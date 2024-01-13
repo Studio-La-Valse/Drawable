@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageVersion>1.0.0</PackageVersion>
+	</PropertyGroup>
+
+	<!--build-->
+	<PropertyGroup>
+		<EnablePackageValidation>true</EnablePackageValidation>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="System.Reactive" Version="6.0.0" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<!-- If all members are not documented, you can disable the compiler warnings -->
+		<NoWarn>$(NoWarn);CS1591</NoWarn>
+	</PropertyGroup>
+
+	<!--meta data-->
+	<PropertyGroup>
+		<Authors>Studio La Valse</Authors>
+		<Description>Provides interaction to the StudioLaValse.Drawable namespace.</Description>
+		<PackageProjectUrl>github.com/Studio-La-Valse/drawable</PackageProjectUrl>
+		<PackageTags>drawable, entity, invalidation, canvas, bitmap</PackageTags>
+	</PropertyGroup>
+
+	<!--License-->
+	<PropertyGroup>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../LICENSE" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+
+	<!--Readme-->
+	<PropertyGroup>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
+	</ItemGroup>
+</Project>
