@@ -9,11 +9,10 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public abstract class BaseDrawableElement
     {
-        public BaseDrawableElement()
-        {
-
-        }
-
+        /// <summary>
+        /// Calculates the bounding box. Optimizations may be provided per geometric primitive.
+        /// </summary>
+        /// <returns></returns>
         public abstract BoundingBox GetBoundingBox();
     }
 }

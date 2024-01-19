@@ -4,6 +4,9 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
+    /// <summary>
+    /// Extension methods for the <see cref="ISelectionBorder"/> interface.
+    /// </summary>
     public static class SelctionBorderExtensions
     {
         /// <summary>

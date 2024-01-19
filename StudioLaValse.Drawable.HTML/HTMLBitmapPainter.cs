@@ -11,21 +11,26 @@ namespace StudioLaValse.Drawable.HTML
     {
         private readonly HTMLCanvas canvas;
 
+        /// <inheritdoc/>
         public HTMLBitmapPainter(HTMLCanvas canvas) : base(canvas)
         {
             this.canvas = canvas;
         }
 
+
+        /// <inheritdoc/>
         public override void DrawBackground(ColorARGB color)
         {
             canvas.Background = color;
         }
 
+        /// <inheritdoc/>
         public override void InitDrawing()
         {
 
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawableLine line)
         {
             var fillr = line.Color.Red;
@@ -48,6 +53,7 @@ namespace StudioLaValse.Drawable.HTML
             canvas.Add(_line);
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawableRectangle rectangle)
         {
             var fillr = rectangle.Color.Red;
@@ -76,6 +82,7 @@ namespace StudioLaValse.Drawable.HTML
             canvas.Add(rect);
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawableText text)
         {
             var x = $"{text.TopLeftX}".Replace(",", ".");
@@ -92,11 +99,13 @@ namespace StudioLaValse.Drawable.HTML
             canvas.Add(t);
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawableEllipse ellipse)
         {
 
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawablePolyline polyline)
         {
             var svg = "<polyline points=\"";
@@ -114,6 +123,7 @@ namespace StudioLaValse.Drawable.HTML
             canvas.Add(svg);
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawablePolygon polygon)
         {
             var svg = "<polygon points=\"";
@@ -131,6 +141,7 @@ namespace StudioLaValse.Drawable.HTML
             canvas.Add(svg);
         }
 
+        /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawableBezierCurve bezier)
         {
             throw new NotImplementedException();

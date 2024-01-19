@@ -7,8 +7,14 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public class DrawableLine : BaseDrawableElement
     {
+        /// <summary>
+        /// The color of the line.
+        /// </summary>
         public ColorARGB Color { get; }
 
+        /// <summary>
+        /// The X-coorindate of the first point of the line.
+        /// </summary>
         public double X1 { get; }
         public double X2 { get; }
         public double Y1 { get; }

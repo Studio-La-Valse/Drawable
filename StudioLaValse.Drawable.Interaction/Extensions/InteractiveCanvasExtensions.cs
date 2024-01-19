@@ -5,6 +5,9 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
+    /// <summary>
+    /// Extensions for the <see cref="IInteractiveCanvas"/>
+    /// </summary>
     public static class InteractiveCanvasExtensions
     {
         /// <summary>
@@ -115,7 +118,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// Transforms a <see cref="BoundingBox"/> from canvas space to its viewbox space, taking into account the canvas' zoom and translation factors.
         /// </summary>
         /// <param name="canvas"></param>
-        /// <param name="pointOnCanvas"></param>
+        /// <param name="boundingBox"></param>
         /// <returns></returns>
         public static BoundingBox CanvasToHost(this IInteractiveCanvas canvas, BoundingBox boundingBox) => new(canvas.CanvasToHost(boundingBox.MinPoint), canvas.CanvasToHost(boundingBox.MaxPoint));
     }

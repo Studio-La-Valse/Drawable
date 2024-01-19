@@ -10,6 +10,9 @@ namespace StudioLaValse.Drawable.Interaction.UserInput
     {
         private readonly ISet<IObserver<BoundingBox>> observers = new HashSet<IObserver<BoundingBox>>();
 
+        /// <summary>
+        /// The default constructor for the observable bounding box
+        /// </summary>
         public ObservableBoundingBox()
         {
 

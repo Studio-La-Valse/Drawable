@@ -7,8 +7,15 @@ namespace StudioLaValse.Drawable.Text
     /// </summary>
     public class FontFamilyCore
     {
+        /// <summary>
+        /// The name of the font.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// The primary constructor.
+        /// </summary>
+        /// <param name="name"></param>
         public FontFamilyCore(string name)
         {
             Name = name;

@@ -10,13 +10,37 @@ namespace StudioLaValse.Drawable.DrawableElements
     {
         private XY? dimensions;
 
+        /// <summary>
+        /// The color of the text.
+        /// </summary>
         public ColorARGB Color { get; }
+        /// <summary>
+        /// The platform independent font family.
+        /// </summary>
         public FontFamilyCore FontFamily { get; }
+        /// <summary>
+        /// The X-coordinate of the top left bounding box of the text. Note that this value will be smaller than the value of the BottomLeftX property.
+        /// </summary>
         public double TopLeftX { get; }
+        /// <summary>
+        /// The X-coordinate of the top left bounding box of the text. Note that this value will be smaller than the value of the BottomLeftY property.
+        /// </summary>
         public double TopLeftY { get; }
+        /// <summary>
+        /// The Y-coordinate of the bottom left point of the bounding box of the text.
+        /// </summary>
         public virtual double BottomLeftY => TopLeftY + Dimensions.Y;
+        /// <summary>
+        /// The font size.
+        /// </summary>
         public double FontSize { get; }
+        /// <summary>
+        /// The text to draw.
+        /// </summary>
         public string Text { get; }
+        /// <summary>
+        /// The dimensions of the boundingbox of the text.
+        /// </summary>
         public XY Dimensions
         {
             get
@@ -25,6 +49,17 @@ namespace StudioLaValse.Drawable.DrawableElements
             }
         }
 
+        /// <summary>
+        /// The default constructor.
+        /// </summary>
+        /// <param name="originX"></param>
+        /// <param name="originY"></param>
+        /// <param name="text"></param>
+        /// <param name="fontSize"></param>
+        /// <param name="color"></param>
+        /// <param name="alignment"></param>
+        /// <param name="verticalAlignment"></param>
+        /// <param name="font"></param>
         public DrawableText(
             double originX,
             double originY,
@@ -60,6 +95,7 @@ namespace StudioLaValse.Drawable.DrawableElements
 
         }
 
+        /// <inheritdoc/>
         public override BoundingBox GetBoundingBox()
         {
             var dimensions = Dimensions;
