@@ -9,6 +9,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// <typeparam name="TEntity"></typeparam>
     public abstract class BaseTransformableParent<TEntity> : BaseSelectableParent<TEntity> where TEntity : class, IEquatable<TEntity>
     {
+        /// <inheritdoc/>
         protected BaseTransformableParent(TEntity element, ISelection<TEntity> selection) : base(element, selection)
         {
 

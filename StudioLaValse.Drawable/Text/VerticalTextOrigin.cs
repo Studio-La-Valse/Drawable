@@ -7,8 +7,17 @@ namespace StudioLaValse.Drawable.Text
     /// </summary>
     public enum VerticalTextOrigin
     {
+        /// <summary>
+        /// Top
+        /// </summary>
         Top = 0,
+        /// <summary>
+        /// Center
+        /// </summary>
         Center = 1,
+        /// <summary>
+        /// Bottom
+        /// </summary>
         Bottom = 2
     }
 }

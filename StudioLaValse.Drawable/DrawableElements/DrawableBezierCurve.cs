@@ -7,18 +7,22 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public class DrawableBezierCurve : DrawablePolyline
     {
+        /// <summary>
+        /// The primary constructor.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="strokeColor"></param>
+        /// <param name="strokeWeight"></param>
         public DrawableBezierCurve(IEnumerable<XY> points, ColorARGB strokeColor, double strokeWeight) : base(points, strokeColor, strokeWeight)
         {
 
         }
 
-        /** Find the ~closest point on a Bézier curve to a point you supply.
-         * out    : A vector to modify to be the point on the curve
-         * curve  : Array of vectors representing control points for a Bézier curve
-         * pt     : The point (vector) you want to find out to be near
-         * tmps   : Array of temporary vectors (reduces memory allocations)
-         * returns: The parameter t representing the location of `out`
-         */
+        /// <summary>
+        /// Find the closest point on a Bezier curve.
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <returns></returns>
         public XY ClosestPoint(XY pt)
         {
             var mindex = 0d;
@@ -50,14 +54,8 @@ namespace StudioLaValse.Drawable.DrawableElements
             return BezierPoint(points, parm);
         }
 
-        /** Find a minimum point for a bounded function. May be a local minimum.
-         * minX   : the smallest input value
-         * maxX   : the largest input value
-         * ƒ      : a function that returns a value `y` given an `x`
-         * ε      : how close in `x` the bounds must be before returning
-         * returns: the `x` value that produces the smallest `y`
-         */
-        public double LocalMinimum(double minX, double maxX, Func<double, double> ƒ, double ε)
+
+        private static double LocalMinimum(double minX, double maxX, Func<double, double> ƒ, double ε)
         {
             var m = minX;
             var n = maxX;
@@ -71,14 +69,7 @@ namespace StudioLaValse.Drawable.DrawableElements
             return k;
         }
 
-        /** Calculate a point along a Bézier segment for a given parameter.
-         * out    : A vector to modify to be the point on the curve
-         * curve  : Array of vectors representing control points for a Bézier curve
-         * t      : Parameter [0,1] for how far along the curve the point should be
-         * tmps   : Array of temporary vectors (reduces memory allocations)
-         * returns: out (the vector that was modified)
-         */
-        public static XY BezierPoint(ICollection<XY> curve, double t)
+        private static XY BezierPoint(ICollection<XY> curve, double t)
         {
             if (curve.Count < 2) throw new Exception("At least 2 control points are required");
 

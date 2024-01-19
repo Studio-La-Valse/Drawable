@@ -5,6 +5,9 @@ using StudioLaValse.Drawable.Interaction.UserInput;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
+    /// <summary>
+    /// Extension methods for the <see cref="IPipe"/> interface.
+    /// </summary>
     public static class PipelineExtensions
     {
         /// <summary>
@@ -54,7 +57,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="inputDispatcher"></param>
         /// <param name="scene"></param>
-        /// <param name="entityChanged"></param>
+        /// <param name="selectionManager"></param>
         /// <returns></returns>
         public static IPipe ThenHandleDefaultClick<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager) where TEntity : class, IEquatable<TEntity>
         {
@@ -67,7 +70,9 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="inputDispatcher"></param>
         /// <param name="scene"></param>
-        /// <param name="entityChanged"></param>
+        /// <param name="selectionManager"></param>
+        /// <param name="observable"></param>
+        /// <param name="notifyEntityChanged"></param>
         /// <returns></returns>
         public static IPipe ThenHandleSelectionBorder<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> notifyEntityChanged) where TEntity : class, IEquatable<TEntity>
         {
@@ -93,9 +98,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="inputDispatcher"></param>
-        /// <param name="selectionManager"></param>
-        /// <param name="scene"></param>
-        /// <param name="notifyEntityChanged"></param>
+        /// <param name="observable"></param>
         /// <returns></returns>
         public static IPipe ThenRender<TEntity>(this IPipe inputDispatcher, INotifyEntityChanged<TEntity> observable) where TEntity : class, IEquatable<TEntity>
         {

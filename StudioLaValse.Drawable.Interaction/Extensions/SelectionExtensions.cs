@@ -3,6 +3,9 @@ using StudioLaValse.Drawable.Interaction.Selection;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
+    /// <summary>
+    /// Extension methods for the <see cref="ISelectionManager{TEntity}"/> interface.
+    /// </summary>
     public static class SelectionExtensions
     {
         /// <summary>

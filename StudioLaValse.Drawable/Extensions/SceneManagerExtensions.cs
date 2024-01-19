@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace StudioLaValse.Drawable.Extensions
 {
+    /// <summary>
+    /// Extension methods for the <see cref="SceneManager{TEntity}"/> class.
+    /// </summary>
     public static class SceneManagerExtensions
     {
         /// <summary>

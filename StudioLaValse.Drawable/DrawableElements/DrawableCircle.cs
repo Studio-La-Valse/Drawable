@@ -7,6 +7,13 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public sealed class DrawableCircle : DrawableEllipse
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="circle"></param>
+        /// <param name="color"></param>
+        /// <param name="stroke"></param>
+        /// <param name="strokeWeight"></param>
         public DrawableCircle(
             Circle circle,
             ColorARGB color,
@@ -23,6 +30,15 @@ namespace StudioLaValse.Drawable.DrawableElements
 
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="centerX"></param>
+        /// <param name="centerY"></param>
+        /// <param name="radius"></param>
+        /// <param name="color"></param>
+        /// <param name="stroke"></param>
+        /// <param name="strokeWeight"></param>
         public DrawableCircle(
             double centerX,
             double centerY,
@@ -41,6 +57,14 @@ namespace StudioLaValse.Drawable.DrawableElements
 
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="center"></param>
+        /// <param name="radius"></param>
+        /// <param name="color"></param>
+        /// <param name="stroke"></param>
+        /// <param name="strokeWeight"></param>
         public DrawableCircle(
             XY center,
             double radius,
@@ -57,7 +81,5 @@ namespace StudioLaValse.Drawable.DrawableElements
         {
 
         }
-
-        public override BoundingBox GetBoundingBox() => base.GetBoundingBox();
     }
 }

@@ -7,18 +7,19 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public sealed class DrawableTrapezoid : DrawablePolygon
     {
+        /// <inheritdoc/>
         public DrawableTrapezoid(XY bottomLeft, XY bottomRight, double thicknessUp, ColorARGB fill) :
             base(ToPoints(bottomLeft, bottomRight, thicknessUp), fill, null, 0)
         {
 
         }
-
+        /// <inheritdoc/>
         public DrawableTrapezoid(Line line, double thicknessUp, ColorARGB fill) :
             base(ToPoints(line.Start, line.End, thicknessUp), fill, null, 0)
         {
 
         }
-
+        /// <inheritdoc/>
         public DrawableTrapezoid(XY bottomLeft, double length, double angle, double thicknessUp) : base(ToPoints(bottomLeft, bottomLeft.Move(length, angle), thicknessUp))
         {
 

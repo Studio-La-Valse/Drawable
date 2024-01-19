@@ -26,20 +26,23 @@
             return new SelectionManager<TEntity>(selection, hashset);
         }
 
+        /// <inheritdoc/>
         public void Add(TEntity element)
         {
             hashSet.Add(element);
         }
+        /// <inheritdoc/>
         public void Set(TEntity element)
         {
             hashSet.Clear();
             hashSet.Add(element);
         }
+        /// <inheritdoc/>
         public void Remove(TEntity element)
         {
             hashSet.Remove(element);
         }
-
+        /// <inheritdoc/>
         public void RemoveRange(IEnumerable<TEntity> elements)
         {
             foreach (var element in elements)
@@ -47,10 +50,12 @@
                 hashSet.Remove(element);
             }
         }
+        /// <inheritdoc/>
         public void Clear()
         {
             hashSet.Clear();
         }
+        /// <inheritdoc/>
         public void SetRange(IEnumerable<TEntity> entities)
         {
             hashSet.Clear();
@@ -59,6 +64,7 @@
                 hashSet.Add(element);
             }
         }
+        /// <inheritdoc/>
         public void AddRange(IEnumerable<TEntity> entities)
         {
             foreach (var element in entities)
@@ -67,8 +73,9 @@
             }
         }
 
-
+        /// <inheritdoc/>
         public IEnumerable<TEntity> GetSelection() => selection.GetSelection();
+        /// <inheritdoc/>
         public bool IsSelected(TEntity element) => selection.IsSelected(element);
     }
 }
