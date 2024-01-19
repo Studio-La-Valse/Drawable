@@ -11,7 +11,7 @@ namespace StudioLaValse.Drawable.BitmapPainters
         private readonly Queue<Action<TBitmap>> drawActions = new();
         private readonly TBitmap canvas;
 
-
+        /// <inheritdoc/>
         protected BaseLazyBitmapPainter(TBitmap canvas)
         {
             this.canvas = canvas;

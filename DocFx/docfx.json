@@ -1,0 +1,53 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../",
+          "files": [
+            "**/*.csproj"
+          ],
+          "exclude": [ 
+            "**/bin/**", 
+            "**/obj/**", 
+            "_site/**", 
+            "DocFx",
+            "StudioLaValse.Drawable.Example/*",
+            "StudioLaValse.Drawable.Example.Winforms/*",
+            "StudioLaValse.Drawable.Example.WPF/*" ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "Drawable.LaValse.Net",
+      "_appTitle": "Drawable.LaValse.Net",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}

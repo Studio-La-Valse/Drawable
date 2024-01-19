@@ -11,6 +11,10 @@
         /// </summary>
         public TEntity AssociatedElement { get; }
 
+        /// <summary>
+        /// The default constructor.
+        /// </summary>
+        /// <param name="element"></param>
         public BaseVisualParent(TEntity element)
         {
             AssociatedElement = element;

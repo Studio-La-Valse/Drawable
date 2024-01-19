@@ -5,7 +5,6 @@ using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Winforms.Controls;
 using StudioLaValse.Drawable.Winforms.Painters;
 using StudioLaValse.Geometry;
-using StudioLaValse.GUI.Example.Winforms;
 using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Winforms

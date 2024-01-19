@@ -1,4 +1,4 @@
-﻿namespace StudioLaValse.GUI.Example.Winforms
+﻿namespace StudioLaValse.Drawable.Example.Winforms
 {
     partial class Form1
     {

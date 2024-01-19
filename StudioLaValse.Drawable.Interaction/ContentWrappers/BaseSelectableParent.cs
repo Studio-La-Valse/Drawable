@@ -18,11 +18,13 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
             throw new Exception("Please either provide a selection through the constructor, or override with your own logic.");
 
 
+        /// <inheritdoc/>
         protected BaseSelectableParent(TEntity element, ISelection<TEntity> selection) : base(element)
         {
             this.selection = selection;
         }
 
+        /// <inheritdoc/>
         public BaseSelectableParent(TEntity element) : base(element)
         {
 

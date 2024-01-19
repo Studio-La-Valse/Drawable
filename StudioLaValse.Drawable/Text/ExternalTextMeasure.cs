@@ -1,5 +1,8 @@
 ﻿namespace StudioLaValse.Drawable.Text
 {
+    /// <summary>
+    /// A static class to hold the globally available text measurer implementation.
+    /// </summary>
     public static class ExternalTextMeasure
     {
         private static IMeasureText? measureText;

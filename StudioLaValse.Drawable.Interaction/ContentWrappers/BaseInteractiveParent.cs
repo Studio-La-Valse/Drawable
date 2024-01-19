@@ -22,6 +22,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         public bool IsMouseOver { get; set; }
 
 
+        /// <inheritdoc/>
         protected BaseInteractiveParent(TEntity element) : base(element)
         {
 
