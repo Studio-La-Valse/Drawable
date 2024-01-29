@@ -1,4 +1,5 @@
 ﻿using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Geometry;
 using System.Globalization;
 using System.Windows;
@@ -77,12 +78,16 @@ namespace StudioLaValse.Drawable.WPF.Extensions
                 text.Text,
                 CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight,
-                new Typeface(new FontFamily(text.FontFamily.Name), new FontStyle(), new FontWeight(), new FontStretch()),
+                new Typeface(text.FontFamily.ToFontFamily(), new FontStyle(), new FontWeight(), new FontStretch()),
                 text.FontSize,
                 text.Color.ToWindowsBrush(),
                 1);
 
             return formattedText;
+        }
+        public static FontFamily ToFontFamily(this FontFamilyCore fontFamily)
+        {
+            return fontFamily.Uri is null ? new FontFamily(fontFamily.Name) : new FontFamily(fontFamily.Uri, fontFamily.Name);
         }
         public static XY MeasureTextSize(this FormattedText formattedText)
         {
@@ -145,7 +150,7 @@ namespace StudioLaValse.Drawable.WPF.Extensions
         {
             var textShape = new TextBlock()
             {
-                FontFamily = new FontFamily(text.FontFamily.Name),
+                FontFamily = text.FontFamily.ToFontFamily(),
                 FontSize = text.FontSize,
                 Text = text.Text,
                 Foreground = text.Color.ToWindowsBrush()
