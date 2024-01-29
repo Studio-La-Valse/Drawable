@@ -8,17 +8,23 @@ namespace StudioLaValse.Drawable.Text
     public class FontFamilyCore
     {
         /// <summary>
+        /// The default constructor.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="uri"></param>
+        public FontFamilyCore(string name, Uri? uri = null)
+        {
+            Uri = uri;
+            Name = name;
+        }
+
+        /// <summary>
+        /// The Uri of the font. Optional.
+        /// </summary>
+        public Uri? Uri { get; }
+        /// <summary>
         /// The name of the font.
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// The primary constructor.
-        /// </summary>
-        /// <param name="name"></param>
-        public FontFamilyCore(string name)
-        {
-            Name = name;
-        }
     }
 }

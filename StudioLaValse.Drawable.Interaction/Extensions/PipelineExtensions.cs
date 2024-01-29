@@ -52,7 +52,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         }
 
         /// <summary>
-        /// Extends the specifief <see cref="IPipe"/> with a special interaction pipe that allows simple mouse click events.
+        ///  Extends the specifief <see cref="IPipe"/> with a special interaction pipe that allows simple mouse click events.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="inputDispatcher"></param>

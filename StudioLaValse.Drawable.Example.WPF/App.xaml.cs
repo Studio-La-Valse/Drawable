@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using StudioLaValse.Drawable.Example.WPF.Models;
 using System.Windows;
+using System.Windows.Media;
 
 namespace StudioLaValse.Drawable.Example.WPF
 {
