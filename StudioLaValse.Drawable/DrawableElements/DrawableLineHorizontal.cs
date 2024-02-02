@@ -7,6 +7,7 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public sealed class DrawableLineHorizontal : DrawableLine
     {
+        /// <inheritdoc/>
         public DrawableLineHorizontal(double heightOnCanvas, double horizontalPosition, double length, double thickness, ColorARGB color) :
             base(horizontalPosition, horizontalPosition + length, heightOnCanvas, heightOnCanvas, color, thickness)
         {

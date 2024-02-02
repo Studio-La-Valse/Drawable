@@ -7,11 +7,30 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public class DrawablePolygon : BaseDrawableElement
     {
+        /// <summary>
+        /// The points of the polygon.
+        /// </summary>
         public IEnumerable<XY> Points { get; }
+        /// <summary>
+        /// The fill color of the polygon.
+        /// </summary>
         public ColorARGB? Fill { get; }
+        /// <summary>
+        /// The stroke color of the polygon.
+        /// </summary>
         public ColorARGB? Color { get; }
+        /// <summary>
+        /// The stroke weight of the polygon.
+        /// </summary>
         public double StrokeWeight { get; }
 
+        /// <summary>
+        /// The default constructor.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="fill"></param>
+        /// <param name="strokeColor"></param>
+        /// <param name="strokeWeight"></param>
         public DrawablePolygon(IEnumerable<XY> points, ColorARGB? fill = null, ColorARGB? strokeColor = null, double strokeWeight = 0)
         {
             Points = points;
@@ -20,6 +39,7 @@ namespace StudioLaValse.Drawable.DrawableElements
             StrokeWeight = strokeWeight;
         }
 
+        /// <inheritdoc/>
         public override BoundingBox GetBoundingBox()
         {
             var minX = 0d;
