@@ -7,10 +7,25 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public class DrawablePolyline : BaseDrawableElement
     {
+        /// <summary>
+        /// The points of the polyline.
+        /// </summary>
         public IEnumerable<XY> Points { get; }
+        /// <summary>
+        /// The color of the polyline.
+        /// </summary>
         public ColorARGB Color { get; }
+        /// <summary>
+        /// The thickness of the polyline.
+        /// </summary>
         public double StrokeWeight { get; }
 
+        /// <summary>
+        /// The default constructor.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="strokeColor"></param>
+        /// <param name="strokeWeight"></param>
         public DrawablePolyline(IEnumerable<XY> points, ColorARGB strokeColor, double strokeWeight)
         {
             Points = points;
@@ -18,6 +33,7 @@ namespace StudioLaValse.Drawable.DrawableElements
             StrokeWeight = strokeWeight;
         }
 
+        /// <inheritdoc/>
         public override BoundingBox GetBoundingBox()
         {
             var minX = 0d;
