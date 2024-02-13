@@ -2,7 +2,6 @@
 
 namespace StudioLaValse.Drawable.WPF.Commands
 {
-
     public class RelayCommand : ICommand
     {
         private readonly Action execute;
@@ -50,7 +49,12 @@ namespace StudioLaValse.Drawable.WPF.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return canExecute != null && parameter != null && canExecute((T)parameter);
+            if(canExecute == null)
+            {
+                return true;
+            }
+
+            return parameter != null && canExecute((T)parameter);
         }
 
         public void Execute(object? parameter)

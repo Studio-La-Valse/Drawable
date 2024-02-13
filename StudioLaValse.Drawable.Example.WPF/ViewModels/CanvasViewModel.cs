@@ -13,7 +13,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             set => SetValue(() => SelectionBorder, value);
         }
 
-        public IObservable<PersistentElement>? Invalidator
+        public IObservable<PersistentElement> Invalidator
         {
             get => GetValue(() => Invalidator);
             set => SetValue(() => Invalidator, value);
