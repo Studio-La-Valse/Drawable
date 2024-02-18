@@ -18,7 +18,7 @@ namespace StudioLaValse.Drawable.Example.WPF.UserControls
     public partial class CanvasUserControl : UserControl, IObserver<PersistentElement>
     {
         public static readonly DependencyProperty SceneProperty = DependencyPropertyBase
-            .Register<CanvasUserControl, SceneManager<PersistentElement>>(nameof(SceneManager), (o, e) => { e.Rerender(o.BaseBitmapPainter); });
+            .Register<CanvasUserControl, SceneManager<PersistentElement, ElementId>>(nameof(SceneManager), (o, e) => { e.Rerender(o.BaseBitmapPainter); });
 
         public static readonly DependencyProperty SelectionBorderProperty = DependencyPropertyBase
             .Register<CanvasUserControl, IObservable<BoundingBox>>(nameof(SelectionBorder), (canvas, value) =>
@@ -57,9 +57,9 @@ namespace StudioLaValse.Drawable.Example.WPF.UserControls
 
 
 
-        public SceneManager<PersistentElement>? SceneManager
+        public SceneManager<PersistentElement, ElementId>? SceneManager
         {
-            get => (SceneManager<PersistentElement>)GetValue(SceneProperty);
+            get => (SceneManager<PersistentElement, ElementId>)GetValue(SceneProperty);
             set => SetValue(SceneProperty, value);
         }
         public IObservable<BoundingBox>? SelectionBorder

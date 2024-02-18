@@ -30,7 +30,7 @@ namespace StudioLaValse.Drawable.Example.Winforms
 
             var canvas = new ControlContainer();
             var canvasPainter = new GraphicsPainter(canvas);
-            var sceneManager = new SceneManager<PersistentElement>(scene)
+            var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId)
                 .WithBackground(ColorARGB.Black)
                 .WithRerender(canvasPainter);
 
