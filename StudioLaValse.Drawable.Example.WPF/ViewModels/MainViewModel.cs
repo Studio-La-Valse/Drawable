@@ -25,7 +25,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             {
                 var model = modelFactory.Create();
                 var scene = sceneFactory.Create(model);
-                var sceneManager = new SceneManager<PersistentElement>(scene).WithBackground(ColorARGB.Black);
+                var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId).WithBackground(ColorARGB.Black);
                 CanvasViewModel.Scene = sceneManager;
                 CanvasViewModel.Pipe = Pipeline.DoNothing()
                     .InterceptKeys(selectionManager, out var _selectionManager)

@@ -19,7 +19,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             set => SetValue(() => Invalidator, value);
         }
 
-        public SceneManager<PersistentElement>? Scene
+        public SceneManager<PersistentElement, ElementId>? Scene
         {
             get => GetValue(() => Scene);
             set => SetValue(() => Scene, value);
