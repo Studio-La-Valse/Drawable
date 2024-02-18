@@ -2,12 +2,12 @@
 
 namespace StudioLaValse.Drawable.Private
 {
-    internal class EntityObserver<TEntity> : IObserver<TEntity> where TEntity : class, IEquatable<TEntity>
+    internal class EntityObserver<TEntity, TKey> : IObserver<TEntity> where TEntity : class where TKey: IEquatable<TKey>
     {
-        private readonly SceneManager<TEntity> sceneManager;
+        private readonly SceneManager<TEntity, TKey> sceneManager;
         private readonly BaseBitmapPainter baseBitmapPainter;
 
-        public EntityObserver(SceneManager<TEntity> sceneManager, BaseBitmapPainter baseBitmapPainter)
+        public EntityObserver(SceneManager<TEntity, TKey> sceneManager, BaseBitmapPainter baseBitmapPainter)
         {
             this.sceneManager = sceneManager;
             this.baseBitmapPainter = baseBitmapPainter;

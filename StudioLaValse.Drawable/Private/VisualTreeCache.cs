@@ -1,14 +1,17 @@
 ﻿namespace StudioLaValse.Drawable.Private
 {
-    internal class VisualTreeCache<TEntity> where TEntity : class, IEquatable<TEntity>
+    internal class VisualTreeCache<TEntity, TKey> where TKey : IEquatable<TKey> 
+                                                  where TEntity : class
     {
-        private readonly Dictionary<TEntity, VisualTree<TEntity>> dict = new Dictionary<TEntity, VisualTree<TEntity>>(new EntityEqualityComparer<TEntity>());
+
+        private readonly Dictionary<TEntity, VisualTree<TEntity>> dict;
 
         public IEnumerable<(TEntity, VisualTree<TEntity>)> Entries => dict.Select(e => (e.Key, e.Value));
 
-        public VisualTreeCache()
+        public VisualTreeCache(GetKey<TEntity, TKey> keyExtractor)
         {
-
+            var equalityComparer = new KeyEqualityComparer<TEntity, TKey>(keyExtractor);
+            dict = new Dictionary<TEntity, VisualTree<TEntity>>(equalityComparer);
         }
 
         public void Rebuild(VisualTree<TEntity> visualTree)

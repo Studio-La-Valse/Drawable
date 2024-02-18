@@ -3,7 +3,7 @@ using StudioLaValse.Drawable.DrawableElements;
 
 namespace StudioLaValse.Drawable.Private
 {
-    internal class VisualTree<TEntity> where TEntity : class, IEquatable<TEntity>
+    internal class VisualTree<TEntity> where TEntity : class
     {
         private readonly List<VisualTree<TEntity>> childBranches = new List<VisualTree<TEntity>>();
         private readonly List<BaseDrawableElement> elements = new List<BaseDrawableElement>();

@@ -68,6 +68,8 @@ namespace StudioLaValse.Drawable.Interaction.Private
                 return;
             }
 
+            source.HandleLeftMouseButtonUp();
+
             // Set the selection to whatever was inside of the drag selection border. 
             selectionManager.SetRange(toSelect);
         }

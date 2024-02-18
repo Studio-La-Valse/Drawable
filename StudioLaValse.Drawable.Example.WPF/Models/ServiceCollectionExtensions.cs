@@ -12,7 +12,7 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
         {
             services.AddTransient<IKeyGenerator<int>, IncrementalKeyGenerator>();
 
-            var notifyElementChanged = SceneManager<PersistentElement>.CreateObservable();
+            var notifyElementChanged = SceneManager<PersistentElement, ElementId>.CreateObservable();
             services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault().OnChangedNotify(notifyElementChanged));
             services.AddSingleton(notifyElementChanged);
             services.AddTransient<ModelFactory>();
