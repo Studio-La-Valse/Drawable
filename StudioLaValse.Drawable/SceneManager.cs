@@ -38,7 +38,7 @@ namespace StudioLaValse.Drawable
         /// The default constructor
         /// </summary>
         /// <param name="scene"></param>
-        /// /// <param name="keyExtractor">The key extractor for entities. Note that entities do not have to implement equals, but the keys they provide do.</param>
+        /// <param name="keyExtractor">The key extractor for entities. Note that entities do not have to implement equals, but the keys they provide do.</param>
         public SceneManager(BaseVisualParent<TEntity> scene, GetKey<TEntity, TKey> keyExtractor)
         {
             visualTree = new VisualTree<TEntity>(scene);
@@ -102,4 +102,13 @@ namespace StudioLaValse.Drawable
             return new EntityInvalidator<TEntity>();
         }
     }
+
+    /// <summary>
+    /// A delegate to get a key from an entity.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="entity"></param>
+    /// <returns></returns>
+    public delegate TKey GetKey<TEntity, TKey>(TEntity entity) where TKey : IEquatable<TKey> where TEntity : class;
 }

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace StudioLaValse.Drawable.Private
+﻿namespace StudioLaValse.Drawable.Private
 {
     internal class VisualTreeCache<TEntity, TKey> where TKey : IEquatable<TKey> 
                                                   where TEntity : class
@@ -12,7 +10,7 @@ namespace StudioLaValse.Drawable.Private
 
         public VisualTreeCache(GetKey<TEntity, TKey> keyExtractor)
         {
-            var equalityComparer = new StrictKeyEqualityComparer<TEntity, TKey>(keyExtractor);
+            var equalityComparer = new KeyEqualityComparer<TEntity, TKey>(keyExtractor);
             dict = new Dictionary<TEntity, VisualTree<TEntity>>(equalityComparer);
         }
 
@@ -43,41 +41,6 @@ namespace StudioLaValse.Drawable.Private
             }
 
             throw new Exception("Specified entity was not found in the visual tree.");
-        }
-    }
-
-    /// <summary>
-    /// A delegate to get a key from an entity.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    public delegate TKey GetKey<TEntity, TKey>(TEntity entity) where TKey : IEquatable<TKey> where TEntity : class;
-
-    internal class StrictKeyEqualityComparer<TEntity, TKey> : IEqualityComparer<TEntity> where TKey : IEquatable<TKey> where TEntity : class
-    {
-        private readonly GetKey<TEntity, TKey> keyExtractor;
-
-        public StrictKeyEqualityComparer(GetKey<TEntity, TKey> keyExtractor)  
-        {
-            this.keyExtractor = keyExtractor;
-        }
-
-
-        public bool Equals(TEntity? x, TEntity? y)
-        {
-            if(x == null || y == null)
-            {
-                return false;
-            }
-
-            return keyExtractor(x).Equals(keyExtractor(y));
-        }
-
-        public int GetHashCode([DisallowNull] TEntity obj)
-        {
-            return keyExtractor(obj).GetHashCode();
         }
     }
 }
