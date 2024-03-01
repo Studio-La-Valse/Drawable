@@ -7,7 +7,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// An abstract class for visual elements that can be transformed.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseTransformableParent<TEntity> : BaseSelectableParent<TEntity> where TEntity : class, IEquatable<TEntity>
+    public abstract class BaseTransformableParent<TEntity> : BaseSelectableParent<TEntity> where TEntity : class
     {
         /// <inheritdoc/>
         protected BaseTransformableParent(TEntity element, ISelection<TEntity> selection) : base(element, selection)
