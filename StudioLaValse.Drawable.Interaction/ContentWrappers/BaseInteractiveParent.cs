@@ -8,7 +8,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// An abstract class meant to be used for a visual parent that needs any basic mouse interaction. 
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseInteractiveParent<TEntity> : BaseVisualParent<TEntity> where TEntity : class, IEquatable<TEntity>
+    public abstract class BaseInteractiveParent<TEntity> : BaseVisualParent<TEntity> where TEntity : class
     {
         /// <summary>
         /// A reference to an entity that will be rerendered on mouse events. 

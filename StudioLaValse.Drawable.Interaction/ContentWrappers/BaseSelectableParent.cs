@@ -6,7 +6,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// An abstract class for elements that can be selected.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseSelectableParent<TEntity> : BaseInteractiveParent<TEntity> where TEntity : class, IEquatable<TEntity>
+    public abstract class BaseSelectableParent<TEntity> : BaseInteractiveParent<TEntity> where TEntity : class
     {
         private readonly ISelection<TEntity>? selection;
 
