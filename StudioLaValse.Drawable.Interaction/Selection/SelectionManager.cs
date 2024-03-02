@@ -4,7 +4,7 @@
     /// The default implementation for the <see cref="ISelectionManager{TEntity}"/> interface.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class SelectionManager<TEntity> : ISelectionManager<TEntity> where TEntity : class, IEquatable<TEntity>
+    public class SelectionManager<TEntity> : ISelectionManager<TEntity> where TEntity : class
     {
         private readonly ISelection<TEntity> selection;
         private readonly HashSet<TEntity> hashSet;
@@ -19,9 +19,10 @@
         /// Creates the default implementation.
         /// </summary>
         /// <returns></returns>
-        public static ISelectionManager<TEntity> CreateDefault()
+        public static ISelectionManager<TEntity> CreateDefault<TKey>(GetKey<TEntity, TKey> getKey) where TKey : IEquatable<TKey>
         {
-            var hashset = new HashSet<TEntity>();
+            var equalityComparer = new KeyEqualityComparer<TEntity, TKey>(getKey);
+            var hashset = new HashSet<TEntity>(equalityComparer);
             var selection = new Selection<TEntity>(hashset);
             return new SelectionManager<TEntity>(selection, hashset);
         }
