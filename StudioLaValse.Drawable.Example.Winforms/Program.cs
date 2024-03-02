@@ -21,7 +21,7 @@ namespace StudioLaValse.Drawable.Example.Winforms
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            var selection = SelectionManager<PersistentElement>.CreateDefault();
+            var selection = SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId);
             var keyGenerator = new IncrementalKeyGenerator();
             var components = Enumerable.Range(0, 5000).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
 

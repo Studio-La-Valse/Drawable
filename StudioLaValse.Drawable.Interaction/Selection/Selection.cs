@@ -1,6 +1,6 @@
 ﻿namespace StudioLaValse.Drawable.Interaction.Selection
 {
-    internal class Selection<TEntity> : ISelection<TEntity> where TEntity : class, IEquatable<TEntity>
+    internal class Selection<TEntity> : ISelection<TEntity> where TEntity : class
     {
         private readonly HashSet<TEntity> selection;
 
