@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.Interaction.Private;
 using StudioLaValse.Drawable.Interaction.Selection;
+using StudioLaValse.Drawable.Interaction.UserInput;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
@@ -12,10 +13,12 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// Extends the specified <see cref="ISelectionManager{TEntity}"/> to notify when it's selection has changed. The entities that are (un) selected are emitted by the specified <see cref="INotifyEntityChanged{TEntity}"/>.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
         /// <param name="selection"></param>
         /// <param name="notifyEntityChanged"></param>
+        /// <param name="getKey"></param>
         /// <returns></returns>
-        public static ISelectionManager<TEntity> OnChangedNotify<TEntity>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TEntity> notifyEntityChanged) where TEntity : class, IEquatable<TEntity>
+        public static ISelectionManager<TEntity> OnChangedNotify<TEntity, TKey>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TEntity> notifyEntityChanged, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
         {
             Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action = (left, right) =>
             {
@@ -23,19 +26,21 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
                 notifyEntityChanged.Invalidate(right);
                 notifyEntityChanged.RenderChanges();
             };
-            return selection.AddChangedHandler(action);
+            return selection.AddChangedHandler(action, getKey);
         }
 
         /// <summary>
         /// Extends the specified <see cref="ISelectionManager{TEntity}"/> with a generic action when it's selection has changed. The first argument of the action are unselected elements, the second argument of the action are the selected elements.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// /// <typeparam name="TKey"></typeparam>
         /// <param name="selection"></param>
         /// <param name="action"></param>
+        /// <param name="getKey"></param>
         /// <returns></returns>
-        public static ISelectionManager<TEntity> AddChangedHandler<TEntity>(this ISelectionManager<TEntity> selection, Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action) where TEntity : class, IEquatable<TEntity>
+        public static ISelectionManager<TEntity> AddChangedHandler<TEntity, TKey>(this ISelectionManager<TEntity> selection, Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
         {
-            var selectionWithHandler = new SelectionWithChangedHandler<TEntity>(selection, action);
+            var selectionWithHandler = new SelectionWithChangedHandler<TEntity, TKey>(selection, action, getKey);
             return selectionWithHandler;
         }
     }
