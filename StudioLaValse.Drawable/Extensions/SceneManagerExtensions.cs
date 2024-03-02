@@ -47,7 +47,7 @@ namespace StudioLaValse.Drawable.Extensions
         /// <param name="entity"></param>
         /// <param name="visualTreeBranch"></param>
         /// <returns></returns>
-        public static bool TryLocate<TEntity>(this IEnumerable<BaseVisualParent<TEntity>> sceneManager, TEntity entity, [NotNullWhen(true)] out BaseVisualParent<TEntity>? visualTreeBranch) where TEntity : class, IEquatable<TEntity>
+        public static bool TryLocate<TEntity>(this IEnumerable<BaseVisualParent<TEntity>> sceneManager, TEntity entity, [NotNullWhen(true)] out BaseVisualParent<TEntity>? visualTreeBranch) where TEntity : class
         {
             visualTreeBranch = sceneManager.FirstOrDefault(c => c.AssociatedElement == entity);
             return visualTreeBranch is not null;
@@ -61,7 +61,7 @@ namespace StudioLaValse.Drawable.Extensions
         /// <param name="entity"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static BaseVisualParent<TEntity> LocateOrThrow<TEntity>(this IEnumerable<BaseVisualParent<TEntity>> sceneManager, TEntity entity) where TEntity : class, IEquatable<TEntity>
+        public static BaseVisualParent<TEntity> LocateOrThrow<TEntity>(this IEnumerable<BaseVisualParent<TEntity>> sceneManager, TEntity entity) where TEntity : class
         {
             if (sceneManager.TryLocate(entity, out var branch))
             {

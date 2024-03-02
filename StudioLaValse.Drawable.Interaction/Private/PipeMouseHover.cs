@@ -5,7 +5,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeMouseHover<TEntity> : IPipe where TEntity : class, IEquatable<TEntity>
+    internal class PipeMouseHover<TEntity> : IPipe where TEntity : class
     {
         private readonly IPipe source;
         private readonly IEnumerable<BaseVisualParent<TEntity>> sceneManager;

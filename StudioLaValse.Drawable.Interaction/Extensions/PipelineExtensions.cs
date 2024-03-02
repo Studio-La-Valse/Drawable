@@ -18,7 +18,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="selectionManager"></param>
         /// <param name="intercepted"></param>
         /// <returns></returns>
-        public static IPipe InterceptKeys<TEntity>(this IPipe pipe, ISelectionManager<TEntity> selectionManager, out ISelectionManager<TEntity> intercepted) where TEntity : class, IEquatable<TEntity>
+        public static IPipe InterceptKeys<TEntity>(this IPipe pipe, ISelectionManager<TEntity> selectionManager, out ISelectionManager<TEntity> intercepted) where TEntity : class
         {
             var _pipe = new PipeInterceptKeys<TEntity>(pipe);
             intercepted = new SelectionWithKeyResponse<TEntity>(selectionManager, () => _pipe.ShiftPressed, () => _pipe.CtrlPressed);
@@ -33,7 +33,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="scene"></param>
         /// <param name="entityChanged"></param>
         /// <returns></returns>
-        public static IPipe ThenHandleDefaultMouseInteraction<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> entityChanged) where TEntity : class, IEquatable<TEntity>
+        public static IPipe ThenHandleDefaultMouseInteraction<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> entityChanged) where TEntity : class
         {
             return new PipeMouseInteraction<TEntity>(inputDispatcher, scene, entityChanged);
         }
@@ -46,7 +46,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="scene"></param>
         /// <param name="entityChanged"></param>
         /// <returns></returns>
-        public static IPipe ThenHandleMouseHover<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> entityChanged) where TEntity : class, IEquatable<TEntity>
+        public static IPipe ThenHandleMouseHover<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> entityChanged) where TEntity : class
         {
             return new PipeMouseHover<TEntity>(inputDispatcher, scene, entityChanged);
         }
@@ -59,7 +59,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="scene"></param>
         /// <param name="selectionManager"></param>
         /// <returns></returns>
-        public static IPipe ThenHandleDefaultClick<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager) where TEntity : class, IEquatable<TEntity>
+        public static IPipe ThenHandleDefaultClick<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager) where TEntity : class
         {
             return new PipeSelection<TEntity>(inputDispatcher, scene, selectionManager);
         }
@@ -74,7 +74,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="observable"></param>
         /// <param name="notifyEntityChanged"></param>
         /// <returns></returns>
-        public static IPipe ThenHandleSelectionBorder<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> notifyEntityChanged) where TEntity : class, IEquatable<TEntity>
+        public static IPipe ThenHandleSelectionBorder<TEntity>(this IPipe inputDispatcher, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> notifyEntityChanged) where TEntity : class
         {
             return new PipeSelectionBorder<TEntity>(inputDispatcher, scene, selectionManager, observable, notifyEntityChanged);
         }
@@ -88,7 +88,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="scene"></param>
         /// <param name="notifyEntityChanged"></param>
         /// <returns></returns>
-        public static IPipe ThenHandleTransformations<TEntity>(this IPipe inputDispatcher, ISelectionManager<TEntity> selectionManager, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> notifyEntityChanged) where TEntity : class, IEquatable<TEntity>
+        public static IPipe ThenHandleTransformations<TEntity>(this IPipe inputDispatcher, ISelectionManager<TEntity> selectionManager, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> notifyEntityChanged) where TEntity : class
         {
             return new PipeTransformations<TEntity>(inputDispatcher, selectionManager, scene, notifyEntityChanged);
         }
@@ -100,7 +100,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="inputDispatcher"></param>
         /// <param name="observable"></param>
         /// <returns></returns>
-        public static IPipe ThenRender<TEntity>(this IPipe inputDispatcher, INotifyEntityChanged<TEntity> observable) where TEntity : class, IEquatable<TEntity>
+        public static IPipe ThenRender<TEntity>(this IPipe inputDispatcher, INotifyEntityChanged<TEntity> observable) where TEntity : class
         {
             return new PipeRerender<TEntity>(inputDispatcher, observable);
         }
