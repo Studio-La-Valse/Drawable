@@ -2,15 +2,17 @@
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class SelectionWithChangedHandler<TEntity> : ISelectionManager<TEntity> where TEntity : class, IEquatable<TEntity>
+    internal class SelectionWithChangedHandler<TEntity, TKey> : ISelectionManager<TEntity> where TEntity : class where TKey: IEquatable<TKey>
     {
         private readonly ISelectionManager<TEntity> selection;
         private readonly Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action;
+        private readonly GetKey<TEntity, TKey> getKey;
 
-        public SelectionWithChangedHandler(ISelectionManager<TEntity> selection, Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action)
+        public SelectionWithChangedHandler(ISelectionManager<TEntity> selection, Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action, GetKey<TEntity, TKey> getKey)
         {
             this.selection = selection;
             this.action = action;
+            this.getKey = getKey;
         }
 
         public IEnumerable<TEntity> GetSelection() => selection.GetSelection();
@@ -70,7 +72,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
         public void SetRange(IEnumerable<TEntity> entities)
         {
             var existingSelection = selection.GetSelection().ToArray();
-            var (left, _, right) = existingSelection.Venn(entities);
+            var (left, _, right) = existingSelection.Venn(entities, getKey);
             selection.SetRange(entities);
             Emit(right, left);
         }

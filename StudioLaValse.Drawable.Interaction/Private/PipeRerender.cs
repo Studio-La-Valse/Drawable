@@ -3,7 +3,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeRerender<TEntity> : IPipe where TEntity : class, IEquatable<TEntity>
+    internal class PipeRerender<TEntity> : IPipe where TEntity : class
     {
         private readonly IPipe source;
         private readonly INotifyEntityChanged<TEntity> observable;
