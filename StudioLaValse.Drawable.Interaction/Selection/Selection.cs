@@ -11,7 +11,7 @@
 
         public bool IsSelected(TEntity element)
         {
-            return GetSelection().Any(e => e.Equals(element));
+            return selection.Contains(element);
         }
         public IEnumerable<TEntity> GetSelection()
         {
