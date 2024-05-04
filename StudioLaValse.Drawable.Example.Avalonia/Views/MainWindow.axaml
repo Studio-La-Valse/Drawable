@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:StudioLaValse.Drawable.Example.Avalonia"
+		xmlns:viewModel="clr-namespace:StudioLaValse.Drawable.Example.Avalonia.ViewModels;assembly=StudioLaValse.Drawable.Example.Avalonia"
+		x:DataType="viewModel:MainWindowViewModel"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:c="using:StudioLaValse.Drawable.Example.Avalonia.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="StudioLaValse.Drawable.Example.Avalonia.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="StudioLaValse.Drawable.Example.Avalonia"
+		Design.DataContext="{x:Static local:DesignData.MainWindowViewModel}">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"/>
+			<ColumnDefinition Width="5"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<StackPanel>
+			<Button Command="{Binding NewSceneCommand}"
+                    Content="New scene"/>
+
+			<Button Command="{Binding ToggleZoom}"
+                    Content="Toggle Zoom"/>
+
+		</StackPanel>
+
+
+
+		<GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+
+		<Grid Grid.Column="2">
+			<c:MainControl DataContext="{Binding CanvasViewModel}"
+						   SceneManager="{Binding SceneManager, Mode=TwoWay}"
+						   SelectionBorder="{Binding SelectionBorder, Mode=TwoWay}"
+						   EnablePan="{Binding EnablePan, Mode=TwoWay}"
+						   Pipe="{Binding Pipe, Mode=TwoWay}"
+						   Invalidator="{Binding Invalidator, Mode=TwoWay}"
+						   Background="Black"/>
+		</Grid>
+
+	</Grid>
+
+
+</Window>

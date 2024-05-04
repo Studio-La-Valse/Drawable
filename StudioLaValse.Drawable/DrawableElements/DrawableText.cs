@@ -80,17 +80,25 @@ namespace StudioLaValse.Drawable.DrawableElements
             if (alignment != HorizontalTextOrigin.Left)
             {
                 if (alignment == HorizontalTextOrigin.Center)
+                {
                     TopLeftX -= Dimensions.X / 2;
+                }
                 else
+                {
                     TopLeftX -= Dimensions.X;
+                }
             }
 
             if (verticalAlignment != VerticalTextOrigin.Top)
             {
                 if (verticalAlignment == VerticalTextOrigin.Center)
+                {
                     TopLeftY -= Dimensions.Y / 2;
+                }
                 else
+                {
                     TopLeftY -= Dimensions.Y;
+                }
             }
 
         }

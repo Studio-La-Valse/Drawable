@@ -7,6 +7,17 @@
 		<PackageVersion>2.1.0</PackageVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.0.10" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\StudioLaValse.Drawable.Interaction\StudioLaValse.Drawable.Interaction.csproj" />
+	</ItemGroup>
+
+
 	<!--build-->
 	<PropertyGroup>
 		<EnablePackageValidation>true</EnablePackageValidation>
@@ -17,17 +28,18 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="System.Reactive" Version="6.0.0" />
+		<PackageReference Include="StudioLaValse.Geometry" Version="1.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<!--meta data-->
 	<PropertyGroup>
 		<Authors>Studio La Valse</Authors>
-		<Description>Provides interaction to the StudioLaValse.Drawable namespace.</Description>
+		<Description>A package to invalidate entities and draw them on any generic bitmap.</Description>
 		<PackageProjectUrl>github.com/Studio-La-Valse/drawable</PackageProjectUrl>
 		<PackageTags>drawable, entity, invalidation, canvas, bitmap</PackageTags>
 	</PropertyGroup>
@@ -51,7 +63,4 @@
 		<None Include="../README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
-	</ItemGroup>
 </Project>
