@@ -52,6 +52,7 @@ jobs:
         dotnet pack StudioLaValse.Drawable.Interaction --configuration Release --output ${{ env.NuGetDirectory }}
         dotnet pack StudioLaValse.Drawable.Skia --configuration Release --output ${{ env.NuGetDirectory }}
         dotnet pack StudioLaValse.Drawable.Winforms --configuration Release --output ${{ env.NuGetDirectory }}
+        dotnet pack StudioLaValse.Drawable.Avalonia --configuration Release --output ${{ env.NuGetDirectory }}
         dotnet pack StudioLaValse.Drawable.WPF --configuration Release --output ${{ env.NuGetDirectory }}
         dotnet pack StudioLaValse.Drawable.WPF.Skia --configuration Release --output ${{ env.NuGetDirectory }}
         
