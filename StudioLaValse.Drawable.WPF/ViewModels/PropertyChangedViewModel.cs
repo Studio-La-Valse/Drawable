@@ -14,7 +14,7 @@ namespace StudioLaValse.Drawable.WPF.ViewModels
 
         protected void SetValue<T>(Expression<Func<T>> propertySelector, T value)
         {
-            string propertyName = GetPropertyName(propertySelector);
+            var propertyName = GetPropertyName(propertySelector);
 
             SetValue(propertyName, value);
         }
@@ -33,7 +33,7 @@ namespace StudioLaValse.Drawable.WPF.ViewModels
 
         protected T GetValue<T>(Expression<Func<T>> propertySelector)
         {
-            string propertyName = GetPropertyName(propertySelector);
+            var propertyName = GetPropertyName(propertySelector);
 
             return GetValue<T>(propertyName);
         }
@@ -44,7 +44,7 @@ namespace StudioLaValse.Drawable.WPF.ViewModels
                 throw new ArgumentException("Invalid property name", propertyName);
             }
 
-            if (!_values.TryGetValue(propertyName, out object? value))
+            if (!_values.TryGetValue(propertyName, out var value))
             {
                 value = default(T);
 
@@ -59,7 +59,7 @@ namespace StudioLaValse.Drawable.WPF.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler? handler = PropertyChanged;
+            var handler = PropertyChanged;
 
             if (handler != null)
             {
