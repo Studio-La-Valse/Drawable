@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Skia" Version="11.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudioLaValse.Drawable.Avalonia\StudioLaValse.Drawable.Avalonia.csproj" />
+    <ProjectReference Include="..\StudioLaValse.Drawable.Skia\StudioLaValse.Drawable.Skia.csproj" />
+  </ItemGroup>
+
+</Project>
