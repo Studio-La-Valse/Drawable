@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Media;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Geometry;
 using System;
 using System.Collections.Generic;
@@ -46,8 +47,13 @@ internal static class GeometryExtensions
     public static FormattedText ToFormattedText(this DrawableText text)
     {
         var brush = text.Color.ToBrush();
-        var fontFamily = new FontFamily(text.FontFamily.Uri?.ToString() ?? text.FontFamily.Name);
+        var fontFamily = text.FontFamily.ToFontFamily();
         var formattedText = new FormattedText(text.Text, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(fontFamily), text.FontSize, brush);
         return formattedText;
+    }
+
+    public static FontFamily ToFontFamily(this FontFamilyCore fontFamily)
+    {
+        return fontFamily.Uri is null ? new FontFamily(fontFamily.Name) : new FontFamily(fontFamily.Uri, fontFamily.Name);
     }
 }
