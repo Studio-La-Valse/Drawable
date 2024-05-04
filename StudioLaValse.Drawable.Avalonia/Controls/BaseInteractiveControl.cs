@@ -50,10 +50,13 @@ internal class ButtonObservable : IObservable<bool>
     }
 }
 
+/// <inheritdoc/>
 public abstract partial class BaseInteractiveControl : UserControl, IInteractiveCanvas
 {
     private readonly ButtonObservable leftButtonObservable = new ButtonObservable();
     private readonly ButtonObservable rightButtonObservable = new ButtonObservable();
+
+    /// <inheritdoc/>
     public BaseInteractiveControl()
     {
         Focusable = true;
@@ -146,19 +149,30 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
         }
     }
 
+    /// <inheritdoc/>
     public double Zoom { get; set; } = 1;
+    /// <inheritdoc/>
     public double TranslateX { get; set; } = 0;
+    /// <inheritdoc/>
     public double TranslateY { get; set; } = 0;
+    /// <inheritdoc/>
     public double ViewBoxWidth => double.IsNormal(Width) ? Width : 0;
+    /// <inheritdoc/>
     public double ViewBoxHeight => double.IsNormal(Height) ? Width : 0;
 
-
+    /// <inheritdoc/>
     public IObservable<XY> MouseMove { get; }
+    /// <inheritdoc/>
     public IObservable<bool> MouseLeftButtonDown { get; }
+    /// <inheritdoc/>
     public IObservable<bool> MouseRightButtonDown { get; }
+    /// <inheritdoc/>
     public IObservable<double> MouseWheel { get; }
+    /// <inheritdoc/>
     new public IObservable<Interaction.UserInput.Key> KeyDown { get; }
+    /// <inheritdoc/>
     new public IObservable<Interaction.UserInput.Key> KeyUp { get; }
 
+    /// <inheritdoc/>
     public abstract void Refresh();
 }
