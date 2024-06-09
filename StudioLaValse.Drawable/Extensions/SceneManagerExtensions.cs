@@ -83,5 +83,21 @@ namespace StudioLaValse.Drawable.Extensions
         {
             return new EntityObserver<TEntity, TKey>(sceneManager, baseBitmapPainter);
         }
+
+        /// <summary>
+        /// Draw the content wrapper recursively.
+        /// </summary>
+        /// <param name="bitmapPainter"></param>
+        /// <param name="contentWrapper"></param>
+        public static void DrawContentWrapper(this BaseBitmapPainter bitmapPainter, BaseContentWrapper contentWrapper)
+        {
+            foreach (var wrapper in contentWrapper.SelectRecursive(p => p.GetContentWrappers()))
+            {
+                foreach (var element in wrapper.GetDrawableElements())
+                {
+                    bitmapPainter.DrawElement(element);
+                }
+            }
+        }
     }
 }

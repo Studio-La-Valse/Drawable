@@ -92,6 +92,8 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
                 global::Avalonia.Input.Key.LeftCtrl => Interaction.UserInput.Key.Control,
                 global::Avalonia.Input.Key.LeftShift => Interaction.UserInput.Key.Shift,
                 global::Avalonia.Input.Key.Escape => Interaction.UserInput.Key.Escape,
+                global::Avalonia.Input.Key.Z => Interaction.UserInput.Key.Z,
+                global::Avalonia.Input.Key.R => Interaction.UserInput.Key.R,
                 _ => Interaction.UserInput.Key.Unknown
             });
 
@@ -102,6 +104,8 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
                 global::Avalonia.Input.Key.LeftCtrl => Interaction.UserInput.Key.Control,
                 global::Avalonia.Input.Key.LeftShift => Interaction.UserInput.Key.Shift,
                 global::Avalonia.Input.Key.Escape => Interaction.UserInput.Key.Escape,
+                global::Avalonia.Input.Key.Z => Interaction.UserInput.Key.Z,
+                global::Avalonia.Input.Key.R => Interaction.UserInput.Key.R,
                 _ => Interaction.UserInput.Key.Unknown
             });
 
