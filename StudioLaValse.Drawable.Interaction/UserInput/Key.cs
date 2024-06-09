@@ -20,6 +20,14 @@
         /// <summary>
         /// The default escape key
         /// </summary>
-        Escape
+        Escape,
+        /// <summary>
+        /// The default z key
+        /// </summary>
+        Z,
+        /// <summary>
+        /// the default r key
+        /// </summary>
+        R
     }
 }
