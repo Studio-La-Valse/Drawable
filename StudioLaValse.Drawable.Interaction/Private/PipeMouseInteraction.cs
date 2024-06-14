@@ -51,7 +51,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
             {
                 if (element.OnMouseMove(position))
                 {
-                    entityChanged.Invalidate(element.AssociatedElement);
+                    entityChanged.Invalidate(element.AssociatedElement, method: Method.Shallow);
                 }
             }
         }

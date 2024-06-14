@@ -2,7 +2,7 @@
 
 namespace StudioLaValse.Drawable.Private
 {
-    internal class EntityObserver<TEntity, TKey> : IObserver<TEntity> where TEntity : class where TKey: IEquatable<TKey>
+    internal class EntityObserver<TEntity, TKey> : IObserver<InvalidationRequest<TEntity>> where TEntity : class where TKey: IEquatable<TKey>
     {
         private readonly SceneManager<TEntity, TKey> sceneManager;
         private readonly BaseBitmapPainter baseBitmapPainter;
@@ -23,7 +23,7 @@ namespace StudioLaValse.Drawable.Private
             throw error;
         }
 
-        public void OnNext(TEntity value)
+        public void OnNext(InvalidationRequest<TEntity> value)
         {
             sceneManager.AddToQueue(value);
         }
