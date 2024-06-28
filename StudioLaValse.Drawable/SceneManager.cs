@@ -21,7 +21,7 @@ namespace StudioLaValse.Drawable
         /// <summary>
         /// The background color of the scene. This value is passed to the associated <see cref="BaseBitmapPainter"></see> in the <see cref="RenderChanges(BaseBitmapPainter)"/> method.
         /// </summary>
-        public ColorARGB Background { get; set; } = ColorARGB.White;
+        public ColorARGB? Background { get; set; }
 
         /// <summary>
         /// Enumerates the visual parents in the scene.
@@ -72,7 +72,10 @@ namespace StudioLaValse.Drawable
             cache.Rebuild(visualTree);
 
             bitmapPainter.InitDrawing();
-            bitmapPainter.DrawBackground(Background);
+            if(Background is not null)
+            {
+                bitmapPainter.DrawBackground(Background);
+            }
 
             while (renderQueue.Count != 0)
             {
