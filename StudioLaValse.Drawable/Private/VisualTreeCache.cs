@@ -1,10 +1,13 @@
-﻿namespace StudioLaValse.Drawable.Private
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StudioLaValse.Drawable.Private
 {
     internal class VisualTreeCache<TEntity, TKey> where TKey : IEquatable<TKey> 
                                                   where TEntity : class
     {
 
         private readonly Dictionary<TEntity, VisualTree<TEntity>> dict;
+        private readonly GetKey<TEntity, TKey> keyExtractor;
 
         public IEnumerable<(TEntity, VisualTree<TEntity>)> Entries => dict.Select(e => (e.Key, e.Value));
 
@@ -12,6 +15,7 @@
         {
             var equalityComparer = new KeyEqualityComparer<TEntity, TKey>(keyExtractor);
             dict = new Dictionary<TEntity, VisualTree<TEntity>>(equalityComparer);
+            this.keyExtractor = keyExtractor;
         }
 
         public void Rebuild(VisualTree<TEntity> visualTree)
@@ -27,20 +31,15 @@
         {
             if (dict.ContainsKey(entity))
             {
-                throw new Exception("Entity has already been added to the visual tree.");
+                throw new Exception($"Entity ({entity} : {keyExtractor(entity)}) has already been added to the visual tree.");
             }
 
             dict.Add(entity, visualTree);
         }
 
-        public VisualTree<TEntity> FindOrThrow(TEntity entity)
+        public bool Find(TEntity entity, [NotNullWhen(true)] out VisualTree<TEntity>? value)
         {
-            if (dict.TryGetValue(entity, out var value))
-            {
-                return value;
-            }
-
-            throw new Exception("Specified entity was not found in the visual tree.");
+            return dict.TryGetValue(entity, out value);
         }
     }
 }

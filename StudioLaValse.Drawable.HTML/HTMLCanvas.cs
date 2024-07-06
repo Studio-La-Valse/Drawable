@@ -7,7 +7,7 @@ namespace StudioLaValse.Drawable.HTML
     /// </summary>
     public class HTMLCanvas
     {
-        private string content = "";
+        private string content = string.Empty;
         private readonly int width;
         private readonly int height;
 
@@ -39,7 +39,7 @@ namespace StudioLaValse.Drawable.HTML
         /// Draws the inner html to svg tags.
         /// </summary>
         /// <returns></returns>
-        public string SVGContent() => $@"<svg  width=""100%"" height=""100%"" viewBox=""0 0 {width} {height}"" fill=""{Background}"">{InnerHtml()}</svg>";
+        public string SVGContent() => $@"<svg width=""100%"" height=""100%"" viewBox=""0 0 {width} {height}"" fill=""{Background}"">{InnerHtml()}</svg>";
         /// <summary>
         /// Renders the inner html to an svg formatted string.
         /// </summary>
@@ -52,6 +52,14 @@ namespace StudioLaValse.Drawable.HTML
         public void Add(string element)
         {
             content += element;
+        }
+
+        /// <summary>
+        /// Clears the content.
+        /// </summary>
+        public void Clear()
+        {
+            content = string.Empty;
         }
     }
 }

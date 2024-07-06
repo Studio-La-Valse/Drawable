@@ -2,31 +2,31 @@
 {
     internal class EntityInvalidator<TEntity> : INotifyEntityChanged<TEntity>
     {
-        private readonly HashSet<IObserver<TEntity>> _observers = new();
+        private readonly HashSet<IObserver<InvalidationRequest<TEntity>>> _observers = [];
 
         public EntityInvalidator() { }
 
-        public void Invalidate(TEntity element)
+        public void Invalidate(TEntity invalidationRequest, NotFoundHandler notFoundHandler, Method method)
         {
             foreach (var observer in _observers)
             {
-                observer.OnNext(element);
+                observer.OnNext(new InvalidationRequest<TEntity>(invalidationRequest, notFoundHandler, method));
             }
         }
 
-        public void Invalidate(IEnumerable<TEntity> elements)
+        public void Invalidate(IEnumerable<TEntity> invalidationRequests, NotFoundHandler notFoundHandler, Method method)
         {
-            foreach (var element in elements)
+            foreach (var element in invalidationRequests)
             {
-                Invalidate(element);
+                Invalidate(element, notFoundHandler, method);
             }
         }
 
-        public void Invalidate(params TEntity[] elements)
+        public void Invalidate(NotFoundHandler notFoundHandler, Method method, params TEntity[] invalidationRequests)
         {
-            foreach (var element in elements)
+            foreach (var element in invalidationRequests)
             {
-                Invalidate(element);
+                Invalidate(element, notFoundHandler, method);
             }
         }
 
@@ -38,10 +38,10 @@
             }
         }
 
-        public IDisposable Subscribe(IObserver<TEntity> observer)
+        public IDisposable Subscribe(IObserver<InvalidationRequest<TEntity>> observer)
         {
             _observers.Add(observer);
-            return new DefaultUnsubscriber<TEntity>(observer, _observers);
+            return new DefaultUnsubscriber<InvalidationRequest<TEntity>>(observer, _observers);
         }
     }
 }

@@ -79,7 +79,7 @@ namespace StudioLaValse.Drawable.Extensions
         /// <param name="sceneManager"></param>
         /// <param name="baseBitmapPainter"></param>
         /// <returns></returns>
-        public static IObserver<TEntity> CreateObserver<TEntity, TKey>(this SceneManager<TEntity, TKey> sceneManager, BaseBitmapPainter baseBitmapPainter) where TEntity : class where TKey : IEquatable<TKey>
+        public static IObserver<InvalidationRequest<TEntity>> CreateObserver<TEntity, TKey>(this SceneManager<TEntity, TKey> sceneManager, BaseBitmapPainter baseBitmapPainter) where TEntity : class where TKey : IEquatable<TKey>
         {
             return new EntityObserver<TEntity, TKey>(sceneManager, baseBitmapPainter);
         }

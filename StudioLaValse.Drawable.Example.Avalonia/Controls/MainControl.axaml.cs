@@ -12,7 +12,7 @@ using StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.Controls;
 
-public partial class MainControl : ReactiveUserControl<CanvasViewModel>, IObserver<PersistentElement>
+public partial class MainControl : ReactiveUserControl<CanvasViewModel>, IObserver<InvalidationRequest<PersistentElement>>
 {
     public static readonly DirectProperty<MainControl, SceneManager<PersistentElement, ElementId>> SceneManagerProperty = AvaloniaProperty
         .RegisterDirect<MainControl, SceneManager<PersistentElement, ElementId>>(nameof(SceneManager), o => o.SceneManager, (o, v) => o.SceneManager = v);
@@ -133,7 +133,7 @@ public partial class MainControl : ReactiveUserControl<CanvasViewModel>, IObserv
     {
         throw error;
     }
-    public void OnNext(PersistentElement value)
+    public void OnNext(InvalidationRequest<PersistentElement> value)
     {
         if (SceneManager is null)
         {

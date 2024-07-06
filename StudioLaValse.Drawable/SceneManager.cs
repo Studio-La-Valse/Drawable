@@ -13,14 +13,15 @@ namespace StudioLaValse.Drawable
     /// <typeparam name="TKey">The entity key type</typeparam>
     public class SceneManager<TEntity, TKey> where TEntity : class where TKey : IEquatable<TKey>
     {
-        private readonly Queue<TEntity> renderQueue = new();
+        private readonly Queue<InvalidationRequest<TEntity>> renderQueue = new();
         private readonly VisualTreeCache<TEntity, TKey> cache;
         private readonly VisualTree<TEntity> visualTree;
+        private readonly GetKey<TEntity, TKey> keyExtractor;
 
         /// <summary>
         /// The background color of the scene. This value is passed to the associated <see cref="BaseBitmapPainter"></see> in the <see cref="RenderChanges(BaseBitmapPainter)"/> method.
         /// </summary>
-        public ColorARGB Background { get; set; } = ColorARGB.White;
+        public ColorARGB? Background { get; set; }
 
         /// <summary>
         /// Enumerates the visual parents in the scene.
@@ -43,6 +44,7 @@ namespace StudioLaValse.Drawable
         {
             visualTree = new VisualTree<TEntity>(scene);
             cache = new VisualTreeCache<TEntity, TKey>(keyExtractor);
+            this.keyExtractor = keyExtractor;
         }
 
 
@@ -51,8 +53,12 @@ namespace StudioLaValse.Drawable
         /// </summary>
         /// <param name="element"></param>
         /// <returns>The same instance of the <see cref="SceneManager{TEntity, TKey}"/> to allow chaining of methods.</returns>
-        public SceneManager<TEntity, TKey> AddToQueue(TEntity element)
+        public SceneManager<TEntity, TKey> AddToQueue(InvalidationRequest<TEntity> element)
         {
+            if(renderQueue.Select(e => e.Entity).Any(e => keyExtractor(e).Equals(keyExtractor(element.Entity))))
+            {
+                return this;
+            }
             renderQueue.Enqueue(element);
             return this;
         }
@@ -66,13 +72,45 @@ namespace StudioLaValse.Drawable
             cache.Rebuild(visualTree);
 
             bitmapPainter.InitDrawing();
-            bitmapPainter.DrawBackground(Background);
+            if(Background is not null)
+            {
+                bitmapPainter.DrawBackground(Background);
+            }
 
             while (renderQueue.Count != 0)
             {
                 var entity = renderQueue.Dequeue();
-                var visualTree = cache.FindOrThrow(entity);
-                visualTree.Unwrap();
+                if(!cache.Find(entity.Entity, out var visualTree))
+                {
+                    switch (entity.NotFoundHandler)
+                    {
+                        case NotFoundHandler.Raise:
+                            throw new InvalidOperationException(
+                                $"Entity ({entity} : {keyExtractor(entity.Entity)}) was not found in the visual tree.");
+                        case NotFoundHandler.Rerender:
+                            Rerender(bitmapPainter);
+                            return;
+                        case NotFoundHandler.Skip:
+                            continue;
+                        default:
+                            throw new NotImplementedException(nameof(entity.NotFoundHandler)); 
+                    }
+                }
+
+                switch (entity.Method)
+                {
+                    case Method.Recursive:
+                        visualTree.Regenerate();
+                        break;
+                    case Method.Deep:
+                        visualTree.Rebuild();
+                        break;
+                    case Method.Shallow:
+                        visualTree.Redraw();
+                        break;
+                    default:
+                        throw new NotImplementedException(nameof(entity.Method));
+                }
             }
 
             visualTree.SelectRecursive(e => e.ChildBranches)
@@ -89,7 +127,7 @@ namespace StudioLaValse.Drawable
         public void Rerender(BaseBitmapPainter bitmapTarget)
         {
             renderQueue.Clear();
-            renderQueue.Enqueue(visualTree.Element);
+            renderQueue.Enqueue(new InvalidationRequest<TEntity>(visualTree.Element, NotFoundHandler.Raise));
             RenderChanges(bitmapTarget);
         }
 

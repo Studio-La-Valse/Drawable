@@ -1,6 +1,7 @@
 ﻿using StudioLaValse.Drawable.Interaction.Private;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Drawable.Private;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
@@ -20,12 +21,12 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <returns></returns>
         public static ISelectionManager<TEntity> OnChangedNotify<TEntity, TKey>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TEntity> notifyEntityChanged, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
         {
-            Action<IEnumerable<TEntity>, IEnumerable<TEntity>> action = (left, right) =>
+            void action(IEnumerable<TEntity> left, IEnumerable<TEntity> right)
             {
-                notifyEntityChanged.Invalidate(left);
-                notifyEntityChanged.Invalidate(right);
+                notifyEntityChanged.Invalidate(left, NotFoundHandler.Skip, Method.Shallow);
+                notifyEntityChanged.Invalidate(right, NotFoundHandler.Skip, Method.Shallow);
                 notifyEntityChanged.RenderChanges();
-            };
+            }
             return selection.AddChangedHandler(action, getKey);
         }
 
@@ -33,7 +34,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// Extends the specified <see cref="ISelectionManager{TEntity}"/> with a generic action when it's selection has changed. The first argument of the action are unselected elements, the second argument of the action are the selected elements.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
         /// <param name="selection"></param>
         /// <param name="action"></param>
         /// <param name="getKey"></param>

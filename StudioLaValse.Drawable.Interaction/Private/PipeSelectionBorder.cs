@@ -120,7 +120,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
                 // Only invalidate if it was previously not true
                 if (!previousMouseOver)
                 {
-                    entityChanged.Invalidate(element.Ghost);
+                    entityChanged.Invalidate(element.Ghost, method: Method.Shallow);
                 }
 
                 // Add to list to select when mouse button is released.

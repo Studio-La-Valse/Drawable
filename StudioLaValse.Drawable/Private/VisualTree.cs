@@ -5,8 +5,9 @@ namespace StudioLaValse.Drawable.Private
 {
     internal class VisualTree<TEntity> where TEntity : class
     {
-        private readonly List<VisualTree<TEntity>> childBranches = new List<VisualTree<TEntity>>();
-        private readonly List<BaseDrawableElement> elements = new List<BaseDrawableElement>();
+        private readonly List<VisualTree<TEntity>> childBranches = [];
+        private readonly List<BaseDrawableElement> elements = [];
+        private readonly List<BaseContentWrapper> contentWrappers = [];
         private readonly BaseVisualParent<TEntity> visualParent;
 
         public TEntity Element => visualParent.AssociatedElement;
@@ -18,19 +19,21 @@ namespace StudioLaValse.Drawable.Private
         public VisualTree(BaseVisualParent<TEntity> visualParent)
         {
             this.visualParent = visualParent;
+            this.contentWrappers.Add(visualParent);
         }
 
 
-        public void Unwrap()
+        public void Regenerate()
         {
             elements.Clear();
+            contentWrappers.Clear();
             childBranches.Clear();
 
             var contentWrapper = VisualParent;
-            Unwrap(contentWrapper);
+            contentWrappers.Add(contentWrapper);
+            Regenerate(contentWrapper);
         }
-
-        public void Unwrap(BaseContentWrapper baseContentWrapper)
+        private void Regenerate(BaseContentWrapper baseContentWrapper)
         {
             var drawableElements = baseContentWrapper.GetDrawableElements();
             foreach (var drawableElement in drawableElements)
@@ -40,15 +43,53 @@ namespace StudioLaValse.Drawable.Private
 
             foreach (var _contentWrapper in baseContentWrapper.GetContentWrappers())
             {
+                contentWrappers.Add(_contentWrapper);
+
                 if (_contentWrapper is BaseVisualParent<TEntity> parent)
                 {
                     var branchToDrawTo = new VisualTree<TEntity>(parent);
                     childBranches.Add(branchToDrawTo);
-                    branchToDrawTo.Unwrap();
+                    branchToDrawTo.Regenerate();
                 }
                 else
                 {
-                    Unwrap(_contentWrapper);
+                    Regenerate(_contentWrapper);
+                }
+            }
+        }
+
+
+        public void Rebuild()
+        {
+            elements.Clear();
+
+            foreach (var contentWrapper in contentWrappers)
+            {
+                var drawableElements = contentWrapper.GetDrawableElements();
+                foreach (var drawableElement in drawableElements)
+                {
+                    elements.Add(drawableElement);
+                }
+            }
+
+            foreach (var child in childBranches)
+            {
+                child.Rebuild();
+            }
+        }
+
+
+
+        public void Redraw()
+        {
+            elements.Clear();
+
+            foreach (var contentWrapper in contentWrappers)
+            {
+                var drawableElements = contentWrapper.GetDrawableElements();
+                foreach (var drawableElement in drawableElements)
+                {
+                    elements.Add(drawableElement);
                 }
             }
         }

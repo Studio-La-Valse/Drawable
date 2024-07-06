@@ -15,7 +15,7 @@ namespace StudioLaValse.Drawable.Example.WPF.UserControls
     /// <summary>
     /// Interaction logic for CanvasUserControl.xaml
     /// </summary>
-    public partial class CanvasUserControl : UserControl, IObserver<PersistentElement>
+    public partial class CanvasUserControl : UserControl, IObserver<InvalidationRequest<PersistentElement>>
     {
         public static readonly DependencyProperty SceneProperty = DependencyPropertyBase
             .Register<CanvasUserControl, SceneManager<PersistentElement, ElementId>>(nameof(SceneManager), (o, e) => { e.Rerender(o.BaseBitmapPainter); });
@@ -120,7 +120,7 @@ namespace StudioLaValse.Drawable.Example.WPF.UserControls
         {
             throw error;
         }
-        public void OnNext(PersistentElement value)
+        public void OnNext(InvalidationRequest<PersistentElement> value)
         {
             if (SceneManager is null)
             {
