@@ -10,14 +10,14 @@ namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 public class CanvasViewModel : ViewModelBase
 {
     private ObservableBoundingBox? selectionBorder;
-    private IObservable<PersistentElement>? invalidator;
+    private IObservable<InvalidationRequest<PersistentElement>>? invalidator;
     private SceneManager<PersistentElement, ElementId>? sceneManager;
     private bool enablePan;
     private IPipe? pipe;
 
     public ObservableBoundingBox? SelectionBorder { get => selectionBorder; set => this.RaiseAndSetIfChanged(ref selectionBorder, value); }
 
-    public IObservable<PersistentElement>? Invalidator { get => invalidator; set => this.RaiseAndSetIfChanged(ref invalidator, value); }
+    public IObservable<InvalidationRequest<PersistentElement>>? Invalidator { get => invalidator; set => this.RaiseAndSetIfChanged(ref invalidator, value); }
 
     public SceneManager<PersistentElement, ElementId>? SceneManager { get => sceneManager; set => this.RaiseAndSetIfChanged(ref sceneManager, value); }
 

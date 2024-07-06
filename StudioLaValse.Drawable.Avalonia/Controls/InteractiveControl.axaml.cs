@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Geometry;
 using System.Drawing;
 
 namespace StudioLaValse.Drawable.Avalonia.Controls;
@@ -11,6 +12,8 @@ public partial class InteractiveControl : BaseInteractiveControl
 {
     /// <inheritdoc/>
     public List<Action<DrawingContext>> DrawActions = [];
+
+
 
     /// <inheritdoc/>
     public InteractiveControl()

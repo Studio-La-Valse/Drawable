@@ -6,55 +6,26 @@ using StudioLaValse.Geometry;
 using System.Reactive.Linq;
 using Avalonia.Media;
 using System.Diagnostics;
+using Avalonia;
 
 namespace StudioLaValse.Drawable.Avalonia.Controls;
-
-internal class DefaultUnsubscriber<TEntity> : IDisposable
-{
-    private readonly IObserver<TEntity> observer;
-    private readonly ISet<IObserver<TEntity>> observers;
-
-    public DefaultUnsubscriber(IObserver<TEntity> observer, ISet<IObserver<TEntity>> observers)
-    {
-        this.observer = observer;
-        this.observers = observers;
-    }
-
-    public void Dispose()
-    {
-        observers.Remove(observer);
-    }
-}
-
-internal class ButtonObservable : IObservable<bool>
-{
-    private readonly ISet<IObserver<bool>> observers = new HashSet<IObserver<bool>>();
-    
-    public ButtonObservable()
-    {
-        
-    }
-
-    public void Next(bool value)
-    {
-        foreach(var  observer in this.observers)
-        {
-            observer.OnNext(value);
-        }
-    }
-
-    public IDisposable Subscribe(IObserver<bool> observer)
-    {
-        observers.Add(observer);
-        return new DefaultUnsubscriber<bool>(observer, observers);
-    }
-}
 
 /// <inheritdoc/>
 public abstract partial class BaseInteractiveControl : UserControl, IInteractiveCanvas
 {
     private readonly ButtonObservable leftButtonObservable = new ButtonObservable();
     private readonly ButtonObservable rightButtonObservable = new ButtonObservable();
+
+
+    /// <inheritdoc/>
+    public static readonly DirectProperty<BaseInteractiveControl, double> ZoomProperty = AvaloniaProperty
+        .RegisterDirect<BaseInteractiveControl, double>(nameof(Zoom), o => o.Zoom, (o, v) => o.Zoom = v, 1);
+    /// <inheritdoc/>
+    public static readonly DirectProperty<BaseInteractiveControl, double> TranslateXProperty = AvaloniaProperty
+        .RegisterDirect<BaseInteractiveControl, double>(nameof(TranslateX), o => o.TranslateX, (o, v) => o.TranslateX = v, 0);
+    /// <inheritdoc/>
+    public static readonly DirectProperty<BaseInteractiveControl, double> TranslateYProperty = AvaloniaProperty
+        .RegisterDirect<BaseInteractiveControl, double>(nameof(TranslateY), o => o.TranslateY, (o, v) => o.TranslateY = v, 0);
 
     /// <inheritdoc/>
     public BaseInteractiveControl()
@@ -92,6 +63,8 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
                 global::Avalonia.Input.Key.LeftCtrl => Interaction.UserInput.Key.Control,
                 global::Avalonia.Input.Key.LeftShift => Interaction.UserInput.Key.Shift,
                 global::Avalonia.Input.Key.Escape => Interaction.UserInput.Key.Escape,
+                global::Avalonia.Input.Key.Z => Interaction.UserInput.Key.Z,
+                global::Avalonia.Input.Key.R => Interaction.UserInput.Key.R,
                 _ => Interaction.UserInput.Key.Unknown
             });
 
@@ -102,11 +75,10 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
                 global::Avalonia.Input.Key.LeftCtrl => Interaction.UserInput.Key.Control,
                 global::Avalonia.Input.Key.LeftShift => Interaction.UserInput.Key.Shift,
                 global::Avalonia.Input.Key.Escape => Interaction.UserInput.Key.Escape,
+                global::Avalonia.Input.Key.Z => Interaction.UserInput.Key.Z,
+                global::Avalonia.Input.Key.R => Interaction.UserInput.Key.R,
                 _ => Interaction.UserInput.Key.Unknown
             });
-
-        MouseLeftButtonDown.Subscribe(v => Debug.WriteLine($"left button down: {v}"));
-        MouseRightButtonDown.Subscribe(v => Debug.WriteLine($"right button down: {v}"));
     }
 
     private bool leftButtonIsDown;
@@ -149,16 +121,41 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
         }
     }
 
+    private double zoom;
     /// <inheritdoc/>
-    public double Zoom { get; set; } = 1;
+    public double Zoom
+    {
+        get => zoom;
+        set 
+        {
+            SetAndRaise(ZoomProperty, ref zoom, value);
+            InvalidateVisual();
+        }
+    }
+
+    private double translateX;
     /// <inheritdoc/>
-    public double TranslateX { get; set; } = 0;
+    public double TranslateX
+    {
+        get => translateX;
+        set
+        { 
+            SetAndRaise(TranslateXProperty, ref translateX, value);
+            InvalidateVisual();
+        }
+    }
+
+    private double translateY;
     /// <inheritdoc/>
-    public double TranslateY { get; set; } = 0;
-    /// <inheritdoc/>
-    public double ViewBoxWidth => double.IsNormal(Width) ? Width : 0;
-    /// <inheritdoc/>
-    public double ViewBoxHeight => double.IsNormal(Height) ? Width : 0;
+    public double TranslateY
+    {
+        get => translateY;
+        set
+        {
+            SetAndRaise(TranslateYProperty, ref translateY, value);
+            InvalidateVisual();
+        }
+    }
 
     /// <inheritdoc/>
     public IObservable<XY> MouseMove { get; }

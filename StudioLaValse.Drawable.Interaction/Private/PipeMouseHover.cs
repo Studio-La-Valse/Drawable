@@ -32,7 +32,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
                 element.IsMouseOver = dragging ? false : element.Respond(position);
                 if (isMouseOver != element.IsMouseOver)
                 {
-                    entityChanged.Invalidate(element.Ghost);
+                    entityChanged.Invalidate(element.Ghost, method: Method.Shallow);
                 }
             }
         }

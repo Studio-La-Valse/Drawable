@@ -52,7 +52,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
     /// <inheritdoc/>
     protected override void DrawElement(DrawingContext drawingContext, DrawableText text)
     {
-        drawingContext.DrawText(text.ToFormattedText(), new Point(text.TopLeftX, text.BottomLeftY));
+        drawingContext.DrawText(text.ToFormattedText(), new Point(text.TopLeftX, text.TopLeftY));
     }
 
     /// <inheritdoc/>
