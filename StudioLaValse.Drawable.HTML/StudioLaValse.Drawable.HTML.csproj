@@ -17,7 +17,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="StudioLaValse.Geometry" Version="1.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -52,6 +51,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\StudioLaValse.Geometry\StudioLaValse.Geometry\StudioLaValse.Geometry.csproj" />
 	  <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
 	</ItemGroup>
 </Project>

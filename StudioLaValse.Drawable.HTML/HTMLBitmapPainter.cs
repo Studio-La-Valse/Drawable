@@ -27,7 +27,7 @@ namespace StudioLaValse.Drawable.HTML
         /// <inheritdoc/>
         public override void InitDrawing()
         {
-
+            canvas.Clear();
         }
 
         /// <inheritdoc/>
@@ -102,7 +102,7 @@ namespace StudioLaValse.Drawable.HTML
         /// <inheritdoc/>
         protected override void DrawElement(HTMLCanvas canvas, DrawableEllipse ellipse)
         {
-
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
