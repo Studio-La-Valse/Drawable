@@ -1,4 +1,6 @@
-﻿using StudioLaValse.Geometry;
+﻿using StudioLaValse.Drawable.Text;
+using StudioLaValse.Geometry;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace StudioLaValse.Drawable.Winforms.Extensions
 {
@@ -35,6 +37,15 @@ namespace StudioLaValse.Drawable.Winforms.Extensions
             var xy = new XY(point.X, point.Y);
             return xy;
         }
-    }
 
+        public static System.Drawing.Font ToWindowsFont(this FontFamilyCore font, double size)
+        {
+            return new System.Drawing.Font(font.ToWindowsFont(), (float)size);
+        }
+
+        public static System.Drawing.FontFamily ToWindowsFont(this FontFamilyCore font)
+        {
+            return new FontFamily(font.Name);
+        }
+    }
 }

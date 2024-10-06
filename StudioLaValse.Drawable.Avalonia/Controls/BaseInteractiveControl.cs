@@ -121,7 +121,7 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
         }
     }
 
-    private double zoom;
+    private double zoom = 1;
     /// <inheritdoc/>
     public double Zoom
     {

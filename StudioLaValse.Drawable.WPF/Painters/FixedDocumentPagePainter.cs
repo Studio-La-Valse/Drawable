@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.WPF.Extensions;
 using StudioLaValse.Geometry;
 using System.Windows.Documents;
@@ -13,11 +14,12 @@ namespace StudioLaValse.Drawable.WPF.Painters
     public class FixedDocumentPagePainter : BaseLazyBitmapPainter<FixedPage>
     {
         private readonly FixedPage document;
+        private readonly IMeasureText measureText;
 
-
-        public FixedDocumentPagePainter(FixedPage page) : base(page)
+        public FixedDocumentPagePainter(FixedPage page, IMeasureText measureText) : base(page)
         {
             document = page;
+            this.measureText = measureText;
         }
 
 
@@ -52,8 +54,8 @@ namespace StudioLaValse.Drawable.WPF.Painters
         {
             var uiElement = text.ToUIElement();
 
-            FixedPage.SetLeft(uiElement, text.TopLeftX);
-            FixedPage.SetTop(uiElement, text.TopLeftY);
+            FixedPage.SetLeft(uiElement, text.GetLeft(measureText));
+            FixedPage.SetTop(uiElement, text.GetTop(measureText));
 
             ((IAddChild)canvas).AddChild(uiElement);
         }

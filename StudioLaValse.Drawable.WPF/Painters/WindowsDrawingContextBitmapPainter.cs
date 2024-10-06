@@ -16,13 +16,14 @@ namespace StudioLaValse.Drawable.WPF.Painters
     public class WindowsDrawingContextBitmapPainter : BaseCachingBitmapPainter<DrawingContext>
     {
         private readonly WindowsDrawingContextUserControl userControl;
+        private readonly IMeasureText measureText;
 
         protected override List<Action<DrawingContext>> Cache => userControl.Cache;
 
-        public WindowsDrawingContextBitmapPainter(WindowsDrawingContextUserControl userControl)
+        public WindowsDrawingContextBitmapPainter(WindowsDrawingContextUserControl userControl, IMeasureText measureText)
         {
             this.userControl = userControl;
-            ExternalTextMeasure.TextMeasurer = new WPFTextMeasurer();
+            this.measureText = measureText;
         }
 
 
@@ -54,7 +55,7 @@ namespace StudioLaValse.Drawable.WPF.Painters
         {
             var formattedText = text.AsFormattedText();
 
-            drawingContext.DrawText(formattedText, new Point(text.TopLeftX, text.TopLeftY));
+            drawingContext.DrawText(formattedText, new Point(text.GetLeft(measureText), text.GetTop(measureText)));
         }
 
         protected override void DrawElement(DrawingContext drawingContext, DrawableEllipse ellipse)

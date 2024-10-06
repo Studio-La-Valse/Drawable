@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.Text;
 using StudioLaValse.Geometry;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StudioLaValse.Drawable.DrawableElements
 {
@@ -19,17 +20,21 @@ namespace StudioLaValse.Drawable.DrawableElements
         /// </summary>
         public FontFamilyCore FontFamily { get; }
         /// <summary>
-        /// The X-coordinate of the top left bounding box of the text. Note that this value will be smaller than the value of the BottomLeftX property.
+        /// The horizontal text alignment: <see cref="HorizontalTextOrigin.Left"/>, <see cref="HorizontalTextOrigin.Center"/>, <see cref="HorizontalTextOrigin.Right"/>.
         /// </summary>
-        public double TopLeftX { get; }
+        public HorizontalTextOrigin HorizontalAlignment { get; }
         /// <summary>
-        /// The X-coordinate of the top left bounding box of the text. Note that this value will be smaller than the value of the BottomLeftY property.
+        /// The X-coordinate of the origin of the text. Note the corresponding horizontal alignment.
         /// </summary>
-        public double TopLeftY { get; }
+        public double OriginX { get; }
         /// <summary>
-        /// The Y-coordinate of the bottom left point of the bounding box of the text.
+        /// The vertical text alignment: <see cref="VerticalTextOrigin.Top"/>, <see cref="VerticalTextOrigin.Center"/>, <see cref="VerticalTextOrigin.Bottom"/>.
         /// </summary>
-        public virtual double BottomLeftY => TopLeftY + Dimensions.Y;
+        public VerticalTextOrigin VerticalAlignment { get; }
+        /// <summary>
+        /// The Y-coordinate of the origin of the text. Note the corresponding vertical alignment.
+        /// </summary>
+        public double OriginY { get; }
         /// <summary>
         /// The font size.
         /// </summary>
@@ -38,16 +43,7 @@ namespace StudioLaValse.Drawable.DrawableElements
         /// The text to draw.
         /// </summary>
         public string Text { get; }
-        /// <summary>
-        /// The dimensions of the boundingbox of the text.
-        /// </summary>
-        public XY Dimensions
-        {
-            get
-            {
-                return dimensions ??= ExternalTextMeasure.TextMeasurer.Measure(Text, FontFamily, FontSize);
-            }
-        }
+
 
         /// <summary>
         /// The default constructor.
@@ -57,58 +53,178 @@ namespace StudioLaValse.Drawable.DrawableElements
         /// <param name="text"></param>
         /// <param name="fontSize"></param>
         /// <param name="color"></param>
-        /// <param name="alignment"></param>
+        /// <param name="horizontalAlignment"></param>
         /// <param name="verticalAlignment"></param>
-        /// <param name="font"></param>
+        /// <param name="fontFamily"></param>
         public DrawableText(
             double originX,
             double originY,
             string text,
             double fontSize,
             ColorARGB color,
-            HorizontalTextOrigin alignment = HorizontalTextOrigin.Left,
-            VerticalTextOrigin verticalAlignment = VerticalTextOrigin.Top,
-            FontFamilyCore? font = null)
+            HorizontalTextOrigin horizontalAlignment,
+            VerticalTextOrigin verticalAlignment,
+            FontFamilyCore fontFamily)
         {
-            TopLeftX = originX;
-            TopLeftY = originY;
-            FontSize = fontSize;
+            OriginX = originX;
+            OriginY = originY;
             Text = text;
+            FontSize = fontSize;
             Color = color;
-            FontFamily = font ?? new FontFamilyCore("Arial");
-
-            if (alignment != HorizontalTextOrigin.Left)
-            {
-                if (alignment == HorizontalTextOrigin.Center)
-                {
-                    TopLeftX -= Dimensions.X / 2;
-                }
-                else
-                {
-                    TopLeftX -= Dimensions.X;
-                }
-            }
-
-            if (verticalAlignment != VerticalTextOrigin.Top)
-            {
-                if (verticalAlignment == VerticalTextOrigin.Center)
-                {
-                    TopLeftY -= Dimensions.Y / 2;
-                }
-                else
-                {
-                    TopLeftY -= Dimensions.Y;
-                }
-            }
-
+            HorizontalAlignment = horizontalAlignment;
+            VerticalAlignment = verticalAlignment;
+            FontFamily = fontFamily;
         }
+
+        /// <summary>
+        /// Get the left coordinate of the text. Text measurement is skipped if text aligns left.
+        /// </summary>
+        /// <param name="measureText"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public double GetLeft(IMeasureText measureText)
+        {
+            if(HorizontalAlignment == HorizontalTextOrigin.Left)
+            {
+                return OriginX;
+            }
+
+            this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
+            if (HorizontalAlignment == HorizontalTextOrigin.Center)
+            {
+                var left = OriginX - dimensions.X / 2;
+                return left;
+            }
+
+            if (HorizontalAlignment == HorizontalTextOrigin.Right)
+            {
+                var left = OriginX - dimensions.X;
+                return left;
+            }
+
+            throw new NotImplementedException(nameof(HorizontalAlignment));
+        }
+
+        /// <summary>
+        /// Get the right coordinate of the text. Text measurement is skipped if text aligns right.
+        /// </summary>
+        /// <param name="measureText"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public double GetRight(IMeasureText measureText)
+        {
+            if (HorizontalAlignment == HorizontalTextOrigin.Right)
+            {
+                return OriginX;
+            }
+
+            this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
+            if (HorizontalAlignment == HorizontalTextOrigin.Center)
+            {
+                var right = OriginX + dimensions.X / 2;
+                return right;
+            }
+
+            if (HorizontalAlignment == HorizontalTextOrigin.Left)
+            {
+                var right = OriginX + dimensions.X;
+                return right;
+            }
+
+            throw new NotImplementedException(nameof(HorizontalAlignment));
+        }
+
+        /// <summary>
+        /// Get the top coordinate of the text. Text measurement is skipped if text aligns at the top.
+        /// </summary>
+        /// <param name="measureText"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public double GetTop(IMeasureText measureText)
+        {
+            if (VerticalAlignment == VerticalTextOrigin.Top)
+            {
+                return OriginY;
+            }
+
+            this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
+            if (VerticalAlignment == VerticalTextOrigin.Center)
+            {
+                var top = OriginY - dimensions.Y / 2;
+                return top;
+            }
+
+            if (VerticalAlignment == VerticalTextOrigin.Bottom)
+            {
+                var top = OriginY - dimensions.Y;
+                return top;
+            }
+
+            throw new NotImplementedException(nameof(HorizontalAlignment));
+        }
+
+        /// <summary>
+        /// Get the bottom coordinate of the text. Text measurement is skipped if text aligns at the bottom.
+        /// </summary>
+        /// <param name="measureText"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public double GetBottom(IMeasureText measureText)
+        {
+            if (VerticalAlignment == VerticalTextOrigin.Bottom)
+            {
+                return OriginY;
+            }
+
+            this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
+            if (VerticalAlignment == VerticalTextOrigin.Center)
+            {
+                var bottom = OriginY + dimensions.Y / 2;
+                return bottom;
+            }
+
+            if (VerticalAlignment == VerticalTextOrigin.Top)
+            {
+                var bottom = OriginY + dimensions.Y;
+                return bottom;
+            }
+
+            throw new NotImplementedException(nameof(HorizontalAlignment));
+        }
+
 
         /// <inheritdoc/>
         public override BoundingBox GetBoundingBox()
         {
-            var dimensions = Dimensions;
+            var dimensions = this.dimensions ??= ExternalTextMeasure.TextMeasurer.Measure(Text, FontFamily, FontSize);
+            var topleftX = OriginX;
+            var topleftY = OriginY;
+            
+            if (HorizontalAlignment != HorizontalTextOrigin.Left)
+            {
+                if (HorizontalAlignment == HorizontalTextOrigin.Center)
+                {
+                    topleftX -= dimensions.X / 2;
+                }
+                else
+                {
+                    topleftX -= dimensions.X;
+                }
+            }
 
-            return new BoundingBox(TopLeftX, TopLeftX + dimensions.X, TopLeftY, TopLeftY + dimensions.Y);
+            if (VerticalAlignment != VerticalTextOrigin.Top)
+            {
+                if (VerticalAlignment == VerticalTextOrigin.Center)
+                {
+                    topleftY -= dimensions.Y / 2;
+                }
+                else
+                {
+                    topleftY -= dimensions.Y;
+                }
+            }
+
+            return new BoundingBox(topleftX, topleftX + dimensions.X, topleftY, topleftY + dimensions.Y);
         }
     }
 }

@@ -16,10 +16,13 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
         }
 
 
-        public BaseVisualParent<PersistentElement> Create(GraphModel model)
+        public BaseVisualParent<PersistentElement> Create(TextModel model)
         {
-            var visual = new VisualGraph(model, selection);
-            return visual;
+            var scene = new TextScene(model);
+            return scene;
+
+            //var visual = new VisualGraph(model, selection);
+            //return visual;
         }
     }
 }

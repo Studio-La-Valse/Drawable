@@ -8,6 +8,7 @@ using StudioLaValse.Drawable.Winforms.Painters;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
+using StudioLaValse.Drawable.Text;
 
 
 namespace StudioLaValse.Drawable.Example.Winforms
@@ -34,7 +35,9 @@ namespace StudioLaValse.Drawable.Example.Winforms
             var scene = new VisualGraph(graph, selection);
 
             var canvas = new ControlContainer();
-            var canvasPainter = new GraphicsPainter(canvas);
+            var textMeasurer = new TextMeasurer();
+            ExternalTextMeasure.TextMeasurer = textMeasurer;
+            var canvasPainter = new GraphicsPainter(canvas, textMeasurer);
             var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId)
                 .WithBackground(ColorARGB.Black)
                 .WithRerender(canvasPainter);
