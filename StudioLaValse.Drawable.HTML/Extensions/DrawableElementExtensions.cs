@@ -101,7 +101,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
             var y = $"{text.OriginY}".Replace(",", ".");
 
             var fontStyle = $"font-size=\"{text.FontSize}px\" " +
-                            $"font-family=\"{text.FontFamily.Name}\" ".Replace(",", ".");
+                            $"font-family=\"{text.FontFamily.Name}\" ".Replace(",", ".") +
+                            $"style=\"fill:{text.Color.Svg()};\"";
 
             var alignmentBase = text.VerticalAlignment switch
             {
