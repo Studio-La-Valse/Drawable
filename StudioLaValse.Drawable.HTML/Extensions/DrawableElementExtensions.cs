@@ -112,8 +112,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
             };
             var textAnchor = text.HorizontalAlignment switch
             {
-                HorizontalTextOrigin.Left => "left",
-                HorizontalTextOrigin.Right => "right",
+                HorizontalTextOrigin.Left => "start",
+                HorizontalTextOrigin.Right => "end",
                 HorizontalTextOrigin.Center => "middle",
                 _ => throw new NotImplementedException(nameof(text.HorizontalAlignment))
             };
