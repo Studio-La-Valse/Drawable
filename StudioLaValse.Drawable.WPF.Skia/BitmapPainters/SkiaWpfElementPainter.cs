@@ -1,5 +1,6 @@
 ﻿using SkiaSharp;
 using StudioLaValse.Drawable.Skia.BitmapPainters;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.WPF.Extensions;
 using StudioLaValse.Drawable.WPF.Skia.UserControls;
 using StudioLaValse.Geometry;
@@ -14,7 +15,7 @@ namespace StudioLaValse.Drawable.WPF.Skia.BitmapPainters
         private readonly SKElementUserControl uc;
 
 
-        public SkiaWpfElementPainter(SKElementUserControl uc)
+        public SkiaWpfElementPainter(SKElementUserControl uc, IMeasureText measureText) : base(measureText) 
         {
             this.uc = uc;
         }

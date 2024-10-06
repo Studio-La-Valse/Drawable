@@ -1,6 +1,8 @@
 ﻿using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Text;
+using StudioLaValse.Geometry;
 
-namespace StudioLaValse.Drawable.Extensions
+namespace StudioLaValse.Drawable.HTML.Extensions
 {
     /// <summary>
     /// Extensions for drawable elements.
@@ -8,17 +10,43 @@ namespace StudioLaValse.Drawable.Extensions
     public static class DrawableElementExtensions
     {
         /// <summary>
+        /// Extract the color rgb string value.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static string Svg(this ColorARGB color)
+        {
+            var fillr = color.Red;
+            var fillg = color.Blue;
+            var fillb = color.Green;
+
+            var rgb = $"rgb({fillr},{fillg},{fillb})";
+            return rgb;
+        }
+
+        /// <summary>
+        /// Extract the color rgb string value.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static string Svg(this ColorRGB color)
+        {
+            var fillr = color.Red;
+            var fillg = color.Blue;
+            var fillb = color.Green;
+
+            var rgb = $"rgb({fillr},{fillg},{fillb})";
+            return rgb;
+        }
+
+        /// <summary>
         /// Transform the element to an svg string.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
         public static string Svg(this DrawableLine line)
         {
-            var fillr = line.Color.Red;
-            var fillg = line.Color.Blue;
-            var fillb = line.Color.Green;
-
-            var style = $"stroke:rgb({fillr},{fillg},{fillb}); " +
+            var style = $"stroke:{line.Color.Svg()}; " +
                         $"stroke-width:{line.Thickness}; ".Replace(",", ".") +
                         $"opacity:{line.Color.Alpha / 255D};".Replace(",", ".");
 
@@ -40,16 +68,13 @@ namespace StudioLaValse.Drawable.Extensions
         /// <returns></returns>
         public static string Svg(this DrawableRectangle rectangle)
         {
-            var fillr = rectangle.Color.Red;
-            var fillg = rectangle.Color.Blue;
-            var fillb = rectangle.Color.Green;
             var filla = (rectangle.Color.Alpha / 255D).ToString().Replace(",", ".");
 
             var stroker = rectangle.StrokeColor?.Red ?? 0;
             var strokeg = rectangle.StrokeColor?.Green ?? 0;
             var strokeb = rectangle.StrokeColor?.Blue ?? 0;
 
-            var style = $"fill:rgb({fillr},{fillg},{fillb}); " +
+            var style = $"fill:{rectangle.Color.Svg()}; " +
                         $"stroke-width:{rectangle.StrokeWeight}; ".Replace(",", ".") +
                         $"stroke:rgb({stroker},{strokeg},{strokeb}); " +
                         $"opacity:{filla};";
@@ -72,13 +97,27 @@ namespace StudioLaValse.Drawable.Extensions
         /// <returns></returns>
         public static string Svg(this DrawableText text)
         {
-            var x = $"{text.TopLeftX}".Replace(",", ".");
-            var y = $"{text.BottomLeftY}".Replace(",", ".");
+            var x = $"{text.OriginX}".Replace(",", ".");
+            var y = $"{text.OriginY}".Replace(",", ".");
 
             var fontStyle = $"font-size=\"{text.FontSize}px\" " +
                             $"font-family=\"{text.FontFamily.Name}\" ".Replace(",", ".");
 
-            var t = $"<text x=\"{x}\" y=\"{y}\" {fontStyle}>{text.Text}</text>";
+            var alignmentBase = text.VerticalAlignment switch
+            {
+                VerticalTextOrigin.Top => "hanging",
+                VerticalTextOrigin.Center => "middle",
+                VerticalTextOrigin.Bottom => "baseline",
+                _ => throw new NotImplementedException(nameof(text.VerticalAlignment))
+            };
+            var textAnchor = text.HorizontalAlignment switch
+            {
+                HorizontalTextOrigin.Left => "left",
+                HorizontalTextOrigin.Right => "right",
+                HorizontalTextOrigin.Center => "middle",
+                _ => throw new NotImplementedException(nameof(text.HorizontalAlignment))
+            };
+            var t = $"<text alignment-baseline=\"{alignmentBase}\" text-anchor=\"{textAnchor}\" x=\"{x}\" y=\"{y}\" {fontStyle}>{text.Text}</text>";
 
             return t;
         }
@@ -95,16 +134,13 @@ namespace StudioLaValse.Drawable.Extensions
             var rx = ellipse.Width / 2;
             var ry = ellipse.Height / 2;
 
-            var fillr = ellipse.Color.Red;
-            var fillg = ellipse.Color.Blue;
-            var fillb = ellipse.Color.Green;
             var filla = (ellipse.Color.Alpha / 255D).ToString().Replace(",", ".");
 
             var stroker = ellipse.StrokeColor?.Red ?? 0;
             var strokeg = ellipse.StrokeColor?.Green ?? 0;
             var strokeb = ellipse.StrokeColor?.Blue ?? 0;
 
-            var style = $"fill:rgb({fillr},{fillg},{fillb}); " +
+            var style = $"fill:{ellipse.Color.Svg()}; " +
                         $"stroke-width:{ellipse.StrokeWeight}; ".Replace(",", ".") +
                         $"stroke:rgb({stroker},{strokeg},{strokeb}); " +
                         $"opacity:{filla};";
@@ -129,8 +165,7 @@ namespace StudioLaValse.Drawable.Extensions
             var strokeg = polyline.Color?.Green ?? 0;
             var strokeb = polyline.Color?.Blue ?? 0;
 
-            var style = $"fill:rgb({fillr},{fillg},{fillb}); " +
-                        $"stroke-width:{polyline.StrokeWeight}; ".Replace(",", ".") +
+            var style = $"stroke-width:{polyline.StrokeWeight}; ".Replace(",", ".") +
                         $"stroke:rgb({stroker},{strokeg},{strokeb}); " +
                         $"opacity:{filla}; ";
 

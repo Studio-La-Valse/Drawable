@@ -402,3 +402,6 @@ FodyWeavers.xsd
 .cache
 /**/_site/
 /**/api/
+
+#nuget config
+nuget.config

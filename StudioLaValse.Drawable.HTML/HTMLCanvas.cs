@@ -1,9 +1,10 @@
-﻿using StudioLaValse.Geometry;
+﻿using StudioLaValse.Drawable.HTML.Extensions;
+using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.HTML
 {
     /// <summary>
-    /// An experimental canvas that stores an html/svg string as a render target for the <see cref="HTMLBitmapPainter"/> bitmap painter.
+    /// An experimental canvas that stores an html/svg string as a render target for the <see cref="HTMLCanvasPainter"/> bitmap painter.
     /// </summary>
     public class HTMLCanvas
     {
@@ -39,7 +40,7 @@ namespace StudioLaValse.Drawable.HTML
         /// Draws the inner html to svg tags.
         /// </summary>
         /// <returns></returns>
-        public string SVGContent() => $@"<svg width=""100%"" height=""100%"" viewBox=""0 0 {width} {height}"" fill=""{Background}"">{InnerHtml()}</svg>";
+        public string SVGContent() => $@"<svg width=""100%"" height=""100%"" viewBox=""0 0 {width} {height}"" style=""background-color:{Background.Svg()}"">{InnerHtml()}</svg>";
         /// <summary>
         /// Renders the inner html to an svg formatted string.
         /// </summary>

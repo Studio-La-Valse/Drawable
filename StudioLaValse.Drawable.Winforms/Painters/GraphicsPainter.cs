@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.Winforms.Controls;
 using StudioLaValse.Drawable.Winforms.Extensions;
 using StudioLaValse.Geometry;
@@ -9,12 +10,14 @@ namespace StudioLaValse.Drawable.Winforms.Painters
     public class GraphicsPainter : BaseCachingBitmapPainter<Graphics>
     {
         private readonly ControlContainer drawingContext;
+        private readonly IMeasureText textMeasurer;
 
         protected override List<Action<Graphics>> Cache => drawingContext.DrawActions;
 
-        public GraphicsPainter(ControlContainer drawingContext)
+        public GraphicsPainter(ControlContainer drawingContext, IMeasureText textMeasurer)
         {
             this.drawingContext = drawingContext;
+            this.textMeasurer = textMeasurer;
         }
 
 
@@ -45,10 +48,10 @@ namespace StudioLaValse.Drawable.Winforms.Painters
         {
             drawingContext.DrawString(
                 text.Text,
-                new Font(new FontFamily(text.FontFamily.Name), (float)text.FontSize),
+                text.FontFamily.ToWindowsFont(text.FontSize),
                 text.Color.ToWindowsBrush(),
-                (float)text.TopLeftX,
-                (float)text.TopLeftY);
+                (float)text.GetLeft(textMeasurer),
+                (float)text.GetTop(textMeasurer));
         }
 
         protected override void DrawElement(Graphics drawingContext, DrawableEllipse ellipse)

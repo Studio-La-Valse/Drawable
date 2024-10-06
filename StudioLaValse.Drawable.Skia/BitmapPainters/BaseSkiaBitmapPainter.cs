@@ -2,6 +2,7 @@
 using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Skia.Extensions;
+using StudioLaValse.Drawable.Text;
 
 namespace StudioLaValse.Drawable.Skia.BitmapPainters
 {
@@ -12,7 +13,12 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
     {
         private readonly SKPath path = new();
         private readonly bool antiAlias = true;
+        private readonly IMeasureText measureText;
 
+        protected BaseSkiaBitmapPainter(IMeasureText measureText)
+        {
+            this.measureText = measureText;
+        }
 
 
         protected override void DrawElement(SKCanvas canvas, DrawableLine line)
@@ -46,12 +52,8 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
             var font = new SKFont(typeFace, (float)text.FontSize);
 
             var textBlob = SKTextBlob.Create(text.Text, font);
-            if (textBlob is null)
-            {
-                return;
-            }
 
-            canvas.DrawText(textBlob, (float)text.TopLeftX, (float)text.BottomLeftY, paint);
+            canvas.DrawText(textBlob, (float)text.GetLeft(measureText), (float)text.GetBottom(measureText), paint);
         }
 
         protected override void DrawElement(SKCanvas canvas, DrawableEllipse ellipse)

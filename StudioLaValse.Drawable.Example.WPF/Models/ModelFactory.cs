@@ -13,12 +13,14 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
             this.keyGenerator = keyGenerator;
         }
 
-        public GraphModel Create()
+        public TextModel Create()
         {
-            var n = 5000;
-            var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
-            var graph = new GraphModel(keyGenerator, components);
-            return graph;
+            return new TextModel(keyGenerator);
+
+            //var n = 5000;
+            //var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
+            //var graph = new GraphModel(keyGenerator, components);
+            //return graph;
 
             //var curve = new CurveModel(keyGenerator);
             //foreach(var _ in Enumerable.Range(0, 4))
