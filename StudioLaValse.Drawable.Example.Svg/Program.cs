@@ -3,6 +3,7 @@ using StudioLaValse.Drawable.Example.Scene;
 using StudioLaValse.Drawable.HTML;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
+using System.Diagnostics;
 
 namespace StudioLaValse.Drawable.Example.Svg;
 
@@ -24,5 +25,11 @@ internal class Program
         var file = Path.Combine(Environment.CurrentDirectory, "index.html");
         var svgContent = canvas.SVGContent();
         File.WriteAllText(file, svgContent);
+
+        using var fileopener = new Process();
+
+        fileopener.StartInfo.FileName = "explorer";
+        fileopener.StartInfo.Arguments = "\"" + file + "\"";
+        fileopener.Start();
     }
 }

@@ -26,7 +26,7 @@ public class TextScene : BaseVisualParent<PersistentElement>
         var left = 20;
 
         var text = "Hello, world!";
-        var textColor = ColorARGB.White;
+        var textColor = new ColorARGB(255, 150, 100, 50);
         var circleColor = new ColorARGB(255, 255, 0, 0);
         var fontFamily = new FontFamilyCore("Arial");
 

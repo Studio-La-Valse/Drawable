@@ -17,8 +17,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         public static string Svg(this ColorARGB color)
         {
             var fillr = color.Red;
-            var fillg = color.Blue;
-            var fillb = color.Green;
+            var fillg = color.Green;
+            var fillb = color.Blue;
 
             var rgb = $"rgb({fillr},{fillg},{fillb})";
             return rgb;
@@ -32,8 +32,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         public static string Svg(this ColorRGB color)
         {
             var fillr = color.Red;
-            var fillg = color.Blue;
-            var fillb = color.Green;
+            var fillg = color.Green;
+            var fillb = color.Blue;
 
             var rgb = $"rgb({fillr},{fillg},{fillb})";
             return rgb;
@@ -101,7 +101,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
             var y = $"{text.OriginY}".Replace(",", ".");
 
             var fontStyle = $"font-size=\"{text.FontSize}px\" " +
-                            $"font-family=\"{text.FontFamily.Name}\" ".Replace(",", ".");
+                            $"font-family=\"{text.FontFamily.Name}\" ".Replace(",", ".") +
+                            $"style=\"fill:{text.Color.Svg()};\"";
 
             var alignmentBase = text.VerticalAlignment switch
             {
@@ -112,8 +113,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
             };
             var textAnchor = text.HorizontalAlignment switch
             {
-                HorizontalTextOrigin.Left => "left",
-                HorizontalTextOrigin.Right => "right",
+                HorizontalTextOrigin.Left => "start",
+                HorizontalTextOrigin.Right => "end",
                 HorizontalTextOrigin.Center => "middle",
                 _ => throw new NotImplementedException(nameof(text.HorizontalAlignment))
             };
