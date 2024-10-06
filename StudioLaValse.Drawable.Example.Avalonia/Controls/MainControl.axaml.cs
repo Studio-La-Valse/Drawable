@@ -9,6 +9,7 @@ using StudioLaValse.Key;
 using System;
 using Avalonia.ReactiveUI;
 using StudioLaValse.Drawable.Example.Avalonia.ViewModels;
+using StudioLaValse.Drawable.Text;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.Controls;
 
@@ -112,7 +113,9 @@ public partial class MainControl : ReactiveUserControl<CanvasViewModel>, IObserv
     {
         InitializeComponent();
 
-        BaseBitmapPainter = new GraphicsPainter(canvas);
+        var textMeasurer = new AvaloniaTextMeasurer();
+        ExternalTextMeasure.TextMeasurer = textMeasurer;
+        BaseBitmapPainter = new GraphicsPainter(canvas, textMeasurer);
 
         PanEnabledDisposable = canvas.EnablePan();
         ZoomEnabledDisposable = canvas.EnableZoom();

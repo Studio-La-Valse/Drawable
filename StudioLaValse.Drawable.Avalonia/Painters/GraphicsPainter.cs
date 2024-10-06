@@ -6,6 +6,7 @@ using StudioLaValse.Drawable.Avalonia.Controls;
 using StudioLaValse.Drawable.Avalonia.Extensions;
 using Avalonia;
 using Avalonia.Controls.Shapes;
+using StudioLaValse.Drawable.Text;
 
 namespace StudioLaValse.Drawable.Avalonia.Painters;
 
@@ -13,14 +14,16 @@ namespace StudioLaValse.Drawable.Avalonia.Painters;
 public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
 {
     private readonly InteractiveControl drawingContext;
+    private readonly IMeasureText textMeasurer;
 
     /// <inheritdoc/>
     protected override List<Action<DrawingContext>> Cache => drawingContext.DrawActions;
 
     /// <inheritdoc/>
-    public GraphicsPainter(InteractiveControl drawingContext)
+    public GraphicsPainter(InteractiveControl drawingContext, IMeasureText textMeasurer)
     {
         this.drawingContext = drawingContext;
+        this.textMeasurer = textMeasurer;
     }
 
     /// <inheritdoc/>
@@ -52,7 +55,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
     /// <inheritdoc/>
     protected override void DrawElement(DrawingContext drawingContext, DrawableText text)
     {
-        drawingContext.DrawText(text.ToFormattedText(), new Point(text.TopLeftX, text.TopLeftY));
+        drawingContext.DrawText(text.ToFormattedText(), new Point(text.GetLeft(textMeasurer), text.GetTop(textMeasurer)));
     }
 
     /// <inheritdoc/>

@@ -1,8 +1,10 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.WPF.DependencyProperties;
 using StudioLaValse.Drawable.WPF.Painters;
+using StudioLaValse.Drawable.WPF.Text;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using System;
@@ -99,7 +101,9 @@ namespace StudioLaValse.Drawable.Example.WPF.UserControls
         {
             InitializeComponent();
 
-            BaseBitmapPainter = new WindowsDrawingContextBitmapPainter(canvas);
+            var textMeasurer = new WPFTextMeasurer();
+            ExternalTextMeasure.TextMeasurer = textMeasurer;
+            BaseBitmapPainter = new WindowsDrawingContextBitmapPainter(canvas, textMeasurer);
 
             PanEnabledDisposable = canvas.EnablePan();
             ZoomEnabledDisposable = canvas.EnableZoom();

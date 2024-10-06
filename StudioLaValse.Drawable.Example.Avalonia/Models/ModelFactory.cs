@@ -1,4 +1,5 @@
 ﻿using StudioLaValse.Drawable.Example.Model;
+using StudioLaValse.Drawable.Example.Scene;
 using StudioLaValse.Key;
 using System.Linq;
 
@@ -13,12 +14,15 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
             this.keyGenerator = keyGenerator;
         }
 
-        public GraphModel Create()
+        public TextModel Create()
         {
-            var n = 5000;
-            var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
-            var graph = new GraphModel(keyGenerator, components);
-            return graph;
+            var text = new TextModel(keyGenerator);
+            return text;
+
+            //var n = 5000;
+            //var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
+            //var graph = new GraphModel(keyGenerator, components);
+            //return graph;
 
             //var curve = new CurveModel(keyGenerator);
             //foreach(var _ in Enumerable.Range(0, 4))

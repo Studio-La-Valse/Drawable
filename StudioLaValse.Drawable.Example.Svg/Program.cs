@@ -1,0 +1,28 @@
+﻿using StudioLaValse.Drawable.Example.Model;
+using StudioLaValse.Drawable.Example.Scene;
+using StudioLaValse.Drawable.HTML;
+using StudioLaValse.Geometry;
+using StudioLaValse.Key;
+
+namespace StudioLaValse.Drawable.Example.Svg;
+
+internal class Program
+{
+    static void Main(string[] args)
+    {
+        // note how a static svg canvas does not need a text measurer!
+
+        var keyGenerator = new IncrementalKeyGenerator();
+        var model = new TextModel(keyGenerator);
+        var scene = new TextScene(model);
+
+        var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId);
+        var canvas = new HTMLCanvas(500, 500);
+        var canvasPainter = new HTMLCanvasPainter(canvas);
+        sceneManager.Rerender(canvasPainter);
+
+        var file = Path.Combine(Environment.CurrentDirectory, "index.html");
+        var svgContent = canvas.SVGContent();
+        File.WriteAllText(file, svgContent);
+    }
+}
