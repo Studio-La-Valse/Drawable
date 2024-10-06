@@ -17,8 +17,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         public static string Svg(this ColorARGB color)
         {
             var fillr = color.Red;
-            var fillg = color.Blue;
-            var fillb = color.Green;
+            var fillg = color.Green;
+            var fillb = color.Blue;
 
             var rgb = $"rgb({fillr},{fillg},{fillb})";
             return rgb;
@@ -32,8 +32,8 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         public static string Svg(this ColorRGB color)
         {
             var fillr = color.Red;
-            var fillg = color.Blue;
-            var fillb = color.Green;
+            var fillg = color.Green;
+            var fillb = color.Blue;
 
             var rgb = $"rgb({fillr},{fillg},{fillb})";
             return rgb;
