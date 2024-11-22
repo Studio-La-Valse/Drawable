@@ -9,17 +9,13 @@ using StudioLaValse.Drawable.Example.Model;
 using StudioLaValse.Drawable.Example.Scene;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
-using StudioLaValse.Drawable.Interaction.UserInput;
-using StudioLaValse.Drawable.Extensions;
-using StudioLaValse.Geometry;
 using StudioLaValse.Key;
-using System.Linq;
 using System;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using StudioLaValse.Drawable.Example.Avalonia.Models;
 using MsExtensionsHostingSample;
-using StudioLaValse.Drawable.Example.Avalonia.Controls;
+using System.Diagnostics;
 
 namespace StudioLaValse.Drawable.Example.Avalonia;
 public partial class App : Application
@@ -31,34 +27,21 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override async void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
     {
-        var hostBuilder = CreateHostBuilder();
-        var host = hostBuilder.Build();
-        GlobalHost = host;
+        using var host = CreateHostBuilder().Build();
+        var mainWindow = host.Services.GetRequiredService<MainWindow>();
+        var mainViewModel = host.Services.GetRequiredService<MainWindowViewModel>();
+        mainWindow.DataContext = mainViewModel;
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = GlobalHost.Services.GetRequiredService<MainWindowViewModel>()
-            };
-            desktop.Exit += (sender, args) =>
-            {
-                GlobalHost.StopAsync(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
-                GlobalHost.Dispose();
-                GlobalHost = null;
-            };
+            throw new UnreachableException();
         }
 
-        DataTemplates.Add(GlobalHost.Services.GetRequiredService<ViewLocator>());
+        desktop.MainWindow = mainWindow;
 
         base.OnFrameworkInitializationCompleted();
-
-        // Usually, we don't want to block main UI thread.
-        // But if it's required to start async services before we create any window,
-        // then don't set any MainWindow, and simply call Show() on a new window later after async initialization. 
-        await host.StartAsync();
     }
 
     private static HostApplicationBuilder CreateHostBuilder()
@@ -96,15 +79,7 @@ file static class Extensions
 
     public static IServiceCollection AddViews(this IServiceCollection services)
     {
-        services.AddTransient<MainWindowViewModel>();
-        services.AddTransient<ViewLocator>();
-        services.AddView<CanvasViewModel, MainControl>();
+        services.AddTransient<MainWindow>();
         return services;
     }
-}
-
-public static class DesignData
-{
-    public static MainWindowViewModel MainWindowViewModel { get; } =
-        ((App)Application.Current!).GlobalHost!.Services.GetRequiredService<MainWindowViewModel>();
 }

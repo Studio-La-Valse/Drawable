@@ -25,7 +25,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId).WithBackground(ColorARGB.Black);
+            var sceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue).WithBackground(ColorARGB.Black);
             CanvasViewModel.SceneManager = sceneManager;
             CanvasViewModel.Pipe = Pipeline.DoNothing()
                 .InterceptKeys(selectionManager, out var _selectionManager)
@@ -38,7 +38,10 @@ public class MainWindowViewModel : ViewModelBase
         });
 
     public ICommand ToggleZoom => ReactiveCommand.Create(
-        () => { CanvasViewModel.EnablePan = !CanvasViewModel.EnablePan; });
+        () => 
+        { 
+            CanvasViewModel.EnablePan = !CanvasViewModel.EnablePan; 
+        });
 
     public MainWindowViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, ISelectionManager<PersistentElement> selectionManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
     {

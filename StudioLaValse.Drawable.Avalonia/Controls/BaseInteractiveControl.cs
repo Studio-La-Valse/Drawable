@@ -11,7 +11,7 @@ using Avalonia;
 namespace StudioLaValse.Drawable.Avalonia.Controls;
 
 /// <inheritdoc/>
-public abstract partial class BaseInteractiveControl : UserControl, IInteractiveCanvas
+public class BaseInteractiveControl : UserControl, IInteractiveCanvas
 {
     private readonly ButtonObservable leftButtonObservable = new ButtonObservable();
     private readonly ButtonObservable rightButtonObservable = new ButtonObservable();
@@ -28,10 +28,13 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
         .RegisterDirect<BaseInteractiveControl, double>(nameof(TranslateY), o => o.TranslateY, (o, v) => o.TranslateY = v, 0);
 
     /// <inheritdoc/>
+    public List<Action<DrawingContext>> DrawActions = [];
+
+
+    /// <inheritdoc/>
     public BaseInteractiveControl()
     {
         Focusable = true;
-        Background = Brushes.Transparent;
         IsHitTestVisible = true;
 
         XY getFromArgs(PointerEventArgs args)
@@ -171,5 +174,20 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
     new public IObservable<Interaction.UserInput.Key> KeyUp { get; }
 
     /// <inheritdoc/>
-    public abstract void Refresh();
+    public void Refresh()
+    {
+        InvalidateVisual();
+    }
+
+    /// <inheritdoc/>
+    public override void Render(DrawingContext drawingContext)
+    {
+        drawingContext.PushTransform(new Matrix(Zoom, 0, 0, Zoom, 0, 0));
+        drawingContext.PushTransform(new Matrix(1, 0, 0, 1, TranslateX, TranslateY));
+
+        foreach (var action in DrawActions)
+        {
+            action(drawingContext);
+        }
+    }
 }
