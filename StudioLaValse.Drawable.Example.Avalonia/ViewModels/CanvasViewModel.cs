@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using StudioLaValse.Drawable.Interaction.Extensions;
+using StudioLaValse.Drawable.Extensions;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
@@ -72,6 +73,32 @@ public class DrawableElementEmitter : System.IObservable<BaseDrawableElement>
     }
 }
 
+public class InvalidatedElementDispatcher : IObserver<InvalidationRequest<PersistentElement>>
+{
+    private readonly SceneManager<PersistentElement, int> sceneManager;
+    private readonly BaseBitmapPainter baseBitmapPainter;
+
+    public InvalidatedElementDispatcher(SceneManager<PersistentElement, int> sceneManager, BaseBitmapPainter baseBitmapPainter)
+    {
+        this.sceneManager = sceneManager;
+        this.baseBitmapPainter = baseBitmapPainter;
+    }
+    public void OnCompleted()
+    {
+        sceneManager.RenderChanges(baseBitmapPainter);
+    }
+
+    public void OnError(Exception error)
+    {
+        throw error;
+    }
+
+    public void OnNext(InvalidationRequest<PersistentElement> value)
+    {
+        sceneManager.AddToQueue(value);
+    }
+}
+
 public class DrawableElementEmitterBitmapPainter : BaseBitmapPainter
 {
     private readonly DrawableElementEmitter drawableElementEmitter;
@@ -108,6 +135,7 @@ public class CanvasViewModel : ViewModelBase
     private SceneManager<PersistentElement, int>? sceneManager;
     private readonly BaseBitmapPainter canvasPainter;
 
+    public BaseBitmapPainter BaseBitmapPainter => canvasPainter;
     public SceneManager<PersistentElement, int>? SceneManager 
     { 
         get => sceneManager; 
@@ -166,39 +194,27 @@ public class CanvasViewModel : ViewModelBase
         set => SetValue(() => EnableZoom, value);
     }
 
-    public CanvasViewModel(ModelFactory modelFactory, SceneFactory sceneFactory)
+    public CanvasViewModel()
     {
-        var model = modelFactory.Create();
         var emitter = new DrawableElementEmitter();
         canvasPainter = new DrawableElementEmitterBitmapPainter(emitter);
 
-        var selectionManager = SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId.IntValue);
-
-        var scene = sceneFactory.Create(model);
-        SceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue);
-
         ElementEmitter = emitter;
 
-        var invalidator = SceneManager<PersistentElement, int>.CreateObservable();
         SelectionBorder = new ObservableBoundingBox();
         var commandManager = StudioLaValse.CommandManager.CommandManager.CreateGreedy();
-
-        Pipe = Pipeline.DoNothing()
-            .InterceptKeys(selectionManager, out var _selectionManager)
-            .ThenHandleDefaultMouseInteraction(SceneManager.VisualParents, invalidator)
-            .ThenHandleMouseHover(SceneManager.VisualParents, invalidator)
-            .ThenHandleDefaultClick(SceneManager.VisualParents, _selectionManager)
-            .ThenHandleSelectionBorder(SceneManager.VisualParents, _selectionManager, SelectionBorder, invalidator)
-            .ThenHandleTransformations(_selectionManager, SceneManager.VisualParents, invalidator)
-            .ThenRender(invalidator)
-            .UndoRedo(commandManager, invalidator);
 
         Zoom = 1;
     }
 
     public void CenterContent()
     {
-        var boundingBox = new BoundingBox(SceneManager.VisualParents
+        if(sceneManager is null)
+        {
+            return;
+        }
+
+        var boundingBox = new BoundingBox(sceneManager.VisualParents
             .SelectMany(e => e.GetDrawableElements().Select(e => e.GetBoundingBox())));
 
         // Step 0: calculate view center

@@ -8,6 +8,7 @@ using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Key;
 using StudioLaValse.Geometry;
+using System;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
@@ -17,6 +18,7 @@ public class MainWindowViewModel : ViewModelBase
     private readonly SceneFactory sceneFactory;
     private readonly ISelectionManager<PersistentElement> selectionManager;
     private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+    private IDisposable? sceneManagerDispatcherDisposable;
 
     public CanvasViewModel CanvasViewModel { get; set; }
 
@@ -25,7 +27,11 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue).WithBackground(ColorARGB.Black);
+            var sceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue).WithBackground(ColorARGB.Black).WithRerender(CanvasViewModel.BaseBitmapPainter);
+
+            sceneManagerDispatcherDisposable?.Dispose();
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(new InvalidatedElementDispatcher(sceneManager, CanvasViewModel.BaseBitmapPainter));
+
             CanvasViewModel.SceneManager = sceneManager;
             CanvasViewModel.Pipe = Pipeline.DoNothing()
                 .InterceptKeys(selectionManager, out var _selectionManager)
@@ -40,7 +46,8 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand ToggleZoom => ReactiveCommand.Create(
         () => 
         { 
-            CanvasViewModel.EnablePan = !CanvasViewModel.EnablePan; 
+            CanvasViewModel.EnablePan = !CanvasViewModel.EnablePan;
+            CanvasViewModel.EnableZoom = !CanvasViewModel.EnableZoom;
         });
 
     public MainWindowViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, ISelectionManager<PersistentElement> selectionManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
@@ -51,5 +58,6 @@ public class MainWindowViewModel : ViewModelBase
         this.notifyEntityChanged = notifyEntityChanged;
 
         CanvasViewModel = canvasViewModel;
+
     }
 }

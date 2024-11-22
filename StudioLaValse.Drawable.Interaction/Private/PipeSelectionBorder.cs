@@ -101,6 +101,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
 
             // Search for all items under the selection box.
             var elementsInBox = scene
+                .OfType<BaseInteractiveParent<TEntity>>()
                 .Where(p =>
                 {
                     var parentBoundingBox = p.BoundingBox();
@@ -109,7 +110,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
                         box.Contains(parentBoundingBox) :
                         box.Overlaps(parentBoundingBox);
                 });
-            foreach (var element in elementsInBox.OfType<BaseInteractiveParent<TEntity>>())
+            foreach (var element in elementsInBox)
             {
                 // Store the IsMouseOverProperty
                 var previousMouseOver = element.IsMouseOver;
@@ -118,7 +119,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
                 element.IsMouseOver = true;
 
                 // Only invalidate if it was previously not true
-                if (!previousMouseOver)
+                if (previousMouseOver != element.IsMouseOver)
                 {
                     entityChanged.Invalidate(element.Ghost, method: Method.Shallow);
                 }

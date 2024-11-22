@@ -47,12 +47,10 @@ namespace StudioLaValse.Drawable.Interaction.Private
         {
             source.HandleSetMousePosition(position);
 
-            foreach (var element in scene.OfType<BaseInteractiveParent<TEntity>>())
+            var elements = scene.OfType<BaseInteractiveParent<TEntity>>().Where(e => e.OnMouseMove(position));
+            foreach (var element in elements)
             {
-                if (element.OnMouseMove(position))
-                {
-                    entityChanged.Invalidate(element.AssociatedElement, method: Method.Shallow);
-                }
+                entityChanged.Invalidate(element.AssociatedElement, method: Method.Recursive);
             }
         }
 
