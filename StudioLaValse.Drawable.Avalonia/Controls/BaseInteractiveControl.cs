@@ -11,10 +11,13 @@ using Avalonia;
 namespace StudioLaValse.Drawable.Avalonia.Controls;
 
 /// <inheritdoc/>
-public abstract partial class BaseInteractiveControl : UserControl, IInteractiveCanvas
+public class BaseInteractiveControl : UserControl, IInteractiveCanvas
 {
     private readonly ButtonObservable leftButtonObservable = new ButtonObservable();
     private readonly ButtonObservable rightButtonObservable = new ButtonObservable();
+
+    private bool leftButtonIsDown;
+    private bool rightButtonIsDown;
 
 
     /// <inheritdoc/>
@@ -28,10 +31,64 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
         .RegisterDirect<BaseInteractiveControl, double>(nameof(TranslateY), o => o.TranslateY, (o, v) => o.TranslateY = v, 0);
 
     /// <inheritdoc/>
+    public List<Action<DrawingContext>> DrawActions = [];
+
+
+    private double zoom = 1;
+    /// <inheritdoc/>
+    public double Zoom
+    {
+        get => zoom;
+        set
+        {
+            SetAndRaise(ZoomProperty, ref zoom, value);
+            InvalidateVisual();
+        }
+    }
+
+    private double translateX;
+    /// <inheritdoc/>
+    public double TranslateX
+    {
+        get => translateX;
+        set
+        {
+            SetAndRaise(TranslateXProperty, ref translateX, value);
+            InvalidateVisual();
+        }
+    }
+
+    private double translateY;
+    /// <inheritdoc/>
+    public double TranslateY
+    {
+        get => translateY;
+        set
+        {
+            SetAndRaise(TranslateYProperty, ref translateY, value);
+            InvalidateVisual();
+        }
+    }
+
+    /// <inheritdoc/>
+    public IObservable<XY> MouseMove { get; }
+    /// <inheritdoc/>
+    public IObservable<bool> MouseLeftButtonDown { get; }
+    /// <inheritdoc/>
+    public IObservable<bool> MouseRightButtonDown { get; }
+    /// <inheritdoc/>
+    public IObservable<double> MouseWheel { get; }
+    /// <inheritdoc/>
+    new public IObservable<Interaction.UserInput.Key> KeyDown { get; }
+    /// <inheritdoc/>
+    new public IObservable<Interaction.UserInput.Key> KeyUp { get; }
+
+
+
+    /// <inheritdoc/>
     public BaseInteractiveControl()
     {
         Focusable = true;
-        Background = Brushes.Transparent;
         IsHitTestVisible = true;
 
         XY getFromArgs(PointerEventArgs args)
@@ -81,8 +138,9 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
             });
     }
 
-    private bool leftButtonIsDown;
-    private bool rightButtonIsDown;
+
+
+
     private void BaseInteractiveControl_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         var point = e.GetCurrentPoint(this);
@@ -121,55 +179,21 @@ public abstract partial class BaseInteractiveControl : UserControl, IInteractive
         }
     }
 
-    private double zoom = 1;
     /// <inheritdoc/>
-    public double Zoom
+    public void Refresh()
     {
-        get => zoom;
-        set 
+        InvalidateVisual();
+    }
+
+    /// <inheritdoc/>
+    public override void Render(DrawingContext drawingContext)
+    {
+        drawingContext.PushTransform(new Matrix(Zoom, 0, 0, Zoom, 0, 0));
+        drawingContext.PushTransform(new Matrix(1, 0, 0, 1, TranslateX, TranslateY));
+
+        foreach (var action in DrawActions)
         {
-            SetAndRaise(ZoomProperty, ref zoom, value);
-            InvalidateVisual();
+            action(drawingContext);
         }
     }
-
-    private double translateX;
-    /// <inheritdoc/>
-    public double TranslateX
-    {
-        get => translateX;
-        set
-        { 
-            SetAndRaise(TranslateXProperty, ref translateX, value);
-            InvalidateVisual();
-        }
-    }
-
-    private double translateY;
-    /// <inheritdoc/>
-    public double TranslateY
-    {
-        get => translateY;
-        set
-        {
-            SetAndRaise(TranslateYProperty, ref translateY, value);
-            InvalidateVisual();
-        }
-    }
-
-    /// <inheritdoc/>
-    public IObservable<XY> MouseMove { get; }
-    /// <inheritdoc/>
-    public IObservable<bool> MouseLeftButtonDown { get; }
-    /// <inheritdoc/>
-    public IObservable<bool> MouseRightButtonDown { get; }
-    /// <inheritdoc/>
-    public IObservable<double> MouseWheel { get; }
-    /// <inheritdoc/>
-    new public IObservable<Interaction.UserInput.Key> KeyDown { get; }
-    /// <inheritdoc/>
-    new public IObservable<Interaction.UserInput.Key> KeyUp { get; }
-
-    /// <inheritdoc/>
-    public abstract void Refresh();
 }

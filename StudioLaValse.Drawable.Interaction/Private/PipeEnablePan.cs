@@ -4,7 +4,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeEnablePan : IPipe
+    internal class PipeEnablePan : IBehavior
     {
         private readonly IInteractiveCanvas canvas;
 

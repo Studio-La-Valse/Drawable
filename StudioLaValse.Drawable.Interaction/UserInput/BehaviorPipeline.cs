@@ -5,12 +5,12 @@ namespace StudioLaValse.Drawable.Interaction.UserInput
     /// <summary>
     /// An initial class for creating an interaction pipeline.
     /// </summary>
-    public static class Pipeline
+    public static class BehaviorPipeline
     {
         /// <summary>
-        /// Creates an <see cref="IPipe"/> that does nothing. This pipe, however, can be chained with other <see cref="IPipe"/>'s to created the pipeline.
+        /// Creates an <see cref="IBehavior"/> that does nothing. This behavior, however, can be chained with other <see cref="IBehavior"/>'s to created the pipeline.
         /// </summary>
         /// <returns></returns>
-        public static IPipe DoNothing() => new EmptyPipeline();
+        public static IBehavior DoNothing() => new EmptyPipeline();
     }
 }

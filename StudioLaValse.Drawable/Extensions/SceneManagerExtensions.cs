@@ -31,11 +31,10 @@ namespace StudioLaValse.Drawable.Extensions
         /// <typeparam name="TEntity"></typeparam>
         /// /// <typeparam name="TKey"></typeparam>
         /// <param name="sceneManager"></param>
-        /// <param name="bitmapTarget"></param>
         /// <returns></returns>
-        public static SceneManager<TEntity, TKey> WithRerender<TEntity, TKey>(this SceneManager<TEntity, TKey> sceneManager, BaseBitmapPainter bitmapTarget) where TEntity : class where TKey : IEquatable<TKey>
+        public static SceneManager<TEntity, TKey> WithRerender<TEntity, TKey>(this SceneManager<TEntity, TKey> sceneManager) where TEntity : class where TKey : IEquatable<TKey>
         {
-            sceneManager.Rerender(bitmapTarget);
+            sceneManager.Rerender();
             return sceneManager;
         }
 
@@ -72,16 +71,16 @@ namespace StudioLaValse.Drawable.Extensions
         }
 
         /// <summary>
-        /// Create a generic, general purpose <see cref="IObserver{T}"/> that can subscribe to any <see cref="IObservable{T}"/>. The implementation invalidates a TEntity on <see cref="IObserver{T}.OnNext(T)"/> and renders changes in the scene on <see cref="IObserver{T}.OnCompleted"/>.
+        /// Creates an observer for an invalidation request that dispatches the observations to the specified scene manager.
+        /// This implementation invalidates a TEntity on <see cref="IObserver{T}.OnNext(T)"/> and renders changes in the scene on <see cref="IObserver{T}.OnCompleted"/>.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// /// <typeparam name="TKey"></typeparam>
         /// <param name="sceneManager"></param>
-        /// <param name="baseBitmapPainter"></param>
         /// <returns></returns>
-        public static IObserver<InvalidationRequest<TEntity>> CreateObserver<TEntity, TKey>(this SceneManager<TEntity, TKey> sceneManager, BaseBitmapPainter baseBitmapPainter) where TEntity : class where TKey : IEquatable<TKey>
+        public static IObserver<InvalidationRequest<TEntity>> CreateObserver<TEntity, TKey>(this SceneManager<TEntity, TKey> sceneManager) where TEntity : class where TKey : IEquatable<TKey>
         {
-            return new EntityObserver<TEntity, TKey>(sceneManager, baseBitmapPainter);
+            return new EntityObserver<TEntity, TKey>(sceneManager);
         }
 
         /// <summary>

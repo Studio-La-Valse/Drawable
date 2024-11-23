@@ -6,9 +6,9 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeSelectionBorder<TEntity> : IPipe where TEntity : class
+    internal class PipeSelectionBorder<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
         private readonly IEnumerable<BaseVisualParent<TEntity>> scene;
         private readonly ISelectionManager<TEntity> selectionManager;
         private readonly ObservableBoundingBox boundingBox;
@@ -25,7 +25,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
         public bool DirectionRight =>
             LastMousePosition.X > LastMouseClickPosition.X;
 
-        public PipeSelectionBorder(IPipe source, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> entityChanged)
+        public PipeSelectionBorder(IBehavior source, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> entityChanged)
         {
             this.source = source;
             this.scene = scene;
@@ -101,6 +101,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
 
             // Search for all items under the selection box.
             var elementsInBox = scene
+                .OfType<BaseInteractiveParent<TEntity>>()
                 .Where(p =>
                 {
                     var parentBoundingBox = p.BoundingBox();
@@ -109,7 +110,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
                         box.Contains(parentBoundingBox) :
                         box.Overlaps(parentBoundingBox);
                 });
-            foreach (var element in elementsInBox.OfType<BaseInteractiveParent<TEntity>>())
+            foreach (var element in elementsInBox)
             {
                 // Store the IsMouseOverProperty
                 var previousMouseOver = element.IsMouseOver;
@@ -118,7 +119,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
                 element.IsMouseOver = true;
 
                 // Only invalidate if it was previously not true
-                if (!previousMouseOver)
+                if (previousMouseOver != element.IsMouseOver)
                 {
                     entityChanged.Invalidate(element.Ghost, method: Method.Shallow);
                 }

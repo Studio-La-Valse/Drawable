@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:usercontrols="clr-namespace:StudioLaValse.Drawable.Example.WPF.UserControls" 
+        xmlns:usercontrols="clr-namespace:StudioLaValse.Drawable.WPF.UserControls;assembly=StudioLaValse.Drawable.WPF" 
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" Background="Green">
 
@@ -21,40 +21,23 @@
             <Button Command="{Binding ToggleZoom}"
                     Content="Toggle Zoom"/>
 
-            <Border HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
-                <TreeView DataContext="{Binding VisualTreeViewModel}"
-                          ItemsSource="{Binding Branches}"
-                          Background="Black"
-                          Foreground="White">
-                    <TreeView.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource {x:Type TreeViewItem}}" 
-                               TargetType="{x:Type TreeViewItem}">
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <TextBlock Text="{Binding Name}" 
-                                       Foreground="White"/>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
-            </Border>
         </StackPanel>
         
        
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-
-        <Grid Grid.Column="2">
-            <usercontrols:CanvasUserControl DataContext="{Binding CanvasViewModel}" 
-                                            SceneManager="{Binding Scene, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            SelectionBorder="{Binding SelectionBorder, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            EnablePan="{Binding EnablePan, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Pipe="{Binding Pipe, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Invalidator="{Binding Invalidator, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        <Grid  Grid.Column="2"
+               DataContext="{Binding CanvasViewModel}">
+            <usercontrols:WindowsDrawingContextUserControl ElementEmitter="{Binding ElementEmitter, Mode=TwoWay}"
+                                                           SelectionBorder="{Binding SelectionBorder, Mode=TwoWay}"
+                                                           Pipe="{Binding Pipe, Mode=TwoWay}"
+                                                           TranslateX="{Binding TranslateX, Mode=TwoWay}"
+                                                           TranslateY="{Binding TranslateY, Mode=TwoWay}"
+                                                           Zoom="{Binding Zoom, Mode=TwoWay}"
+                                                           EnablePan="{Binding EnablePan, Mode=TwoWay}"
+                                                           EnableZoom="{Binding EnableZoom, Mode=TwoWay}"
+                                                           Bounds="{Binding Bounds, Mode=OneWayToSource}"
+                                                           Background="Black"/>
         </Grid>
 
     </Grid>

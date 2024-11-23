@@ -1,9 +1,12 @@
 ﻿using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Drawable.WPF.DependencyProperties;
 using StudioLaValse.Geometry;
 using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Key = System.Windows.Input.Key;
 
 namespace StudioLaValse.Drawable.WPF.Visuals
@@ -13,13 +16,38 @@ namespace StudioLaValse.Drawable.WPF.Visuals
     /// </summary>
     public abstract class BaseInteractiveVisual : UserControl, IInteractiveCanvas
     {
-        public double Zoom { get; set; } = 1;
-        public double TranslateX { get; set; } = 0;
-        public double TranslateY { get; set; } = 0;
-        public XY LastPosition { get; set; } = new XY(0, 0);
+        public static readonly DependencyProperty ZoomProperty = DependencyPropertyBase
+            .Register<BaseInteractiveVisual, double>(nameof(Zoom), (o, e) => { }, 1);
 
-        public double ViewBoxWidth => double.IsNormal(Width) ? Width : 0;
-        public double ViewBoxHeight => double.IsNormal(Height) ? Width : 0;
+        public static readonly DependencyProperty TranslateXProperty = DependencyPropertyBase
+            .Register<BaseInteractiveVisual, double>(nameof(TranslateX), (o, e) => { });
+
+        public static readonly DependencyProperty TranslateYProperty = DependencyPropertyBase
+            .Register<BaseInteractiveVisual, double>(nameof(TranslateY), (o, e) => { });
+
+        public static readonly DependencyProperty BoundsProperty = DependencyPropertyBase
+            .Register<BaseInteractiveVisual, Rect>(nameof(Bounds), (o, e) => { });
+
+        public double Zoom
+        {
+            get => (double)GetValue(ZoomProperty);
+            set => SetValue(ZoomProperty, value);
+        }
+        public double TranslateX
+        {
+            get => (double)GetValue(TranslateXProperty);
+            set => SetValue(TranslateXProperty, value);
+        }
+        public double TranslateY
+        {
+            get => (double)GetValue(TranslateYProperty);
+            set => SetValue(TranslateYProperty, value);
+        }
+        public Rect Bounds
+        {
+            get => (Rect)GetValue(BoundsProperty);
+            set => SetValue(BoundsProperty, value);
+        }
 
         new public IObservable<XY> MouseMove { get; }
         new public IObservable<bool> MouseLeftButtonDown { get; }
@@ -78,9 +106,15 @@ namespace StudioLaValse.Drawable.WPF.Visuals
                     Key.Escape => Interaction.UserInput.Key.Escape,
                     _ => Interaction.UserInput.Key.Unknown
                 });
+
+            this.SizeChanged += BaseInteractiveVisual_SizeChanged;
         }
 
-
+        private void BaseInteractiveVisual_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var size = e.NewSize;
+            Bounds = new Rect(size);
+        }
 
         public abstract void Refresh();
     }

@@ -6,14 +6,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
+    xmlns:uc="clr-namespace:StudioLaValse.Drawable.WPF.UserControls;assembly=StudioLaValse.Drawable.WPF"
     mc:Ignorable="d" 
     ClipToBounds="True"
     d:DesignHeight="800" d:DesignWidth="800"
     PreviewMouseDown="BaseInteractiveVisual_PreviewMouseDown">
-
-    <skia:SKElement x:Name="SKElement"
+    
+    <Grid>
+        <skia:SKElement x:Name="SKElement"
                     PaintSurface="SKElement_PaintSurface"/>
 
-
-
+        <uc:DragSelectionUserControl
+            x:Name="selectionBorderName" />
+    </Grid>
 </visuals:BaseInteractiveVisual>

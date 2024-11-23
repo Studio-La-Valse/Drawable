@@ -6,11 +6,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:c="using:StudioLaValse.Drawable.Example.Avalonia.Controls"
+		xmlns:ce="using:StudioLaValse.Drawable.Avalonia.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="StudioLaValse.Drawable.Example.Avalonia.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="StudioLaValse.Drawable.Example.Avalonia"
-		Design.DataContext="{x:Static local:DesignData.MainWindowViewModel}">
+        Title="StudioLaValse.Drawable.Example.Avalonia">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -33,13 +33,18 @@
 		<GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
 
 		<Grid Grid.Column="2">
-			<c:MainControl DataContext="{Binding CanvasViewModel}"
-						   SceneManager="{Binding SceneManager, Mode=TwoWay}"
-						   SelectionBorder="{Binding SelectionBorder, Mode=TwoWay}"
-						   EnablePan="{Binding EnablePan, Mode=TwoWay}"
-						   Pipe="{Binding Pipe, Mode=TwoWay}"
-						   Invalidator="{Binding Invalidator, Mode=TwoWay}"
-						   Background="Black"/>
+			<ce:InteractiveControl Name="canvas"
+								   x:DataType="viewModel:CanvasViewModel"
+								   DataContext="{Binding CanvasViewModel}"
+								   Bounds="{Binding Bounds, Mode=OneWayToSource}"
+								   ElementEmitter="{Binding ElementEmitter}"
+								   SelectionBorder="{Binding SelectionBorder}"
+								   Pipe="{Binding Pipe}"
+								   TranslateX="{Binding TranslateX}"
+								   TranslateY="{Binding TranslateY}"
+								   Zoom="{Binding Zoom, Mode=TwoWay}"
+								   EnablePan="{Binding EnablePan}"
+								   EnableZoom="{Binding EnableZoom}"/>
 		</Grid>
 
 	</Grid>

@@ -3,7 +3,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class EmptyPipeline : IPipe
+    internal class EmptyPipeline : IBehavior
     {
         internal EmptyPipeline()
         {
