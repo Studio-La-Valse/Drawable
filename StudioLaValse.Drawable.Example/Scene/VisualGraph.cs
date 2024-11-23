@@ -2,6 +2,7 @@
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Example.Model;
 using StudioLaValse.Drawable.Interaction.Selection;
+using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Scene
@@ -25,6 +26,11 @@ namespace StudioLaValse.Drawable.Example.Scene
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
             return new List<BaseDrawableElement>();
+        }
+
+        public override BoundingBox BoundingBox()
+        {
+            return new BoundingBox(GetContentWrappers().Select(e => e.BoundingBox()));
         }
     }
 }

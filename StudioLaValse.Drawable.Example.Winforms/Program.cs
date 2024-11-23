@@ -38,11 +38,11 @@ namespace StudioLaValse.Drawable.Example.Winforms
             var textMeasurer = new TextMeasurer();
             ExternalTextMeasure.TextMeasurer = textMeasurer;
             var canvasPainter = new GraphicsPainter(canvas, textMeasurer);
-            var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId)
+            var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId, canvasPainter)
                 .WithBackground(ColorARGB.Black)
-                .WithRerender(canvasPainter);
+                .WithRerender();
 
-            var pipe = Pipeline.DoNothing()
+            var pipe = BehaviorPipeline.DoNothing()
                 .InterceptKeys(selection, out var _selectionManager)
                 .ThenHandleDefaultMouseInteraction(sceneManager.VisualParents, notifyEntityChanged)
                 .ThenHandleMouseHover(sceneManager.VisualParents, notifyEntityChanged)

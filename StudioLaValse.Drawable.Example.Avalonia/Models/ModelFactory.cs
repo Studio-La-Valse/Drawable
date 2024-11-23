@@ -14,15 +14,15 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
             this.keyGenerator = keyGenerator;
         }
 
-        public TextModel Create()
+        public GraphModel Create()
         {
-            var text = new TextModel(keyGenerator);
-            return text;
+            //var text = new TextModel(keyGenerator);
+            //return text;
 
-            //var n = 5000;
-            //var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
-            //var graph = new GraphModel(keyGenerator, components);
-            //return graph;
+            var n = 5000;
+            var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
+            var graph = new GraphModel(keyGenerator, components);
+            return graph;
 
             //var curve = new CurveModel(keyGenerator);
             //foreach(var _ in Enumerable.Range(0, 4))

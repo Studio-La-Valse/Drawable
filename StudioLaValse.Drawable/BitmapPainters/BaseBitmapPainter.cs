@@ -3,6 +3,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.BitmapPainters
 {
+
     /// <summary>
     /// The base class for all bitmap painters. Required by the <see cref="SceneManager{TEntity, TKey}"/>
     /// </summary>

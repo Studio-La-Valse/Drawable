@@ -23,8 +23,8 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         {
             void action(IEnumerable<TEntity> left, IEnumerable<TEntity> right)
             {
-                notifyEntityChanged.Invalidate(left, NotFoundHandler.Skip, Method.Shallow);
-                notifyEntityChanged.Invalidate(right, NotFoundHandler.Skip, Method.Shallow);
+                notifyEntityChanged.Invalidate(left, NotFoundHandler.Skip, Method.Deep);
+                notifyEntityChanged.Invalidate(right, NotFoundHandler.Skip, Method.Deep);
                 notifyEntityChanged.RenderChanges();
             }
             return selection.AddChangedHandler(action, getKey);

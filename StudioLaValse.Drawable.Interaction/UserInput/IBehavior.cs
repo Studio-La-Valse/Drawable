@@ -3,9 +3,9 @@
 namespace StudioLaValse.Drawable.Interaction.UserInput
 {
     /// <summary>
-    /// A single pipe in an interaction pipeline, that determines the behavior on interaction events like mouse- or key events.
+    /// A single behavior in an interaction pipeline, that determines the behavior on interaction events like mouse- or key events.
     /// </summary>
-    public interface IPipe
+    public interface IBehavior
     {
         /// <summary>
         /// Called on mouse left button down.

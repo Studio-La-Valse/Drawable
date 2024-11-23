@@ -6,9 +6,9 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeSelection<TEntity> : IPipe where TEntity : class
+    internal class PipeSelection<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
         private readonly IEnumerable<BaseVisualParent<TEntity>> scene;
         private readonly ISelectionManager<TEntity> selection;
 
@@ -16,7 +16,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
         public XY LastMousePosition { get; set; } = new XY(0, 0);
 
 
-        public PipeSelection(IPipe source, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selection)
+        public PipeSelection(IBehavior source, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selection)
         {
             this.source = source;
             this.scene = scene;

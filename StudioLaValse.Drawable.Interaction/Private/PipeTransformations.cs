@@ -7,9 +7,9 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeTransformations<TEntity> : IPipe where TEntity : class
+    internal class PipeTransformations<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
         private readonly ISelectionManager<TEntity> selection;
         private readonly IEnumerable<BaseVisualParent<TEntity>> scene;
         private readonly INotifyEntityChanged<TEntity> entityChanged;
@@ -26,7 +26,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
         public double TotalDeltaY { get; set; }
 
 
-        public PipeTransformations(IPipe source, ISelectionManager<TEntity> selection, IEnumerable<BaseVisualParent<TEntity>> sceneManager, INotifyEntityChanged<TEntity> entityChanged)
+        public PipeTransformations(IBehavior source, ISelectionManager<TEntity> selection, IEnumerable<BaseVisualParent<TEntity>> sceneManager, INotifyEntityChanged<TEntity> entityChanged)
         {
             this.source = source;
             this.selection = selection;

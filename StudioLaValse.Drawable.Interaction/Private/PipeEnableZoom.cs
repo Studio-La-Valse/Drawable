@@ -4,7 +4,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeEnableZoom : IPipe
+    internal class PipeEnableZoom : IBehavior
     {
         private readonly IInteractiveCanvas canvas;
 

@@ -3,14 +3,14 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeInterceptKeys<TEntity> : IPipe where TEntity : class
+    internal class PipeInterceptKeys<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
 
         public bool ShiftPressed { get; set; }
         public bool CtrlPressed { get; set; }
 
-        public PipeInterceptKeys(IPipe source)
+        public PipeInterceptKeys(IBehavior source)
         {
             this.source = source;
         }

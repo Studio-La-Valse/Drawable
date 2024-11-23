@@ -17,10 +17,11 @@ internal class Program
         var model = new TextModel(keyGenerator);
         var scene = new TextScene(model);
 
-        var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId);
         var canvas = new HTMLCanvas(500, 500);
         var canvasPainter = new HTMLCanvasPainter(canvas);
-        sceneManager.Rerender(canvasPainter);
+        var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId, canvasPainter);
+
+        sceneManager.Rerender();
 
         var file = Path.Combine(Environment.CurrentDirectory, "index.html");
         var svgContent = canvas.SVGContent();

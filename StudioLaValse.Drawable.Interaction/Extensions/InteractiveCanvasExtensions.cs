@@ -11,42 +11,42 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
     public static class InteractiveCanvasExtensions
     {
         /// <summary>
-        /// Subscribes to an interaction <see cref="IPipe"/>. Returns an <see cref="IDisposable"/> that when disposed, unsubscribes from the <see cref="IPipe"/>
+        /// Subscribes to an interaction <see cref="IBehavior"/>. Returns an <see cref="IDisposable"/> that when disposed, unsubscribes from the <see cref="IBehavior"/>
         /// </summary>
         /// <param name="canvas"></param>
-        /// <param name="pipe"></param>
+        /// <param name="behavior"></param>
         /// <returns></returns>
-        public static IDisposable Subscribe(this IInteractiveCanvas canvas, IPipe pipe)
+        public static IDisposable Subscribe(this IInteractiveCanvas canvas, IBehavior behavior)
         {
             var collection = new Queue<IDisposable>();
             var list = new List<IDisposable>()
             {
-                canvas.MouseMove.Subscribe(pipe.HandleSetMousePosition),
+                canvas.MouseMove.Subscribe(behavior.HandleSetMousePosition),
                 canvas.MouseLeftButtonDown.Subscribe(e =>
                 {
                     if (e)
                     {
-                        pipe.HandleLeftMouseButtonDown();
+                        behavior.HandleLeftMouseButtonDown();
                     }
                     else
                     {
-                        pipe.HandleLeftMouseButtonUp();
+                        behavior.HandleLeftMouseButtonUp();
                     }
                 }),
                 canvas.MouseRightButtonDown.Subscribe(e =>
                 {
                     if (e)
                     {
-                        pipe.HandleRightMouseButtonDown();
+                        behavior.HandleRightMouseButtonDown();
                     }
                     else
                     {
-                        pipe.HandleRightMouseButtonUp();
+                        behavior.HandleRightMouseButtonUp();
                     }
                 }),
-                canvas.MouseWheel.Subscribe(pipe.HandleMouseWheel),
-                canvas.KeyDown.Subscribe(pipe.KeyDown),
-                canvas.KeyUp.Subscribe(pipe.KeyUp)
+                canvas.MouseWheel.Subscribe(behavior.HandleMouseWheel),
+                canvas.KeyDown.Subscribe(behavior.KeyDown),
+                canvas.KeyUp.Subscribe(behavior.KeyUp)
             };
             foreach (var element in list)
             {
@@ -56,24 +56,24 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
             return disposable;
         }
         /// <summary>
-        /// Subscribes to a special interaction pipe that allows the <see cref="IInteractiveCanvas"/> to be panned. Unsubscribe by disposing the returned <see cref="IDisposable"/>.
+        /// Subscribes to a special interaction behavior that allows the <see cref="IInteractiveCanvas"/> to be panned. Unsubscribe by disposing the returned <see cref="IDisposable"/>.
         /// </summary>
         /// <param name="canvas"></param>
         /// <returns></returns>
         public static IDisposable EnablePan(this IInteractiveCanvas canvas)
         {
-            var pipe = new PipeEnablePan(canvas);
-            return canvas.Subscribe(pipe);
+            var behavior = new PipeEnablePan(canvas);
+            return canvas.Subscribe(behavior);
         }
         /// <summary>
-        /// Subscribes to a special interaction pipe that allows the <see cref="IInteractiveCanvas"/> to be zoomed in and out. Unsubscribe by disposing the returned <see cref="IDisposable"/>.
+        /// Subscribes to a special interaction behavior that allows the <see cref="IInteractiveCanvas"/> to be zoomed in and out. Unsubscribe by disposing the returned <see cref="IDisposable"/>.
         /// </summary>
         /// <param name="canvas"></param>
         /// <returns></returns>
         public static IDisposable EnableZoom(this IInteractiveCanvas canvas)
         {
-            var pipe = new PipeEnableZoom(canvas);
-            return canvas.Subscribe(pipe);
+            var behavior = new PipeEnableZoom(canvas);
+            return canvas.Subscribe(behavior);
         }
 
 
