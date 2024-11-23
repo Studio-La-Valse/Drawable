@@ -12,146 +12,22 @@ using System.Linq;
 using System.Reactive.Linq;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Extensions;
+using StudioLaValse.Drawable.ContentWrappers;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
-public class Unsubscriber<T> : IDisposable
-{
-    private readonly ICollection<System.IObserver<T>> _observers;
-    private readonly System.IObserver<T> _observer;
-
-    private Unsubscriber(ICollection<System.IObserver<T>> observers, System.IObserver<T> observer)
-    {
-        _observers = observers;
-        _observer = observer;
-    }
-
-    public void Dispose()
-    {
-        _observers.Remove(_observer);
-    }
-
-    public static IDisposable SubscribeOrThrow(HashSet<System.IObserver<T>> observers, System.IObserver<T> observer)
-    {
-        if (!observers.Add(observer))
-        {
-            throw new InvalidOperationException();
-        }
-
-        return new Unsubscriber<T>(observers, observer);
-    }
-}
-
-
-public class DrawableElementEmitter : System.IObservable<BaseDrawableElement>
-{
-    private readonly HashSet<System.IObserver<BaseDrawableElement>> observers = [];
-    public DrawableElementEmitter()
-    {
-
-    }
-
-    public void Emit(BaseDrawableElement baseDrawableElement)
-    {
-        foreach (var subscriber in observers)
-        {
-            subscriber.OnNext(baseDrawableElement);
-        }
-    }
-
-    public void Complete()
-    {
-        foreach (var subscriber in observers)
-        {
-            subscriber.OnCompleted();
-        }
-    }
-
-    public IDisposable Subscribe(System.IObserver<BaseDrawableElement> observer)
-    {
-        return Unsubscriber<BaseDrawableElement>.SubscribeOrThrow(observers, observer);
-    }
-}
-
-public class InvalidatedElementDispatcher : IObserver<InvalidationRequest<PersistentElement>>
-{
-    private readonly SceneManager<PersistentElement, int> sceneManager;
-    private readonly BaseBitmapPainter baseBitmapPainter;
-
-    public InvalidatedElementDispatcher(SceneManager<PersistentElement, int> sceneManager, BaseBitmapPainter baseBitmapPainter)
-    {
-        this.sceneManager = sceneManager;
-        this.baseBitmapPainter = baseBitmapPainter;
-    }
-    public void OnCompleted()
-    {
-        sceneManager.RenderChanges(baseBitmapPainter);
-    }
-
-    public void OnError(Exception error)
-    {
-        throw error;
-    }
-
-    public void OnNext(InvalidationRequest<PersistentElement> value)
-    {
-        sceneManager.AddToQueue(value);
-    }
-}
-
-public class DrawableElementEmitterBitmapPainter : BaseBitmapPainter
-{
-    private readonly DrawableElementEmitter drawableElementEmitter;
-
-    public DrawableElementEmitterBitmapPainter(DrawableElementEmitter drawableElementEmitter)
-    {
-        this.drawableElementEmitter = drawableElementEmitter;
-    }
-
-    public override void DrawBackground(ColorARGB color)
-    {
-
-    }
-
-    public override void DrawElement(BaseDrawableElement element)
-    {
-        drawableElementEmitter.Emit(element);
-    }
-
-    public override void FinishDrawing()
-    {
-        drawableElementEmitter.Complete();
-    }
-
-    public override void InitDrawing()
-    {
-
-    }
-}
-
 public class CanvasViewModel : ViewModelBase
 {
-    private bool initialized = false;
-    private SceneManager<PersistentElement, int>? sceneManager;
     private readonly BaseBitmapPainter canvasPainter;
 
     public BaseBitmapPainter BaseBitmapPainter => canvasPainter;
-    public SceneManager<PersistentElement, int>? SceneManager 
-    { 
-        get => sceneManager; 
-        set
-        {
-            sceneManager = value;
-            sceneManager?.Rerender(canvasPainter);
-        }
-    }
 
     public IObservable<BaseDrawableElement> ElementEmitter
     {
         get => GetValue(() => ElementEmitter);
         set => SetValue(() => ElementEmitter, value);
     }
-    public IPipe Pipe
+    public IBehavior Pipe
     {
         get => GetValue(() => Pipe);
         set => SetValue(() => Pipe, value);
@@ -202,20 +78,18 @@ public class CanvasViewModel : ViewModelBase
         ElementEmitter = emitter;
 
         SelectionBorder = new ObservableBoundingBox();
-        var commandManager = StudioLaValse.CommandManager.CommandManager.CreateGreedy();
 
         Zoom = 1;
     }
 
-    public void CenterContent()
+    public void CenterContent(BaseContentWrapper baseContentWrapper) 
     {
-        if(sceneManager is null)
+        var boundingBox = baseContentWrapper.BoundingBox();
+
+        if (boundingBox.Width == 0 || boundingBox.Height == 0)
         {
             return;
         }
-
-        var boundingBox = new BoundingBox(sceneManager.VisualParents
-            .SelectMany(e => e.GetDrawableElements().Select(e => e.GetBoundingBox())));
 
         // Step 0: calculate view center
         var viewCenterX = Bounds.X + Bounds.Width / 2;
@@ -250,20 +124,20 @@ public class CanvasViewModel : ViewModelBase
 
 public static class PipeExtensions
 {
-    public static IPipe UndoRedo(this IPipe nextPipe, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+    public static IBehavior UndoRedo(this IBehavior nextPipe, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
     {
         return new UndoRedoPipe(nextPipe, commandManager, notifyEntityChanged);
     }
 }
 
-internal class UndoRedoPipe : IPipe
+internal class UndoRedoPipe : IBehavior
 {
-    private readonly IPipe next;
+    private readonly IBehavior next;
     private readonly ICommandManager commandManager;
     private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
     private bool controlDown = false;
 
-    public UndoRedoPipe(IPipe next, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+    public UndoRedoPipe(IBehavior next, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
     {
         this.next = next;
         this.commandManager = commandManager;

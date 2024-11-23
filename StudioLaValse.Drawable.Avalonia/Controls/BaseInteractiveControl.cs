@@ -16,6 +16,9 @@ public class BaseInteractiveControl : UserControl, IInteractiveCanvas
     private readonly ButtonObservable leftButtonObservable = new ButtonObservable();
     private readonly ButtonObservable rightButtonObservable = new ButtonObservable();
 
+    private bool leftButtonIsDown;
+    private bool rightButtonIsDown;
+
 
     /// <inheritdoc/>
     public static readonly DirectProperty<BaseInteractiveControl, double> ZoomProperty = AvaloniaProperty
@@ -29,6 +32,57 @@ public class BaseInteractiveControl : UserControl, IInteractiveCanvas
 
     /// <inheritdoc/>
     public List<Action<DrawingContext>> DrawActions = [];
+
+
+    private double zoom = 1;
+    /// <inheritdoc/>
+    public double Zoom
+    {
+        get => zoom;
+        set
+        {
+            SetAndRaise(ZoomProperty, ref zoom, value);
+            InvalidateVisual();
+        }
+    }
+
+    private double translateX;
+    /// <inheritdoc/>
+    public double TranslateX
+    {
+        get => translateX;
+        set
+        {
+            SetAndRaise(TranslateXProperty, ref translateX, value);
+            InvalidateVisual();
+        }
+    }
+
+    private double translateY;
+    /// <inheritdoc/>
+    public double TranslateY
+    {
+        get => translateY;
+        set
+        {
+            SetAndRaise(TranslateYProperty, ref translateY, value);
+            InvalidateVisual();
+        }
+    }
+
+    /// <inheritdoc/>
+    public IObservable<XY> MouseMove { get; }
+    /// <inheritdoc/>
+    public IObservable<bool> MouseLeftButtonDown { get; }
+    /// <inheritdoc/>
+    public IObservable<bool> MouseRightButtonDown { get; }
+    /// <inheritdoc/>
+    public IObservable<double> MouseWheel { get; }
+    /// <inheritdoc/>
+    new public IObservable<Interaction.UserInput.Key> KeyDown { get; }
+    /// <inheritdoc/>
+    new public IObservable<Interaction.UserInput.Key> KeyUp { get; }
+
 
 
     /// <inheritdoc/>
@@ -84,8 +138,9 @@ public class BaseInteractiveControl : UserControl, IInteractiveCanvas
             });
     }
 
-    private bool leftButtonIsDown;
-    private bool rightButtonIsDown;
+
+
+
     private void BaseInteractiveControl_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         var point = e.GetCurrentPoint(this);
@@ -123,55 +178,6 @@ public class BaseInteractiveControl : UserControl, IInteractiveCanvas
             rightButtonIsDown = nextRightButtonDown;
         }
     }
-
-    private double zoom = 1;
-    /// <inheritdoc/>
-    public double Zoom
-    {
-        get => zoom;
-        set 
-        {
-            SetAndRaise(ZoomProperty, ref zoom, value);
-            InvalidateVisual();
-        }
-    }
-
-    private double translateX;
-    /// <inheritdoc/>
-    public double TranslateX
-    {
-        get => translateX;
-        set
-        { 
-            SetAndRaise(TranslateXProperty, ref translateX, value);
-            InvalidateVisual();
-        }
-    }
-
-    private double translateY;
-    /// <inheritdoc/>
-    public double TranslateY
-    {
-        get => translateY;
-        set
-        {
-            SetAndRaise(TranslateYProperty, ref translateY, value);
-            InvalidateVisual();
-        }
-    }
-
-    /// <inheritdoc/>
-    public IObservable<XY> MouseMove { get; }
-    /// <inheritdoc/>
-    public IObservable<bool> MouseLeftButtonDown { get; }
-    /// <inheritdoc/>
-    public IObservable<bool> MouseRightButtonDown { get; }
-    /// <inheritdoc/>
-    public IObservable<double> MouseWheel { get; }
-    /// <inheritdoc/>
-    new public IObservable<Interaction.UserInput.Key> KeyDown { get; }
-    /// <inheritdoc/>
-    new public IObservable<Interaction.UserInput.Key> KeyUp { get; }
 
     /// <inheritdoc/>
     public void Refresh()

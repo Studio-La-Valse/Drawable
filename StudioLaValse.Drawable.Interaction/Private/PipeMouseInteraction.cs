@@ -5,13 +5,13 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeMouseInteraction<TEntity> : IPipe where TEntity : class
+    internal class PipeMouseInteraction<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
         private readonly IEnumerable<BaseVisualParent<TEntity>> scene;
         private readonly INotifyEntityChanged<TEntity> entityChanged;
 
-        public PipeMouseInteraction(IPipe source, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> entityChanged)
+        public PipeMouseInteraction(IBehavior source, IEnumerable<BaseVisualParent<TEntity>> scene, INotifyEntityChanged<TEntity> entityChanged)
         {
             this.source = source;
             this.scene = scene;

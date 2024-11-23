@@ -3,12 +3,12 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeRerender<TEntity> : IPipe where TEntity : class
+    internal class PipeRerender<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
         private readonly INotifyEntityChanged<TEntity> observable;
 
-        public PipeRerender(IPipe source, INotifyEntityChanged<TEntity> observable)
+        public PipeRerender(IBehavior source, INotifyEntityChanged<TEntity> observable)
         {
             this.source = source;
             this.observable = observable;

@@ -16,9 +16,9 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
         }
 
 
-        public BaseVisualParent<PersistentElement> Create(TextModel model)
+        public BaseVisualParent<PersistentElement> Create(GraphModel model)
         {
-            var visual = new TextScene(model);
+            var visual = new VisualGraph(model, selection);
             return visual;
         }
     }

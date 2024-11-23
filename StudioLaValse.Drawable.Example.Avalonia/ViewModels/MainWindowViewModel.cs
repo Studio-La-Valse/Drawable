@@ -27,13 +27,12 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue).WithBackground(ColorARGB.Black).WithRerender(CanvasViewModel.BaseBitmapPainter);
+            var sceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue, CanvasViewModel.BaseBitmapPainter).WithBackground(ColorARGB.Black).WithRerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
-            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(new InvalidatedElementDispatcher(sceneManager, CanvasViewModel.BaseBitmapPainter));
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager);
 
-            CanvasViewModel.SceneManager = sceneManager;
-            CanvasViewModel.Pipe = Pipeline.DoNothing()
+            CanvasViewModel.Pipe = BehaviorPipeline.DoNothing()
                 .InterceptKeys(selectionManager, out var _selectionManager)
                 .ThenHandleDefaultMouseInteraction(sceneManager.VisualParents, notifyEntityChanged)
                 .ThenHandleMouseHover(sceneManager.VisualParents, notifyEntityChanged)
@@ -41,6 +40,8 @@ public class MainWindowViewModel : ViewModelBase
                 .ThenHandleSelectionBorder(sceneManager.VisualParents, _selectionManager, CanvasViewModel.SelectionBorder, notifyEntityChanged)
                 .ThenHandleTransformations(_selectionManager, sceneManager.VisualParents, notifyEntityChanged)
                 .ThenRender(notifyEntityChanged);
+
+            CanvasViewModel.CenterContent(scene);
         });
 
     public ICommand ToggleZoom => ReactiveCommand.Create(

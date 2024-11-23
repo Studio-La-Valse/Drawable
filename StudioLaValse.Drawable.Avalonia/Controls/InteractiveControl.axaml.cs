@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using StudioLaValse.Drawable.Avalonia.Painters;
+using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
@@ -43,20 +44,20 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         }
     }
 
-    private IPipe pipe;
+    private IBehavior pipe;
     private IDisposable pipeSubscription;
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DirectProperty<InteractiveControl, IPipe> PipeProperty =
-         AvaloniaProperty.RegisterDirect<InteractiveControl, IPipe>(
+    public static readonly DirectProperty<InteractiveControl, IBehavior> PipeProperty =
+         AvaloniaProperty.RegisterDirect<InteractiveControl, IBehavior>(
              nameof(Pipe),
              e => e.Pipe,
              (e, v) => e.Pipe = v);
     /// <summary>
     /// 
     /// </summary>
-    public IPipe Pipe
+    public IBehavior Pipe
     {
         get => pipe;
         set
@@ -167,43 +168,8 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         baseBitmapPainter = new GraphicsPainter(this, textMeasurer);
         drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-        pipe = Pipeline.DoNothing();
+        pipe = BehaviorPipeline.DoNothing();
         pipeSubscription = this.Subscribe(pipe);
-    }
-
-    class DrawableElementObserver : IObserver<BaseDrawableElement>
-    {
-        private readonly GraphicsPainter baseBitmapPainter;
-
-        private bool completed = true;
-
-        public DrawableElementObserver(GraphicsPainter baseBitmapPainter)
-        {
-            this.baseBitmapPainter = baseBitmapPainter;
-        }
-
-        public void OnCompleted()
-        {
-            baseBitmapPainter.FinishDrawing();
-
-            completed = true;
-        }
-
-        public void OnError(Exception error)
-        {
-            throw error;
-        }
-
-        public void OnNext(BaseDrawableElement value)
-        {
-            if (completed)
-            {
-                baseBitmapPainter.InitDrawing();
-                completed = false;
-            }
-
-            baseBitmapPainter.DrawElement(value);
-        }
     }
 
     /// <summary>

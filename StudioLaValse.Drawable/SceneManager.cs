@@ -11,15 +11,16 @@ namespace StudioLaValse.Drawable
     /// </summary>
     /// <typeparam name="TEntity">The entity type</typeparam>
     /// <typeparam name="TKey">The entity key type</typeparam>
-    public class SceneManager<TEntity, TKey> where TEntity : class where TKey : IEquatable<TKey>
+    public class SceneManager<TEntity, TKey> : IObserver<InvalidationRequest<TEntity>> where TEntity : class where TKey : IEquatable<TKey>
     {
         private readonly Queue<InvalidationRequest<TEntity>> renderQueue = new();
         private readonly VisualTreeCache<TEntity, TKey> cache;
         private readonly VisualTree<TEntity> visualTree;
         private readonly GetKey<TEntity, TKey> keyExtractor;
+        private readonly BaseBitmapPainter bitmapPainter;
 
         /// <summary>
-        /// The background color of the scene. This value is passed to the associated <see cref="BaseBitmapPainter"></see> in the <see cref="RenderChanges(BaseBitmapPainter)"/> method.
+        /// The background color of the scene. This value is passed to the associated <see cref="BaseBitmapPainter"></see> in the <see cref="RenderChanges()"/> method.
         /// </summary>
         public ColorARGB? Background { get; set; }
 
@@ -40,11 +41,13 @@ namespace StudioLaValse.Drawable
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="keyExtractor">The key extractor for entities. Note that entities do not have to implement equals, but the keys they provide do.</param>
-        public SceneManager(BaseVisualParent<TEntity> scene, GetKey<TEntity, TKey> keyExtractor)
+        /// <param name="bitmapPainter"></param>
+        public SceneManager(BaseVisualParent<TEntity> scene, GetKey<TEntity, TKey> keyExtractor, BaseBitmapPainter bitmapPainter)
         {
             visualTree = new VisualTree<TEntity>(scene);
             cache = new VisualTreeCache<TEntity, TKey>(keyExtractor);
             this.keyExtractor = keyExtractor;
+            this.bitmapPainter = bitmapPainter;
         }
 
 
@@ -66,8 +69,7 @@ namespace StudioLaValse.Drawable
         /// <summary>
         /// Render all changes in the invalidation queue to the specified <see cref="BaseBitmapPainter"/>.
         /// </summary>
-        /// <param name="bitmapPainter"></param>
-        public void RenderChanges(BaseBitmapPainter bitmapPainter)
+        public void RenderChanges()
         {
             cache.Rebuild(visualTree);
 
@@ -88,7 +90,7 @@ namespace StudioLaValse.Drawable
                             throw new InvalidOperationException(
                                 $"Entity ({entity} : {keyExtractor(entity.Entity)}) was not found in the visual tree.");
                         case NotFoundHandler.Rerender:
-                            Rerender(bitmapPainter);
+                            Rerender();
                             return;
                         case NotFoundHandler.Skip:
                             continue;
@@ -123,30 +125,39 @@ namespace StudioLaValse.Drawable
         /// <summary>
         /// Rerenders the original provided <see cref="BaseVisualParent{TEntity}"/> to a the specified <see cref="BaseBitmapPainter"/>.
         /// </summary>
-        /// <param name="bitmapTarget"></param>
-        public void Rerender(BaseBitmapPainter bitmapTarget)
+        public void Rerender()
         {
             renderQueue.Clear();
             renderQueue.Enqueue(new InvalidationRequest<TEntity>(visualTree.Element, NotFoundHandler.Raise));
-            RenderChanges(bitmapTarget);
+            RenderChanges();
         }
 
         /// <summary>
-        /// A static method to create a default observable that notifies when the state of an entity has changed. Used by any <see cref="IObserver{T}"/>, or <see cref="SceneManagerExtensions.CreateObserver{TEntity, TKey}(SceneManager{TEntity, TKey}, BaseBitmapPainter)"/> to invalidate and rerender these entities.
+        /// A static method to create a default observable that notifies when the state of an entity has changed. 
+        /// Used by any <see cref="IObserver{T}"/>, or <see cref="SceneManagerExtensions.CreateObserver{TEntity, TKey}(SceneManager{TEntity, TKey})"/> to invalidate and rerender these entities.
         /// </summary>
         /// <returns></returns>
         public static INotifyEntityChanged<TEntity> CreateObservable()
         {
             return new EntityInvalidator<TEntity>();
         }
-    }
 
-    /// <summary>
-    /// A delegate to get a key from an entity.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    public delegate TKey GetKey<TEntity, TKey>(TEntity entity) where TKey : IEquatable<TKey> where TEntity : class;
+        /// <inheritdoc/>
+        public void OnCompleted()
+        {
+            RenderChanges();
+        }
+
+        /// <inheritdoc/>
+        public void OnError(Exception error)
+        {
+            throw error;
+        }
+
+        /// <inheritdoc/>
+        public void OnNext(InvalidationRequest<TEntity> value)
+        {
+            AddToQueue(value);
+        }
+    }
 }

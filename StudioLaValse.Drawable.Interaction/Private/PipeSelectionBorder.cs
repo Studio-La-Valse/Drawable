@@ -6,9 +6,9 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeSelectionBorder<TEntity> : IPipe where TEntity : class
+    internal class PipeSelectionBorder<TEntity> : IBehavior where TEntity : class
     {
-        private readonly IPipe source;
+        private readonly IBehavior source;
         private readonly IEnumerable<BaseVisualParent<TEntity>> scene;
         private readonly ISelectionManager<TEntity> selectionManager;
         private readonly ObservableBoundingBox boundingBox;
@@ -25,7 +25,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
         public bool DirectionRight =>
             LastMousePosition.X > LastMouseClickPosition.X;
 
-        public PipeSelectionBorder(IPipe source, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> entityChanged)
+        public PipeSelectionBorder(IBehavior source, IEnumerable<BaseVisualParent<TEntity>> scene, ISelectionManager<TEntity> selectionManager, ObservableBoundingBox observable, INotifyEntityChanged<TEntity> entityChanged)
         {
             this.source = source;
             this.scene = scene;
