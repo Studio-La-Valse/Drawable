@@ -15,24 +15,28 @@ namespace StudioLaValse.Drawable.Interaction
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleLeftMouseButtonDown(Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on mouse left button up.
         /// </summary>
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleLeftMouseButtonUp(Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on mouse right button down.
         /// </summary>
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleRightMouseButtonDown(Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on mouse right button up.
         /// </summary>
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleRightMouseButtonUp(Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on mouse move.
         /// </summary>
@@ -40,6 +44,7 @@ namespace StudioLaValse.Drawable.Interaction
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on mouse wheel scroll.
         /// </summary>
@@ -47,6 +52,7 @@ namespace StudioLaValse.Drawable.Interaction
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleMouseWheel(double delta, Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on key up.
         /// </summary>
@@ -54,6 +60,7 @@ namespace StudioLaValse.Drawable.Interaction
         /// <param name="invalidationRequests">The queue of elements that will be invalidated after the bevahior has propagated through all children.</param>
         /// <returns>True when the behavior is allowed to propagate throught its children.</returns>
         bool HandleKeyUp(Key key, Queue<InvalidationRequest<TEntity>> invalidationRequests);
+
         /// <summary>
         /// Called on key down.
         /// </summary>

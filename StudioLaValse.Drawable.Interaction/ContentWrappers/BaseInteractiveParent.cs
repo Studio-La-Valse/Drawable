@@ -105,25 +105,20 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         {
             LastMousePosition = position;
 
-            var wasOverBefore = IsMouseOver;
-            var isNowOver = CaptureMouse(LastMousePosition);
+            var isNowOver = CaptureMouse(position);
 
-            var respond = wasOverBefore != isNowOver;
-            if (respond)
+            if (isNowOver)
             {
-                if (isNowOver)
+                if (OnMouseEnter() is InvalidationRequest<TEntity> e)
                 {
-                    if (OnMouseEnter() is InvalidationRequest<TEntity> e)
-                    {
-                        invalidationRequests.Enqueue(e);
-                    }
+                    invalidationRequests.Enqueue(e);
                 }
-                else
+            }
+            else
+            {
+                if (OnMouseLeave() is InvalidationRequest<TEntity> e)
                 {
-                    if (OnMouseLeave() is InvalidationRequest<TEntity> e)
-                    {
-                        invalidationRequests.Enqueue(e);
-                    }
+                    invalidationRequests.Enqueue(e);
                 }
             }
 

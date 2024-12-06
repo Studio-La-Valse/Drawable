@@ -54,15 +54,10 @@ namespace StudioLaValse.Drawable.Example.Scene
         }
 
 
-        public override bool Transform(double deltaX, double deltaY)
+        public override InvalidationRequest<PersistentElement> Transform(double deltaX, double deltaY)
         {
             controlPoint.Set(controlPoint.Point.X + deltaX, controlPoint.Point.Y + deltaY);
-            return true;
-        }
-
-        public override PersistentElement OnTransformInvalidate()
-        {
-            return host.AssociatedElement;
+            return new InvalidationRequest<PersistentElement>(host.AssociatedElement);
         }
     }
 }

@@ -1,22 +1,9 @@
-﻿using StudioLaValse.Drawable.Interaction.Selection;
+﻿using StudioLaValse.Drawable.Interaction.Exceptions;
+using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.ContentWrappers
 {
-    /// <summary>
-    /// An exception that is thrown when an invalid selection logic has been provided.
-    /// </summary>
-    public class InvalidSelectionProviderException : Exception
-    {
-        /// <summary>
-        /// The default constructor.
-        /// </summary>
-        public InvalidSelectionProviderException() : base("Please either provide a selection through the constructor, or override with your own logic.")
-        {
-            
-        }
-    }
-
     /// <summary>
     /// An abstract class for elements that can be selected.
     /// </summary>
@@ -42,50 +29,6 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// </summary>
         protected virtual double DragDelta { get; set; } = 2;
 
-        /// <summary>
-        /// Deselect the element.
-        /// Returns true if the selection has been succesfully changed.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="InvalidSelectionProviderException"></exception>
-        public virtual bool Deselect()
-        {
-            if(selection is null)
-            {
-                throw new InvalidSelectionProviderException();
-            }
-
-            if (!selection.IsSelected(AssociatedElement))
-            {
-                return false;
-            }
-
-            selection.Remove(AssociatedElement);
-            return true;
-        }
-
-        /// <summary>
-        /// Select the element.
-        /// Returns true if the selection has been succesfully changed.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="InvalidSelectionProviderException"></exception>
-        public virtual bool Select()
-        {
-            if (selection is null)
-            {
-                throw new InvalidSelectionProviderException();
-            }
-
-            if (selection.IsSelected(AssociatedElement))
-            {
-                return false;
-            }
-
-            selection.Set(AssociatedElement);
-            return true;
-        }
-
         /// <inheritdoc/>
         protected BaseSelectableParent(TEntity element, ISelectionManager<TEntity> selection) : base(element)
         {
@@ -96,6 +39,51 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         public BaseSelectableParent(TEntity element) : base(element)
         {
 
+        }
+
+
+        /// <summary>
+        /// Deselect the element.
+        /// Returns true if the selection has been succesfully changed.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidSelectionProviderException"></exception>
+        public virtual InvalidationRequest<TEntity>? Deselect()
+        {
+            if (selection is null)
+            {
+                throw new InvalidSelectionProviderException();
+            }
+
+            if (!selection.IsSelected(AssociatedElement))
+            {
+                return null;
+            }
+
+            selection.Remove(AssociatedElement);
+            return new InvalidationRequest<TEntity>(AssociatedElement);
+        }
+
+        /// <summary>
+        /// Select the element.
+        /// Returns true if the selection has been succesfully changed.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidSelectionProviderException"></exception>
+        public virtual InvalidationRequest<TEntity>? Select()
+        {
+            if (selection is null)
+            {
+                throw new InvalidSelectionProviderException();
+            }
+
+            if (selection.IsSelected(AssociatedElement))
+            {
+                return null;
+            }
+
+            selection.Set(AssociatedElement);
+            return new InvalidationRequest<TEntity>(AssociatedElement);
         }
 
         /// <inheritdoc/>
@@ -113,16 +101,18 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
             {
                 if (IsMouseOver)
                 {
-                    if (Select())
+                    if (Select() is InvalidationRequest<TEntity> e)
                     {
-                        invalidationRequests.Enqueue(new InvalidationRequest<TEntity>(AssociatedElement));
+                        invalidationRequests.Enqueue(e);
+                        return false;
                     }
                 }
                 else
                 {
-                    if (Deselect())
+                    if (Deselect() is InvalidationRequest<TEntity> e)
                     {
-                        invalidationRequests.Enqueue(new InvalidationRequest<TEntity>(AssociatedElement));
+                        invalidationRequests.Enqueue(e);
+                        return false;
                     }
                 }
             }

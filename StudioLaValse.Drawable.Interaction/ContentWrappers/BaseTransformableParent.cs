@@ -31,18 +31,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// </summary>
         /// <param name="deltaX"></param>
         /// <param name="deltaY"></param>
-        /// <returns>A boolean value to indicate wether the update should require a rerender of the element returned by <see cref="OnTransformInvalidate"/> method.</returns>
-        public abstract bool Transform(double deltaX, double deltaY);
-
-        /// <summary>
-        /// A method called during transformation to check which item to rerender.
-        /// By default returns a reference to the <see cref="BaseVisualParent{TEntity}.AssociatedElement"/>
-        /// </summary>
-        /// <returns></returns>
-        public virtual TEntity OnTransformInvalidate()
-        {
-            return AssociatedElement;
-        }
+        public abstract InvalidationRequest<TEntity>? Transform(double deltaX, double deltaY);
 
 
         /// <inheritdoc/>
@@ -64,18 +53,14 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// <inheritdoc/>
         public override bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<TEntity>> invalidationRequests)
         {
-            var hasTransformed = false;
             if (IsSelected && leftMouseIsDown && lastMouseIsDownWasOnElement && position.DistanceTo(LastMousePosition) > DragDelta)
             {
                 var deltaX = position.X - LastMousePosition.X;
                 var deltaY = position.Y - LastMousePosition.Y;
-                hasTransformed = Transform(deltaX, deltaY);
-            }
-
-            if (hasTransformed)
-            {
-                var elementToTransform = OnTransformInvalidate();
-                invalidationRequests.Enqueue(new InvalidationRequest<TEntity>(elementToTransform));
+                if (Transform(deltaX, deltaY) is InvalidationRequest<TEntity> e)
+                {
+                    invalidationRequests.Enqueue(e);
+                } 
             }
 
             return base.HandleSetMousePosition(position, invalidationRequests);

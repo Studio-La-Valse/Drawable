@@ -54,11 +54,17 @@ namespace StudioLaValse.Drawable.Example.Scene
                 Y + Radius / 2);
         }
 
-        public override bool Transform(double deltaX, double deltaY)
+        public override InvalidationRequest<PersistentElement> Transform(double deltaX, double deltaY)
         {
             X += deltaX;
             Y += deltaY;
-            return true;
+            return new InvalidationRequest<PersistentElement>(AssociatedElement);
+        }
+
+        public override bool CaptureMouse(XY point)
+        {
+            var distance = point.DistanceTo(new XY(X, Y));
+            return distance <= Radius;
         }
 
         public override bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<PersistentElement>> invalidationRequests)

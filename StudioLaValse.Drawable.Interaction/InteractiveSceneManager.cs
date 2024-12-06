@@ -164,9 +164,9 @@ namespace StudioLaValse.Drawable.Interaction
 
             foreach(var element in VisualParents.OfType<BaseTransformableParent<TEntity>>().Where(e => e.IsSelected))
             {
-                if(element.Transform(deltaPosition.X, deltaPosition.Y))
+                if(element.Transform(deltaPosition.X, deltaPosition.Y) is InvalidationRequest<TEntity> e)
                 {
-                    RenderQueue.Enqueue(new InvalidationRequest<TEntity>(element.AssociatedElement));
+                    RenderQueue.Enqueue(e);
                 }
             }
 
@@ -226,7 +226,7 @@ namespace StudioLaValse.Drawable.Interaction
         /// </summary>
         public virtual void HandleHideBoundingBox()
         {
-            if (lastBoundingBox.HasValue)
+            if (Dragging && lastBoundingBox.HasValue)
             {
                 selectionManager.Clear();
 
