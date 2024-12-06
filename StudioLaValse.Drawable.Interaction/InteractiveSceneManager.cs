@@ -1,4 +1,3 @@
-using StudioLaValse.Drawable;
 using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.ContentWrappers;
@@ -6,7 +5,6 @@ using StudioLaValse.Drawable.Interaction.Private;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Geometry;
-using System.Xml.Linq;
 
 namespace StudioLaValse.Drawable.Interaction
 {

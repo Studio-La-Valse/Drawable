@@ -47,7 +47,7 @@ namespace StudioLaValse.Drawable.Private
         /// <summary>
         /// Regenerates the visual tree, clearing and repopulating elements, content wrappers, and child branches.
         /// </summary>
-        internal void Regenerate()
+        public void Regenerate()
         {
             elements.Clear();
             contentWrappers.Clear();
@@ -62,7 +62,7 @@ namespace StudioLaValse.Drawable.Private
         /// Helper method to recursively regenerate the visual tree.
         /// </summary>
         /// <param name="baseContentWrapper">The base content wrapper to regenerate from.</param>
-        internal void Regenerate(BaseContentWrapper baseContentWrapper)
+        public void Regenerate(BaseContentWrapper baseContentWrapper)
         {
             var drawableElements = baseContentWrapper.GetDrawableElements();
             foreach (var drawableElement in drawableElements)
@@ -90,7 +90,7 @@ namespace StudioLaValse.Drawable.Private
         /// <summary>
         /// Rebuilds the visual tree, clearing and repopulating the drawable elements.
         /// </summary>
-        internal void Rebuild()
+        public void Rebuild()
         {
             elements.Clear();
 
@@ -112,7 +112,7 @@ namespace StudioLaValse.Drawable.Private
         /// <summary>
         /// Redraws the visual tree, clearing and repopulating the drawable elements.
         /// </summary>
-        internal void Redraw()
+        public void Redraw()
         {
             elements.Clear();
 
@@ -123,6 +123,25 @@ namespace StudioLaValse.Drawable.Private
                 {
                     elements.Add(drawableElement);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Traverses the visual tree and handles behavior based on the provided function.
+        /// </summary>
+        /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
+        public void TraverseAndHandle(Func<BaseVisualParent<TEntity>, bool> handleBehavior)
+        {
+            var result = handleBehavior(VisualParent);
+
+            if (!result)
+            {
+                return;
+            }
+
+            foreach (var child in ChildBranches)
+            {
+                child.TraverseAndHandle(handleBehavior);
             }
         }
     }
