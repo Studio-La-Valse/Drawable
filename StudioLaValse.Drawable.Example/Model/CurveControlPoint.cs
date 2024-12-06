@@ -9,9 +9,9 @@ namespace StudioLaValse.Drawable.Example.Model
         public XY Point => point;
         public CurveModel ControlFor { get; }
 
-        public CurveControlPoint(IKeyGenerator<int> keyGenerator, XY point, CurveModel controlFor) : base(keyGenerator)
+        public CurveControlPoint(IKeyGenerator<int> keyGenerator, CurveModel controlFor) : base(keyGenerator)
         {
-            this.point = point;
+            point = new XY(Random.Shared.Next(200), Random.Shared.Next(200));
             ControlFor = controlFor;
         }
 

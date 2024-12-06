@@ -9,9 +9,9 @@ namespace StudioLaValse.Drawable.Example.Scene
     public class VisualCurveScene : BaseVisualParent<PersistentElement>
     {
         private readonly CurveScene curveScene;
-        private readonly ISelection<PersistentElement> selection;
+        private readonly ISelectionManager<PersistentElement> selection;
 
-        public VisualCurveScene(CurveScene curveScene, ISelection<PersistentElement> selection) : base(curveScene)
+        public VisualCurveScene(CurveScene curveScene, ISelectionManager<PersistentElement> selection) : base(curveScene)
         {
             this.curveScene = curveScene;
             this.selection = selection;

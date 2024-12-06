@@ -19,6 +19,7 @@ namespace StudioLaValse.Drawable
         private readonly GetKey<TEntity, TKey> keyExtractor;
         private readonly BaseBitmapPainter bitmapPainter;
 
+
         /// <summary>
         /// The background color of the scene. This value is passed to the associated <see cref="BaseBitmapPainter"></see> in the <see cref="RenderChanges()"/> method.
         /// </summary>
@@ -27,14 +28,13 @@ namespace StudioLaValse.Drawable
         /// <summary>
         /// Enumerates the visual parents in the scene.
         /// </summary>
-        public IEnumerable<BaseVisualParent<TEntity>> VisualParents =>
+        protected IEnumerable<BaseVisualParent<TEntity>> VisualParents =>
             cache.Entries.Select(e => e.Item2.VisualParent);
 
         /// <summary>
-        /// Enumerates the entities that are visually represented in the scene.
+        /// The render queue.
         /// </summary>
-        public IEnumerable<TEntity> KnownEntities =>
-            cache.Entries.Select(e => e.Item1);
+        protected Queue<InvalidationRequest<TEntity>> RenderQueue => this.renderQueue;
 
         /// <summary>
         /// The default constructor
@@ -76,7 +76,7 @@ namespace StudioLaValse.Drawable
             bitmapPainter.InitDrawing();
             if(Background is not null)
             {
-                bitmapPainter.DrawBackground(Background);
+                bitmapPainter.DrawBackground(Background.Value);
             }
 
             while (renderQueue.Count != 0)
@@ -115,11 +115,13 @@ namespace StudioLaValse.Drawable
                 }
             }
 
-            visualTree.SelectRecursive(e => e.ChildBranches)
+            visualTree.SelectBreadth(e => e.ChildBranches)
                 .SelectMany(e => e.Elements)
                 .ForEach(bitmapPainter.DrawElement);
 
             bitmapPainter.FinishDrawing();
+
+            cache.Rebuild(visualTree);
         }
 
         /// <summary>
@@ -131,6 +133,36 @@ namespace StudioLaValse.Drawable
             renderQueue.Enqueue(new InvalidationRequest<TEntity>(visualTree.Element, NotFoundHandler.Raise));
             RenderChanges();
         }
+
+        /// <summary>
+        /// Traverses the visual tree and handles behavior based on the provided function.
+        /// </summary>
+        /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
+        protected virtual void TraverseAndHandle(Func<BaseVisualParent<TEntity>, bool> handleBehavior)
+        {
+            TraverseAndHandle(visualTree, handleBehavior);
+        }
+
+        /// <summary>
+        /// Traverses the visual tree and handles behavior based on the provided function.
+        /// </summary>
+        /// <param name="visualTree">The visual tree branch to handle.</param>
+        /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
+        private void TraverseAndHandle(VisualTree<TEntity> visualTree, Func<BaseVisualParent<TEntity>, bool> handleBehavior)
+        {
+            var result = handleBehavior(visualTree.VisualParent);
+
+            if (!result)
+            {
+                return;
+            }
+
+            foreach (var child in visualTree.ChildBranches)
+            {
+                TraverseAndHandle(child, handleBehavior);
+            }
+        }
+
 
         /// <summary>
         /// A static method to create a default observable that notifies when the state of an entity has changed. 

@@ -68,5 +68,17 @@ namespace StudioLaValse.Drawable.DrawableElements
 
             return new BoundingBox(minX, maxX, minY, maxY);
         }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointEdge(XY other)
+        {
+            return new Polygon(Points).ClosestPointEdge(other);
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointShape(XY other)
+        {
+            return new Polygon(Points).ClosestPointShape(other);
+        }
     }
 }

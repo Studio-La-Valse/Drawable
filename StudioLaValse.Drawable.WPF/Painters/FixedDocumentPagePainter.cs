@@ -85,7 +85,7 @@ namespace StudioLaValse.Drawable.WPF.Painters
 
         }
 
-        protected override void DrawElement(FixedPage canvas, DrawableBezierCurve bezier)
+        protected override void DrawElement(FixedPage canvas, DrawableBezierQuadratic bezier)
         {
             throw new NotImplementedException();
         }

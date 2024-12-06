@@ -74,7 +74,7 @@ namespace StudioLaValse.Drawable.WPF.Painters
                 return;
             }
 
-            var isStroked = polyline.Color != null && polyline.StrokeWeight > 0;
+            var isStroked = polyline.StrokeWeight > 0;
 
             var segments = new PathSegmentCollection()
             {
@@ -118,7 +118,7 @@ namespace StudioLaValse.Drawable.WPF.Painters
             drawingContext.DrawGeometry(polygon.Fill.ToWindowsBrush(), pen, geometry);
         }
 
-        protected override void DrawElement(DrawingContext canvas, DrawableBezierCurve bezier)
+        protected override void DrawElement(DrawingContext canvas, DrawableBezierQuadratic bezier)
         {
             var enumerated = bezier.Points.ToList();
             if (enumerated.Count < 2)

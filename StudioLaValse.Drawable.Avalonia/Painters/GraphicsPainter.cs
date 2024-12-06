@@ -36,7 +36,9 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
     protected override void DrawElement(DrawingContext drawingContext, DrawableLine line)
     {
         var pen = line.Color.ToPen(line.Thickness);
-        drawingContext.DrawLine(pen, line.TopLeft.ToPoint(), line.BottomRight.ToPoint());
+        var firstPoint = new Point(line.X1, line.Y1);
+        var secondPoint = new Point(line.X2, line.Y2);
+        drawingContext.DrawLine(pen, firstPoint, secondPoint);
     }
 
     /// <inheritdoc/>
@@ -47,7 +49,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
 
         if (rectangle.StrokeColor != null && rectangle.StrokeWeight > 0)
         {
-            var pen = rectangle.StrokeColor.ToPen(rectangle.StrokeWeight);
+            var pen = rectangle.StrokeColor.Value.ToPen(rectangle.StrokeWeight);
             drawingContext.DrawRectangle(pen, rect);
         }
     }
@@ -69,7 +71,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
         var rect = new Rect(x, y, width, height);
         if (ellipse.StrokeColor != null && ellipse.StrokeWeight > 0)
         {
-            var strokeBrush = ellipse.StrokeColor.ToBrush();
+            var strokeBrush = ellipse.StrokeColor.Value.ToBrush();
             var pen = new Pen(strokeBrush, (float)ellipse.StrokeWeight);
             drawingContext.DrawEllipse(brush, pen, rect);
         }
@@ -82,32 +84,125 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
     /// <inheritdoc/>
     protected override void DrawElement(DrawingContext drawingContext, DrawablePolyline polyline)
     {
-        var strokeBrush = polyline.Color?.ToBrush() ?? new SolidColorBrush();
-        var pen = new Pen(strokeBrush, polyline.StrokeWeight);
-        var geometry = new PolylineGeometry()
+        if (!polyline.Points.Any())
         {
-            Points = polyline.Points.Select(p => p.ToPoint()).ToArray(),
+            return;
+        }
+
+        var segments = new PathSegments()
+        {
+            new PolyLineSegment(polyline.Points.Skip(1).Select(p => p.ToPoint()))
         };
-        drawingContext.DrawGeometry(null, pen, geometry);
+
+        var figures = new PathFigures()
+        {
+            new PathFigure()
+            {
+                StartPoint = polyline.Points.First().ToPoint(),
+                Segments = segments,
+                IsFilled = false
+            }
+        };
+
+        var geometry = new PathGeometry()
+        {
+            Figures = figures
+        };
+
+        var brush = polyline.Color.ToBrush();
+
+        drawingContext.DrawGeometry(null, new Pen(brush, polyline.StrokeWeight), geometry);
     }
 
     /// <inheritdoc/>
     protected override void DrawElement(DrawingContext drawingContext, DrawablePolygon polygon)
     {
-        var fillBrush = polygon.Fill?.ToBrush() ?? new SolidColorBrush();
-        var strokeBrush = polygon.Color?.ToBrush() ?? new SolidColorBrush();
-        var pen = new Pen(strokeBrush, polygon.StrokeWeight);
-        var geometry = new PolylineGeometry()
+        var segments = new PathSegments();
+        var isStroked = polygon.Color != null && polygon.StrokeWeight > 0;
+
+        foreach (var point in polygon.Points.Skip(1))
         {
-            Points = polygon.Points.Select(p => p.ToPoint()).ToArray(),
+            var segment = new LineSegment()
+            {
+                Point = point.ToPoint()
+            };
+
+            segments.Add(segment);
+        }
+
+        var figures = new PathFigures()
+        {
+            new PathFigure()
+            {
+                StartPoint = polygon.Points.First().ToPoint(),
+                IsFilled = true,
+                IsClosed = true,
+                Segments = segments,
+            }
         };
-        drawingContext.DrawGeometry(fillBrush, pen, geometry);
+
+        var geometry = new PathGeometry()
+        {
+            Figures = figures
+        };
+
+        var pen = isStroked ?
+            new Pen(polygon.Color!.Value.ToBrush(), polygon.StrokeWeight) : null;
+
+        drawingContext.DrawGeometry(polygon.Fill?.ToBrush(), pen, geometry);
     }
 
     /// <inheritdoc/>
-    protected override void DrawElement(DrawingContext canvas, DrawableBezierCurve bezier)
+    protected override void DrawElement(DrawingContext canvas, DrawableBezierQuadratic bezier)
     {
-        throw new NotImplementedException();
+        var enumerated = bezier.Points.ToList();
+        if (enumerated.Count < 2)
+        {
+            return;
+        }
+
+        if (enumerated.Count == 2)
+        {
+            var _pen = new Pen(bezier.Color.ToBrush(), bezier.StrokeWeight);
+            canvas.DrawLine(_pen, enumerated[0].ToPoint(), enumerated[1].ToPoint());
+            return;
+        }
+
+        var segments = new PathSegments();
+        PathSegment segment = enumerated.Count switch
+        {
+            3 => new global::Avalonia.Media.QuadraticBezierSegment()
+            {
+                Point1 = enumerated[1].ToPoint(),
+                Point2 = enumerated[2].ToPoint(),
+            },
+            4 => new BezierSegment()
+            {
+                Point1 = enumerated[1].ToPoint(),
+                Point2 = enumerated[2].ToPoint(),
+                Point3 = enumerated[3].ToPoint(),
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(bezier)),
+        };
+        segments.Add(segment);
+
+        var pathFigures = new PathFigures()
+        {
+            new PathFigure()
+            {
+                StartPoint = enumerated[0].ToPoint(),
+                Segments = segments,
+                IsFilled = false,
+                IsClosed = false
+            }
+        };
+        var geometry = new PathGeometry()
+        {
+            Figures = pathFigures,
+        };
+
+        var pen = new Pen(bezier.Color.ToBrush(), bezier.StrokeWeight);
+        canvas.DrawGeometry(null, pen, geometry);
     }
 
     /// <inheritdoc/>

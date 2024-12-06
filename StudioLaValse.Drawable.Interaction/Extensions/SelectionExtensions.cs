@@ -25,7 +25,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
             {
                 notifyEntityChanged.Invalidate(left, NotFoundHandler.Skip, Method.Deep);
                 notifyEntityChanged.Invalidate(right, NotFoundHandler.Skip, Method.Deep);
-                notifyEntityChanged.RenderChanges();
+                // notifyEntityChanged.RenderChanges();
             }
             return selection.AddChangedHandler(action, getKey);
         }

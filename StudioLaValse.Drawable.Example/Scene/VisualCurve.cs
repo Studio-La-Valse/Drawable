@@ -11,9 +11,9 @@ namespace StudioLaValse.Drawable.Example.Scene
     public class VisualCurve : BaseSelectableParent<PersistentElement>
     {
         private readonly CurveModel curve;
-        private readonly ISelection<PersistentElement> selection;
+        private readonly ISelectionManager<PersistentElement> selection;
 
-        public VisualCurve(CurveModel curve, ISelection<PersistentElement> selection) : base(curve, selection)
+        public VisualCurve(CurveModel curve, ISelectionManager<PersistentElement> selection) : base(curve, selection)
         {
             this.curve = curve;
             this.selection = selection;
@@ -27,10 +27,10 @@ namespace StudioLaValse.Drawable.Example.Scene
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
-            var color = IsMouseOver ? new ColorARGB(255, new ColorRGB(255, 0, 0)) : ColorARGB.White;
+            var color = IsMouseOver ? new ColorARGB(255, 255, 0, 0) : ColorARGB.White;
             var list = new List<BaseDrawableElement>()
             {
-                new DrawableBezierCurve(curve.ControlPoints.Select(p => p.Point), color, 2)
+                new DrawableBezierQuadratic(curve.First.Point, curve.Second.Point, curve.Third.Point, curve.Fourth.Point, color, 2)
             };
 
             if (IsSelected)
@@ -41,19 +41,15 @@ namespace StudioLaValse.Drawable.Example.Scene
             return list;
         }
 
-        public override bool OnMouseMove(XY mousePosition)
+        public override bool CaptureMouse(XY point)
         {
-            return false;
-        }
-
-        public override bool Respond(XY point)
-        {
-            return new DrawableBezierCurve(curve.ControlPoints.Select(p => p.Point), ColorARGB.White, 2).ClosestPoint(point).DistanceTo(point) < 10;
+            var margin = 2;
+            return new CubicBezierSegment(curve.First.Point, curve.Second.Point, curve.Third.Point, curve.Fourth.Point).ClosestPoint(point).DistanceTo(point) < margin;
         }
 
         public override BoundingBox BoundingBox()
         {
-            return new DrawableBezierCurve(curve.ControlPoints.Select(p => p.Point), ColorARGB.Black, 2).GetBoundingBox();
+            return new BoundingBox(GetDrawableElements().OfType<DrawableBezierQuadratic>().Select(e => e.GetBoundingBox()));
         }
     }
 }

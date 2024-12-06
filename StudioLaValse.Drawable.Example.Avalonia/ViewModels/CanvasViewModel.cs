@@ -13,6 +13,7 @@ using System.Reactive.Linq;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.ContentWrappers;
+using StudioLaValse.Drawable.Interaction;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
@@ -27,12 +28,12 @@ public class CanvasViewModel : ViewModelBase
         get => GetValue(() => ElementEmitter);
         set => SetValue(() => ElementEmitter, value);
     }
-    public IBehavior Pipe
+    public IInputObserver Pipe
     {
         get => GetValue(() => Pipe);
         set => SetValue(() => Pipe, value);
     }
-    public ObservableBoundingBox SelectionBorder
+    public IObservable<BoundingBox> SelectionBorder
     {
         get => GetValue(() => SelectionBorder);
         set => SetValue(() => SelectionBorder, value);
@@ -77,8 +78,6 @@ public class CanvasViewModel : ViewModelBase
 
         ElementEmitter = emitter;
 
-        SelectionBorder = new ObservableBoundingBox();
-
         Zoom = 1;
     }
 
@@ -122,101 +121,101 @@ public class CanvasViewModel : ViewModelBase
 }
 
 
-public static class PipeExtensions
-{
-    public static IBehavior UndoRedo(this IBehavior nextPipe, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
-    {
-        return new UndoRedoPipe(nextPipe, commandManager, notifyEntityChanged);
-    }
-}
+//public static class PipeExtensions
+//{
+//    public static IBehavior UndoRedo(this IBehavior nextPipe, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+//    {
+//        return new UndoRedoPipe(nextPipe, commandManager, notifyEntityChanged);
+//    }
+//}
 
-internal class UndoRedoPipe : IBehavior
-{
-    private readonly IBehavior next;
-    private readonly ICommandManager commandManager;
-    private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
-    private bool controlDown = false;
+//internal class UndoRedoPipe : IBehavior
+//{
+//    private readonly IBehavior next;
+//    private readonly ICommandManager commandManager;
+//    private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+//    private bool controlDown = false;
 
-    public UndoRedoPipe(IBehavior next, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
-    {
-        this.next = next;
-        this.commandManager = commandManager;
-        this.notifyEntityChanged = notifyEntityChanged;
-    }
+//    public UndoRedoPipe(IBehavior next, ICommandManager commandManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+//    {
+//        this.next = next;
+//        this.commandManager = commandManager;
+//        this.notifyEntityChanged = notifyEntityChanged;
+//    }
 
-    public void HandleLeftMouseButtonDown()
-    {
-        next.HandleLeftMouseButtonDown();
-    }
+//    public void HandleLeftMouseButtonDown()
+//    {
+//        next.HandleLeftMouseButtonDown();
+//    }
 
-    public void HandleLeftMouseButtonUp()
-    {
-        next.HandleLeftMouseButtonUp();
-    }
+//    public void HandleLeftMouseButtonUp()
+//    {
+//        next.HandleLeftMouseButtonUp();
+//    }
 
-    public void HandleMouseWheel(double delta)
-    {
-        next.HandleMouseWheel(delta);
-    }
+//    public void HandleMouseWheel(double delta)
+//    {
+//        next.HandleMouseWheel(delta);
+//    }
 
-    public void HandleRightMouseButtonDown()
-    {
-        next.HandleRightMouseButtonDown();
-    }
+//    public void HandleRightMouseButtonDown()
+//    {
+//        next.HandleRightMouseButtonDown();
+//    }
 
-    public void HandleRightMouseButtonUp()
-    {
-        next.HandleRightMouseButtonUp();
-    }
+//    public void HandleRightMouseButtonUp()
+//    {
+//        next.HandleRightMouseButtonUp();
+//    }
 
-    public void HandleSetMousePosition(XY position)
-    {
-        next.HandleSetMousePosition(position);
-    }
+//    public void HandleSetMousePosition(XY position)
+//    {
+//        next.HandleSetMousePosition(position);
+//    }
 
-    public void KeyDown(Interaction.UserInput.Key key)
-    {
-        if (key == Interaction.UserInput.Key.Control)
-        {
-            controlDown = true;
-        }
+//    public void KeyDown(Interaction.UserInput.Key key)
+//    {
+//        if (key == Interaction.UserInput.Key.Control)
+//        {
+//            controlDown = true;
+//        }
 
-        next.KeyDown(key);
-    }
+//        next.Handle(key);
+//    }
 
-    public void KeyUp(Interaction.UserInput.Key key)
-    {
-        if (key == Interaction.UserInput.Key.Control)
-        {
-            controlDown = false;
-        }
+//    public void KeyUp(Interaction.UserInput.Key key)
+//    {
+//        if (key == Interaction.UserInput.Key.Control)
+//        {
+//            controlDown = false;
+//        }
 
-        if (controlDown && key == Interaction.UserInput.Key.Z)
-        {
-            try
-            {
-                commandManager.Undo();
-                notifyEntityChanged.RenderChanges();
-            }
-            catch
-            {
+//        if (controlDown && key == Interaction.UserInput.Key.Z)
+//        {
+//            try
+//            {
+//                commandManager.Undo();
+//                notifyEntityChanged.RenderChanges();
+//            }
+//            catch
+//            {
 
-            }
-        }
+//            }
+//        }
 
-        if (controlDown && key == Interaction.UserInput.Key.R)
-        {
-            try
-            {
-                commandManager.Redo();
-                notifyEntityChanged.RenderChanges();
-            }
-            catch
-            {
+//        if (controlDown && key == Interaction.UserInput.Key.R)
+//        {
+//            try
+//            {
+//                commandManager.Redo();
+//                notifyEntityChanged.RenderChanges();
+//            }
+//            catch
+//            {
 
-            }
-        }
+//            }
+//        }
 
-        next.KeyUp(key);
-    }
-}
+//        next.HandleKeyUp(key);
+//    }
+//}

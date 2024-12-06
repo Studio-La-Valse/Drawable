@@ -16,7 +16,7 @@ namespace StudioLaValse.Drawable.Example.Scene
 
         public override PersistentElement Ghost => controlPoint;
 
-        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelection<PersistentElement> selection) : base(controlPoint, selection)
+        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelectionManager<PersistentElement> selection) : base(controlPoint, selection)
         {
             this.controlPoint = controlPoint;
             this.host = host;
@@ -45,7 +45,7 @@ namespace StudioLaValse.Drawable.Example.Scene
                 alpha += 100;
             }
 
-            var ghostColor = new ColorARGB(alpha, new ColorRGB(255, 0, 0));
+            var ghostColor = new ColorARGB(alpha, 255, 0, 0);
             return new List<BaseDrawableElement>()
             {
                 new DrawableCircle(controlPoint.Point, 5, ColorARGB.White),
@@ -53,16 +53,6 @@ namespace StudioLaValse.Drawable.Example.Scene
             };
         }
 
-        public override bool Respond(XY point)
-        {
-            var distance = point.DistanceTo(controlPoint.Point);
-            return distance < 5;
-        }
-
-        public override bool OnMouseMove(XY mousePosition)
-        {
-            return false;
-        }
 
         public override bool Transform(double deltaX, double deltaY)
         {

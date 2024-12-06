@@ -1,6 +1,7 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.WPF.ViewModels;
 using StudioLaValse.Key;
@@ -21,7 +22,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             get => GetValue(() => ElementEmitter);
             set => SetValue(() => ElementEmitter, value);
         }
-        public IBehavior Pipe
+        public IInputObserver Pipe
         {
             get => GetValue(() => Pipe);
             set => SetValue(() => Pipe, value);

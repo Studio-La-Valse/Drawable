@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="StudioLaValse.Geometry" Version="1.0.0" />
+    <PackageReference Include="StudioLaValse.Geometry" Version="2.0.0" />
     <PackageReference Include="System.Reactive.Linq" Version="6.0.0" />
   </ItemGroup>
 

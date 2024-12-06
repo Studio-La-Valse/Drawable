@@ -4,7 +4,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeEnablePan : IBehavior
+    internal class PipeEnablePan : IInputObserver
     {
         private readonly IInteractiveCanvas canvas;
 
@@ -38,7 +38,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
 
         public void HandleRightMouseButtonUp()
         {
-            RightButtonDown = false;
+            RightButtonDown = false; 
         }
 
         public void HandleSetMousePosition(XY position)
@@ -63,14 +63,14 @@ namespace StudioLaValse.Drawable.Interaction.Private
             LastPosition = positionOnHost;
         }
 
-        public void KeyDown(Key key)
+        public void HandleKeyDown(Key key)
         {
-
+           
         }
 
-        public void KeyUp(Key key)
+        public void HandleKeyUp(Key key)
         {
-
+            
         }
     }
 }

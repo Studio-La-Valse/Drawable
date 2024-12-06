@@ -92,13 +92,13 @@ namespace StudioLaValse.Drawable.DrawableElements
             this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
             if (HorizontalAlignment == HorizontalTextOrigin.Center)
             {
-                var left = OriginX - dimensions.X / 2;
+                var left = OriginX - dimensions.Value.X / 2;
                 return left;
             }
 
             if (HorizontalAlignment == HorizontalTextOrigin.Right)
             {
-                var left = OriginX - dimensions.X;
+                var left = OriginX - dimensions.Value.X;
                 return left;
             }
 
@@ -121,13 +121,13 @@ namespace StudioLaValse.Drawable.DrawableElements
             this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
             if (HorizontalAlignment == HorizontalTextOrigin.Center)
             {
-                var right = OriginX + dimensions.X / 2;
+                var right = OriginX + dimensions.Value.X / 2;
                 return right;
             }
 
             if (HorizontalAlignment == HorizontalTextOrigin.Left)
             {
-                var right = OriginX + dimensions.X;
+                var right = OriginX + dimensions.Value.X;
                 return right;
             }
 
@@ -150,13 +150,13 @@ namespace StudioLaValse.Drawable.DrawableElements
             this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
             if (VerticalAlignment == VerticalTextOrigin.Center)
             {
-                var top = OriginY - dimensions.Y / 2;
+                var top = OriginY - dimensions.Value.Y / 2;
                 return top;
             }
 
             if (VerticalAlignment == VerticalTextOrigin.Bottom)
             {
-                var top = OriginY - dimensions.Y;
+                var top = OriginY - dimensions.Value.Y;
                 return top;
             }
 
@@ -179,13 +179,13 @@ namespace StudioLaValse.Drawable.DrawableElements
             this.dimensions ??= measureText.Measure(Text, FontFamily, FontSize);
             if (VerticalAlignment == VerticalTextOrigin.Center)
             {
-                var bottom = OriginY + dimensions.Y / 2;
+                var bottom = OriginY + dimensions.Value.Y / 2;
                 return bottom;
             }
 
             if (VerticalAlignment == VerticalTextOrigin.Top)
             {
-                var bottom = OriginY + dimensions.Y;
+                var bottom = OriginY + dimensions.Value.Y;
                 return bottom;
             }
 
@@ -225,6 +225,18 @@ namespace StudioLaValse.Drawable.DrawableElements
             }
 
             return new BoundingBox(topleftX, topleftX + dimensions.X, topleftY, topleftY + dimensions.Y);
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointEdge(XY other)
+        {
+            return GetBoundingBox().ClosestPointEdge(other);
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointShape(XY other)
+        {
+            return GetBoundingBox().ClosestPointShape(other);
         }
     }
 }

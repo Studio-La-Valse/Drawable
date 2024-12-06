@@ -26,6 +26,11 @@ namespace StudioLaValse.Drawable.Interaction.Private
 
         public void Clear()
         {
+            if (!selection.GetSelection().Any())
+            {
+                return;
+            }
+
             var changedElements = selection.GetSelection().ToArray();
 
             selection.Clear();
@@ -40,6 +45,11 @@ namespace StudioLaValse.Drawable.Interaction.Private
 
         public void Add(TEntity element)
         {
+            if (IsSelected(element))
+            {
+                return;
+            }
+
             selection.Add(element);
             Emit(new[] { element }, Array.Empty<TEntity>());
         }
@@ -52,6 +62,11 @@ namespace StudioLaValse.Drawable.Interaction.Private
 
         public void Remove(TEntity element)
         {
+            if (!IsSelected(element))
+            {
+                return;
+            }
+
             selection.Remove(element);
             Emit(Array.Empty<TEntity>(), new[] { element });
         }
@@ -65,6 +80,11 @@ namespace StudioLaValse.Drawable.Interaction.Private
         public void Set(TEntity element)
         {
             var existingSelection = selection.GetSelection().ToArray();
+            if(existingSelection.Length == 1 && existingSelection.Single().Equals(element))
+            {
+                return;
+            }
+
             selection.Set(element);
             Emit(new[] { element }, existingSelection);
         }

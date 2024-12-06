@@ -20,7 +20,7 @@ internal static class GeometryExtensions
 
     public static Color ToColor(this ColorARGB colorARGB)
     {
-        var color = new Color((byte)colorARGB.Alpha, (byte)colorARGB.Red, (byte)colorARGB.Green, (byte)colorARGB.Blue);
+        var color = new Color((byte)(colorARGB.Alpha * 255), (byte)colorARGB.Red, (byte)colorARGB.Green, (byte)colorARGB.Blue);
         return color;
     }
 

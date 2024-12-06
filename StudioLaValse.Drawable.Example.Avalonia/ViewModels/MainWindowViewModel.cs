@@ -9,6 +9,7 @@ using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Key;
 using StudioLaValse.Geometry;
 using System;
+using StudioLaValse.Drawable.Interaction;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
@@ -27,19 +28,15 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new SceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue, CanvasViewModel.BaseBitmapPainter).WithBackground(ColorARGB.Black).WithRerender();
+            var sceneManager = new InteractiveSceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue, CanvasViewModel.BaseBitmapPainter, selectionManager);
+
+            sceneManager.Rerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
             sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager);
 
-            CanvasViewModel.Pipe = BehaviorPipeline.DoNothing()
-                .InterceptKeys(selectionManager, out var _selectionManager)
-                .ThenHandleDefaultMouseInteraction(sceneManager.VisualParents, notifyEntityChanged)
-                .ThenHandleMouseHover(sceneManager.VisualParents, notifyEntityChanged)
-                .ThenHandleDefaultClick(sceneManager.VisualParents, _selectionManager)
-                .ThenHandleSelectionBorder(sceneManager.VisualParents, _selectionManager, CanvasViewModel.SelectionBorder, notifyEntityChanged)
-                .ThenHandleTransformations(_selectionManager, sceneManager.VisualParents, notifyEntityChanged)
-                .ThenRender(notifyEntityChanged);
+            CanvasViewModel.SelectionBorder = sceneManager;
+            CanvasViewModel.Pipe = sceneManager;
 
             CanvasViewModel.CenterContent(scene);
         });

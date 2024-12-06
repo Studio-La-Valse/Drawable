@@ -1,4 +1,5 @@
 ﻿using StudioLaValse.Geometry;
+using System.Drawing;
 
 namespace StudioLaValse.Drawable.DrawableElements
 {
@@ -113,6 +114,25 @@ namespace StudioLaValse.Drawable.DrawableElements
         public double GetDistance(XY point)
         {
             return new Line(X1, Y1, X2, Y2).Distance(point);
+        }
+
+        /// <inheritdoc/>
+        public bool ContainsPosition(XY position, double margin = 0)
+        {
+            margin += Thickness / 2;
+            return GetDistance(position) <= margin;
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointEdge(XY other)
+        {
+            return new Line(X1, Y1, X2, Y2).ClosestPoint(other);
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointShape(XY other)
+        {
+            return new Line(X1, Y1, X2, Y2).ClosestPoint(other);
         }
     }
 }

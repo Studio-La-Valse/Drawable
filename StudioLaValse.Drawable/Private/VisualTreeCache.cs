@@ -21,7 +21,7 @@ namespace StudioLaValse.Drawable.Private
         public void Rebuild(VisualTree<TEntity> visualTree)
         {
             dict.Clear();
-            foreach (var branch in visualTree.SelectRecursive(e => e.ChildBranches))
+            foreach (var branch in visualTree.SelectBreadth(e => e.ChildBranches))
             {
                 Add(branch.Element, branch);
             }

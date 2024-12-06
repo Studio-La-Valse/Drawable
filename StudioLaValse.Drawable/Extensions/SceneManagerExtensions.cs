@@ -90,7 +90,7 @@ namespace StudioLaValse.Drawable.Extensions
         /// <param name="contentWrapper"></param>
         public static void DrawContentWrapper(this BaseBitmapPainter bitmapPainter, BaseContentWrapper contentWrapper)
         {
-            foreach (var wrapper in contentWrapper.SelectRecursive(p => p.GetContentWrappers()))
+            foreach (var wrapper in contentWrapper.SelectBreadth(p => p.GetContentWrappers()))
             {
                 foreach (var element in wrapper.GetDrawableElements())
                 {

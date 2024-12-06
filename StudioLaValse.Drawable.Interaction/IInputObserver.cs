@@ -1,11 +1,12 @@
-﻿using StudioLaValse.Geometry;
+﻿using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Geometry;
 
-namespace StudioLaValse.Drawable.Interaction.UserInput
+namespace StudioLaValse.Drawable.Interaction
 {
     /// <summary>
     /// A single behavior in an interaction pipeline, that determines the behavior on interaction events like mouse- or key events.
     /// </summary>
-    public interface IBehavior
+    public interface IInputObserver
     {
         /// <summary>
         /// Called on mouse left button down.
@@ -34,10 +35,10 @@ namespace StudioLaValse.Drawable.Interaction.UserInput
         /// <summary>
         /// Called on key up.
         /// </summary>
-        void KeyUp(Key key);
+        void HandleKeyUp(Key key);
         /// <summary>
         /// Called on key down.
         /// </summary>
-        void KeyDown(Key key);
+        void HandleKeyDown(Key key);
     }
 }

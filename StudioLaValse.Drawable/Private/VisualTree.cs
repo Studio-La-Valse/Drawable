@@ -3,27 +3,51 @@ using StudioLaValse.Drawable.DrawableElements;
 
 namespace StudioLaValse.Drawable.Private
 {
+    /// <summary>
+    /// Represents a visual tree containing elements of type <typeparamref name="TEntity"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of elements contained in the visual tree.</typeparam>
     internal class VisualTree<TEntity> where TEntity : class
     {
-        private readonly List<VisualTree<TEntity>> childBranches = [];
-        private readonly List<BaseDrawableElement> elements = [];
-        private readonly List<BaseContentWrapper> contentWrappers = [];
+        private readonly List<VisualTree<TEntity>> childBranches = new List<VisualTree<TEntity>>();
+        private readonly List<BaseDrawableElement> elements = new List<BaseDrawableElement>();
+        private readonly List<BaseContentWrapper> contentWrappers = new List<BaseContentWrapper>();
         private readonly BaseVisualParent<TEntity> visualParent;
 
+        /// <summary>
+        /// Gets the element associated with the visual parent.
+        /// </summary>
         public TEntity Element => visualParent.AssociatedElement;
+
+        /// <summary>
+        /// Gets the visual parent.
+        /// </summary>
         public BaseVisualParent<TEntity> VisualParent => visualParent;
+
+        /// <summary>
+        /// Gets the drawable elements in the visual tree.
+        /// </summary>
         public IEnumerable<BaseDrawableElement> Elements => elements;
+
+        /// <summary>
+        /// Gets the child branches of the visual tree.
+        /// </summary>
         public IEnumerable<VisualTree<TEntity>> ChildBranches => childBranches;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisualTree{TEntity}"/> class.
+        /// </summary>
+        /// <param name="visualParent">The visual parent associated with the tree.</param>
         public VisualTree(BaseVisualParent<TEntity> visualParent)
         {
             this.visualParent = visualParent;
-            this.contentWrappers.Add(visualParent);
+            contentWrappers.Add(visualParent);
         }
 
-
-        public void Regenerate()
+        /// <summary>
+        /// Regenerates the visual tree, clearing and repopulating elements, content wrappers, and child branches.
+        /// </summary>
+        internal void Regenerate()
         {
             elements.Clear();
             contentWrappers.Clear();
@@ -33,7 +57,12 @@ namespace StudioLaValse.Drawable.Private
             contentWrappers.Add(contentWrapper);
             Regenerate(contentWrapper);
         }
-        private void Regenerate(BaseContentWrapper baseContentWrapper)
+
+        /// <summary>
+        /// Helper method to recursively regenerate the visual tree.
+        /// </summary>
+        /// <param name="baseContentWrapper">The base content wrapper to regenerate from.</param>
+        internal void Regenerate(BaseContentWrapper baseContentWrapper)
         {
             var drawableElements = baseContentWrapper.GetDrawableElements();
             foreach (var drawableElement in drawableElements)
@@ -58,8 +87,10 @@ namespace StudioLaValse.Drawable.Private
             }
         }
 
-
-        public void Rebuild()
+        /// <summary>
+        /// Rebuilds the visual tree, clearing and repopulating the drawable elements.
+        /// </summary>
+        internal void Rebuild()
         {
             elements.Clear();
 
@@ -78,9 +109,10 @@ namespace StudioLaValse.Drawable.Private
             }
         }
 
-
-
-        public void Redraw()
+        /// <summary>
+        /// Redraws the visual tree, clearing and repopulating the drawable elements.
+        /// </summary>
+        internal void Redraw()
         {
             elements.Clear();
 
@@ -94,4 +126,5 @@ namespace StudioLaValse.Drawable.Private
             }
         }
     }
+
 }

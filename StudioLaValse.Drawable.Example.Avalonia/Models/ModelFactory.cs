@@ -1,6 +1,8 @@
 ﻿using StudioLaValse.Drawable.Example.Model;
 using StudioLaValse.Drawable.Example.Scene;
+using StudioLaValse.Geometry;
 using StudioLaValse.Key;
+using System;
 using System.Linq;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.Models
@@ -25,14 +27,9 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
             return graph;
 
             //var curve = new CurveModel(keyGenerator);
-            //foreach(var _ in Enumerable.Range(0, 4))
-            //{
-            //    var point = new XY(Random.Shared.Next() % n, Random.Shared.Next() % n);
-            //    curve.AddControlPoint(point);
-            //}
 
             //var scene = new CurveScene(keyGenerator, curve);
-            //var visualScene = new VisualCurveScene(scene, selection);
+            //return scene;
         }
     }
 }

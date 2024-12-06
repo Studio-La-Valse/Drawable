@@ -48,7 +48,7 @@ namespace StudioLaValse.Drawable.BitmapPainters
                     Cache.Add((c) => DrawElement(c, ellipse));
                     break;
 
-                case DrawableBezierCurve bezier:
+                case DrawableBezierQuadratic bezier:
                     Cache.Add(c => DrawElement(c, bezier));
                     break;
 

@@ -23,7 +23,7 @@ namespace StudioLaValse.Drawable.Winforms.Painters
 
         public override void DrawBackground(ColorARGB colorARGB)
         {
-            drawingContext.BackColor = ((ColorRGB)colorARGB).ToWindowsColor();
+            drawingContext.BackColor = colorARGB.ToWindowsColor();
         }
 
         protected override void DrawElement(Graphics drawingContext, DrawableLine line)
@@ -39,7 +39,7 @@ namespace StudioLaValse.Drawable.Winforms.Painters
 
             if (rectangle.StrokeColor != null && rectangle.StrokeWeight > 0)
             {
-                var pen = new Pen(rectangle.StrokeColor.ToWindowsColor(), (float)rectangle.StrokeWeight);
+                var pen = new Pen(rectangle.StrokeColor.Value.ToWindowsColor(), (float)rectangle.StrokeWeight);
                 drawingContext.DrawRectangle(pen, rect);
             }
         }
@@ -65,7 +65,7 @@ namespace StudioLaValse.Drawable.Winforms.Painters
 
             if (ellipse.StrokeColor != null && ellipse.StrokeWeight > 0)
             {
-                var strokeBrush = ellipse.StrokeColor.ToWindowsBrush();
+                var strokeBrush = ellipse.StrokeColor.Value.ToWindowsBrush();
                 var pen = new Pen(strokeBrush, (float)ellipse.StrokeWeight);
                 drawingContext.DrawEllipse(pen, (float)(ellipse.CenterX - ellipse.Width / 2), (float)(ellipse.CenterY - ellipse.Height / 2), (float)ellipse.Width, (float)ellipse.Height);
             }
@@ -86,7 +86,7 @@ namespace StudioLaValse.Drawable.Winforms.Painters
             drawingContext.Invalidate();
         }
 
-        protected override void DrawElement(Graphics canvas, DrawableBezierCurve bezier)
+        protected override void DrawElement(Graphics canvas, DrawableBezierQuadratic bezier)
         {
             throw new NotImplementedException();
         }

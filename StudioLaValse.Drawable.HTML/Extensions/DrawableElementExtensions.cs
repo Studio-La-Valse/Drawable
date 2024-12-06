@@ -25,21 +25,6 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         }
 
         /// <summary>
-        /// Extract the color rgb string value.
-        /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static string Svg(this ColorRGB color)
-        {
-            var fillr = color.Red;
-            var fillg = color.Green;
-            var fillb = color.Blue;
-
-            var rgb = $"rgb({fillr},{fillg},{fillb})";
-            return rgb;
-        }
-
-        /// <summary>
         /// Transform the element to an svg string.
         /// </summary>
         /// <param name="line"></param>
@@ -157,18 +142,14 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         /// <returns></returns>
         public static string Svg(this DrawablePolyline polyline)
         {
-            var fillr = polyline.Color.Red;
-            var fillg = polyline.Color.Blue;
-            var fillb = polyline.Color.Green;
-            var filla = (polyline.Color.Alpha / 255D).ToString().Replace(",", ".");
-
-            var stroker = polyline.Color?.Red ?? 0;
-            var strokeg = polyline.Color?.Green ?? 0;
-            var strokeb = polyline.Color?.Blue ?? 0;
+            var stroker = polyline.Color.Red;
+            var strokeg = polyline.Color.Green;
+            var strokeb = polyline.Color.Blue;
+            var strokea = (polyline.Color.Alpha / 255D).ToString().Replace(",", ".");
 
             var style = $"stroke-width:{polyline.StrokeWeight}; ".Replace(",", ".") +
                         $"stroke:rgb({stroker},{strokeg},{strokeb}); " +
-                        $"opacity:{filla}; ";
+                        $"opacity:{strokea}; ";
 
             var svg = $"<polyline style=\"{style}\" points=\"";
 
@@ -196,7 +177,7 @@ namespace StudioLaValse.Drawable.HTML.Extensions
             var fillg = polygon.Fill?.Blue ?? 0;
             var fillb = polygon.Fill?.Green ?? 0;
             var filla = polygon.Fill is not null ?
-                (polygon.Fill.Alpha / 255D).ToString().Replace(",", ".") :
+                (polygon.Fill.Value.Alpha / 255D).ToString().Replace(",", ".") :
                 "0";
 
             var stroker = polygon.Color?.Red ?? 0;
@@ -235,7 +216,7 @@ namespace StudioLaValse.Drawable.HTML.Extensions
         /// </summary>
         /// <param name="bezier"></param>
         /// <returns></returns>
-        public static string Svg(this DrawableBezierCurve bezier)
+        public static string Svg(this DrawableBezierQuadratic bezier)
         {
             throw new NotImplementedException();
         }

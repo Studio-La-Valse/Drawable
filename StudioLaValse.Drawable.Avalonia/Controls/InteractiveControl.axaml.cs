@@ -5,6 +5,7 @@ using Avalonia.Media;
 using StudioLaValse.Drawable.Avalonia.Painters;
 using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
@@ -44,20 +45,20 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         }
     }
 
-    private IBehavior pipe;
+    private IInputObserver pipe;
     private IDisposable pipeSubscription;
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DirectProperty<InteractiveControl, IBehavior> PipeProperty =
-         AvaloniaProperty.RegisterDirect<InteractiveControl, IBehavior>(
+    public static readonly DirectProperty<InteractiveControl, IInputObserver> PipeProperty =
+         AvaloniaProperty.RegisterDirect<InteractiveControl, IInputObserver>(
              nameof(Pipe),
              e => e.Pipe,
              (e, v) => e.Pipe = v);
     /// <summary>
     /// 
     /// </summary>
-    public IBehavior Pipe
+    public IInputObserver Pipe
     {
         get => pipe;
         set
@@ -73,20 +74,20 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         }
     }
 
-    private ObservableBoundingBox? _selectionBorder;
+    private IObservable<BoundingBox>? _selectionBorder;
     private IDisposable? selectionBorderSubscription;
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DirectProperty<InteractiveControl, ObservableBoundingBox?> SelectionBorderProperty =
-         AvaloniaProperty.RegisterDirect<InteractiveControl, ObservableBoundingBox?>(
+    public static readonly DirectProperty<InteractiveControl, IObservable<BoundingBox>?> SelectionBorderProperty =
+         AvaloniaProperty.RegisterDirect<InteractiveControl, IObservable<BoundingBox>?>(
              nameof(SelectionBorder),
              e => e.SelectionBorder,
              (e, v) => e.SelectionBorder = v);
     /// <summary>
     /// 
     /// </summary>
-    public ObservableBoundingBox? SelectionBorder
+    public IObservable<BoundingBox>? SelectionBorder
     {
         get => _selectionBorder;
         set
@@ -168,7 +169,7 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         baseBitmapPainter = new GraphicsPainter(this, textMeasurer);
         drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-        pipe = BehaviorPipeline.DoNothing();
+        pipe = new EmptyPipeline();
         pipeSubscription = this.Subscribe(pipe);
     }
 
@@ -182,5 +183,53 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         selectionBorderSubscription?.Dispose();
         pipeSubscription.Dispose();
         elementEmitterSubscription?.Dispose();
+    }
+}
+
+internal class EmptyPipeline : IInputObserver
+{
+    internal EmptyPipeline()
+    {
+
+    }
+
+    public void HandleLeftMouseButtonDown()
+    {
+
+    }
+
+    public void HandleLeftMouseButtonUp()
+    {
+
+    }
+
+    public void HandleMouseWheel(double delta)
+    {
+
+    }
+
+    public void HandleRightMouseButtonDown()
+    {
+
+    }
+
+    public void HandleRightMouseButtonUp()
+    {
+
+    }
+
+    public void HandleSetMousePosition(XY position)
+    {
+
+    }
+
+    public void HandleKeyDown(Key key)
+    {
+
+    }
+
+    public void HandleKeyUp(Key key)
+    {
+
     }
 }

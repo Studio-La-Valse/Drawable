@@ -12,6 +12,7 @@ using StudioLaValse.Drawable.WPF.Skia.BitmapPainters;
 using StudioLaValse.Drawable.WPF.UserControls;
 using StudioLaValse.Drawable.WPF.Visuals;
 using System.Windows;
+using StudioLaValse.Drawable.Interaction;
 
 namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 {
@@ -44,7 +45,7 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 
         private IDisposable pipeSubscription;
         public static readonly DependencyProperty PipeProperty = DependencyPropertyBase
-            .Register<SKElementUserControl, IBehavior>(nameof(Pipe), (o, e) =>
+            .Register<SKElementUserControl, IInputObserver>(nameof(Pipe), (o, e) =>
             {
                 o.pipeSubscription?.Dispose();
                 if (e is null)
@@ -54,9 +55,9 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 
                 o.pipeSubscription = o.Subscribe(e);
             }, BehaviorPipeline.DoNothing());
-        public IBehavior Pipe
+        public IInputObserver Pipe
         {
-            get => (IBehavior)GetValue(PipeProperty);
+            get => (IInputObserver)GetValue(PipeProperty);
             set => SetValue(PipeProperty, value);
         }
 

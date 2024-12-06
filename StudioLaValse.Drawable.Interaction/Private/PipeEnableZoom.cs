@@ -4,7 +4,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeEnableZoom : IBehavior
+    internal class PipeEnableZoom : IInputObserver
     {
         private readonly IInteractiveCanvas canvas;
 
@@ -57,12 +57,12 @@ namespace StudioLaValse.Drawable.Interaction.Private
             MouseLocation = positionOnHost;
         }
 
-        public void KeyDown(Key key)
+        public void HandleKeyDown(Key key)
         {
 
         }
 
-        public void KeyUp(Key key)
+        public void HandleKeyUp(Key key)
         {
 
         }

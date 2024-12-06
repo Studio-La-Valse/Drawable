@@ -21,18 +21,19 @@ namespace StudioLaValse.Drawable.Example.Scene
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
-            var elements = new List<BaseDrawableElement>();
             if (host.IsSelected)
             {
-                elements.Add(new DrawableCircle(host.X, host.Y, host.Radius, ColorARGB.Transparant, new ColorARGB(255, 255, 0, 0), 5));
+                yield return new DrawableCircle(host.X, host.Y, host.Radius, ColorARGB.Transparant, new ColorARGB(1, 255, 0, 0), 5);
+                yield break;
             }
 
-            if (host.IsMouseOver)
+            if (host.MouseIsOver)
             {
-                elements.Add(new DrawableCircle(host.X, host.Y, host.Radius, new ColorARGB(100, 255, 0, 0)));
+                yield return new DrawableCircle(host.X, host.Y, host.Radius, new ColorARGB(0.5, 255, 0, 0));
+                yield break;
             }
 
-            return elements;
+            yield break;
         }
     }
 }

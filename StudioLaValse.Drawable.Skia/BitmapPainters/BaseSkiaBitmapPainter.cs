@@ -65,7 +65,7 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
             canvas.DrawOval((float)ellipse.CenterX, (float)ellipse.CenterY, (float)ellipse.Width / 2, (float)ellipse.Height / 2, paint);
             if (ellipse.StrokeColor != null && ellipse.StrokeWeight > 0)
             {
-                color = new SKColor((byte)ellipse.StrokeColor.Red, (byte)ellipse.StrokeColor.Green, (byte)ellipse.StrokeColor.Blue, (byte)ellipse.StrokeColor.Alpha);
+                color = new SKColor((byte)ellipse.StrokeColor!.Value.Red, (byte)ellipse.StrokeColor!.Value.Green, (byte)ellipse.StrokeColor!.Value.Blue, (byte)(ellipse.StrokeColor!.Value.Alpha * 255));
                 paint = new SKPaint() { Color = color, IsStroke = true, StrokeWidth = (float)ellipse.StrokeWeight };
 
                 canvas.DrawOval((float)ellipse.CenterX, (float)ellipse.CenterY, (float)ellipse.Width / 2, (float)ellipse.Height / 2, paint);
@@ -110,7 +110,7 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
 
             if (polygon.Fill != null)
             {
-                var fillColor = new SKColor((byte)polygon.Fill.Red, (byte)polygon.Fill.Green, (byte)polygon.Fill.Blue, (byte)polygon.Fill.Alpha);
+                var fillColor = new SKColor((byte)polygon.Fill.Value.Red, (byte)polygon.Fill.Value.Green, (byte)polygon.Fill.Value.Blue, (byte)polygon.Fill.Value.Alpha);
 
                 using var fillPaint = new SKPaint() { Color = fillColor, IsStroke = false, Style = SKPaintStyle.Fill, IsAntialias = true };
                 fillPaint.IsAntialias = antiAlias;
@@ -120,7 +120,7 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
 
             if (polygon.Color != null && polygon.StrokeWeight > 0)
             {
-                var strokeColor = new SKColor((byte)polygon.Color.Red, (byte)polygon.Color.Green, (byte)polygon.Color.Blue, (byte)polygon.Color.Alpha);
+                var strokeColor = new SKColor((byte)polygon.Color.Value.Red, (byte)polygon.Color.Value.Green, (byte)polygon.Color.Value.Blue, (byte)polygon.Color.Value.Alpha);
 
                 using var strokePaint = new SKPaint() { Color = strokeColor, IsStroke = true, Style = SKPaintStyle.Stroke, StrokeJoin = SKStrokeJoin.Miter, StrokeCap = SKStrokeCap.Butt, IsAntialias = true };
                 strokePaint.IsAntialias = antiAlias;
@@ -129,7 +129,7 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
             }
         }
 
-        protected override void DrawElement(SKCanvas canvas, DrawableBezierCurve bezier)
+        protected override void DrawElement(SKCanvas canvas, DrawableBezierQuadratic bezier)
         {
             throw new NotImplementedException();
         }

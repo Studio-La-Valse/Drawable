@@ -85,6 +85,6 @@ namespace StudioLaValse.Drawable.BitmapPainters
         /// </summary>
         /// <param name="bitmap"></param>
         /// <param name="bezier"></param>
-        protected abstract void DrawElement(TBitmap bitmap, DrawableBezierCurve bezier);
+        protected abstract void DrawElement(TBitmap bitmap, DrawableBezierQuadratic bezier);
     }
 }

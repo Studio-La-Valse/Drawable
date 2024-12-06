@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
@@ -39,7 +40,7 @@ namespace StudioLaValse.Drawable.WPF.UserControls
 
         private IDisposable pipeSubscription;
         public static readonly DependencyProperty PipeProperty = DependencyPropertyBase
-            .Register<WindowsDrawingContextUserControl, IBehavior>(nameof(Pipe), (o, e) =>
+            .Register<WindowsDrawingContextUserControl, IInputObserver>(nameof(Pipe), (o, e) =>
             {
                 o.pipeSubscription?.Dispose();
                 if (e is null)
@@ -49,9 +50,9 @@ namespace StudioLaValse.Drawable.WPF.UserControls
 
                 o.pipeSubscription = o.Subscribe(e);
             }, BehaviorPipeline.DoNothing());
-        public IBehavior Pipe
+        public IInputObserver Pipe
         {
-            get => (IBehavior)GetValue(PipeProperty);
+            get => (IInputObserver)GetValue(PipeProperty);
             set => SetValue(PipeProperty, value);
         }
 

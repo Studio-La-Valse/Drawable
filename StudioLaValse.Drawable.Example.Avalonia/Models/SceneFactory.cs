@@ -23,6 +23,9 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
 
             var visual = new VisualGraph(model, selection);
             return visual;
+
+            //var visual = new VisualCurveScene(model, selection);
+            //return visual;
         }
     }
 }
