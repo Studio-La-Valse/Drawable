@@ -3,6 +3,7 @@ using StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 using StudioLaValse.Drawable.Example.Avalonia.Views;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.Models

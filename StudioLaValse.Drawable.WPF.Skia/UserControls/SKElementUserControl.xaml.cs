@@ -7,13 +7,10 @@ using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Skia.Models;
 using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.WPF.DependencyProperties;
-using StudioLaValse.Drawable.WPF.Painters;
 using StudioLaValse.Drawable.WPF.Skia.BitmapPainters;
-using StudioLaValse.Drawable.WPF.UserControls;
 using StudioLaValse.Drawable.WPF.Visuals;
 using System.Windows;
 using StudioLaValse.Drawable.Interaction;
-using StudioLaValse.Drawable.Avalonia.Controls;
 using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.WPF.Skia.UserControls

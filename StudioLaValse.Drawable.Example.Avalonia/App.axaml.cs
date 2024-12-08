@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using StudioLaValse.Drawable.Example.Avalonia.Models;
 using MsExtensionsHostingSample;
 using System.Diagnostics;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 
 namespace StudioLaValse.Drawable.Example.Avalonia;
 public partial class App : Application

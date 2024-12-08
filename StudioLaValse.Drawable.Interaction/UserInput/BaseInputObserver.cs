@@ -1,8 +1,7 @@
 ﻿using StudioLaValse.Drawable.Interaction;
-using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Geometry;
 
-namespace StudioLaValse.Drawable.Avalonia.Controls;
+namespace StudioLaValse.Drawable.Interaction.UserInput;
 
 /// <summary>
 /// An input observer that does not actually do anything, but allows for chaining.

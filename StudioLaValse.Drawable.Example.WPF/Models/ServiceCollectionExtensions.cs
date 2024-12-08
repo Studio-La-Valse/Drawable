@@ -3,6 +3,7 @@ using StudioLaValse.Drawable.Example.WPF.ViewModels;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.WPF.Models

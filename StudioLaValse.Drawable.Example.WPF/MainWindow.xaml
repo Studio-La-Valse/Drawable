@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:usercontrols="clr-namespace:StudioLaValse.Drawable.WPF.UserControls;assembly=StudioLaValse.Drawable.WPF" 
+        xmlns:converters="clr-namespace:StudioLaValse.Drawable.WPF.Converters;assembly=StudioLaValse.Drawable.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" Background="Green">
-
+    
+    <Window.Resources>
+        <converters:BoundsConverter x:Key="BoundsConverter"/>     
+    </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -30,13 +35,13 @@
                DataContext="{Binding CanvasViewModel}">
             <usercontrols:WindowsDrawingContextUserControl ElementEmitter="{Binding ElementEmitter, Mode=TwoWay}"
                                                            SelectionBorder="{Binding SelectionBorder, Mode=TwoWay}"
-                                                           Pipe="{Binding Pipe, Mode=TwoWay}"
+                                                           InputObserver="{Binding InputObserver, Mode=TwoWay}"
                                                            TranslateX="{Binding TranslateX, Mode=TwoWay}"
                                                            TranslateY="{Binding TranslateY, Mode=TwoWay}"
                                                            Zoom="{Binding Zoom, Mode=TwoWay}"
                                                            EnablePan="{Binding EnablePan, Mode=TwoWay}"
                                                            EnableZoom="{Binding EnableZoom, Mode=TwoWay}"
-                                                           Bounds="{Binding Bounds, Mode=OneWayToSource}"
+                                                           Bounds="{Binding Bounds, Mode=OneWayToSource, Converter={StaticResource ResourceKey=BoundsConverter}}"
                                                            Background="Black"/>
         </Grid>
 

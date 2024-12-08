@@ -7,6 +7,7 @@ using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
+using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
 using StudioLaValse.Geometry;
 using System.Drawing;
@@ -44,32 +45,32 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         }
     }
 
-    private IInputObserver pipe;
-    private IDisposable pipeSubscription;
+    private IInputObserver inputObserver;
+    private IDisposable inputObserverSubscription;
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DirectProperty<InteractiveControl, IInputObserver> PipeProperty =
+    public static readonly DirectProperty<InteractiveControl, IInputObserver> InputObserverProperty =
          AvaloniaProperty.RegisterDirect<InteractiveControl, IInputObserver>(
-             nameof(Pipe),
-             e => e.Pipe,
-             (e, v) => e.Pipe = v);
+             nameof(InputObserver),
+             e => e.InputObserver,
+             (e, v) => e.InputObserver = v);
     /// <summary>
     /// 
     /// </summary>
-    public IInputObserver Pipe
+    public IInputObserver InputObserver
     {
-        get => pipe;
+        get => InputObserver;
         set
         {
-            pipeSubscription?.Dispose();
-            SetAndRaise(PipeProperty, ref pipe, value);
-            if(pipe is null)
+            inputObserverSubscription?.Dispose();
+            SetAndRaise(InputObserverProperty, ref inputObserver, value);
+            if(inputObserver is null)
             {
                 return;
             }
 
-            pipeSubscription = this.Subscribe(pipe);
+            inputObserverSubscription = this.Subscribe(inputObserver);
         }
     }
 
@@ -168,8 +169,8 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         baseBitmapPainter = new GraphicsPainter(this, textMeasurer);
         drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-        pipe = new BaseInputObserver();
-        pipeSubscription = this.Subscribe(pipe);
+        inputObserver = new BaseInputObserver();
+        inputObserverSubscription = this.Subscribe(inputObserver);
     }
 
     /// <summary>
@@ -180,7 +181,7 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         enableZoomSubscription?.Dispose();
         enablePanSubscription?.Dispose();
         selectionBorderSubscription?.Dispose();
-        pipeSubscription.Dispose();
+        inputObserverSubscription.Dispose();
         elementEmitterSubscription?.Dispose();
     }
 }

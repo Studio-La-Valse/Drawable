@@ -10,6 +10,7 @@ using StudioLaValse.Key;
 using StudioLaValse.Geometry;
 using System;
 using StudioLaValse.Drawable.Interaction;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 
 namespace StudioLaValse.Drawable.Example.Avalonia.ViewModels;
 
@@ -28,7 +29,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.BaseBitmapPainter);
+            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter);
 
             sceneManager.Rerender();
 
@@ -36,7 +37,7 @@ public class MainWindowViewModel : ViewModelBase
             sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
             CanvasViewModel.SelectionBorder = sceneManager;
-            CanvasViewModel.Pipe = sceneManager.Then(selectionManager);
+            CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
 
             CanvasViewModel.CenterContent(scene);
         });

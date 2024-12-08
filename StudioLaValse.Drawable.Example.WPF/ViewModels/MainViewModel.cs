@@ -4,6 +4,7 @@ using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 using StudioLaValse.Drawable.WPF.Commands;
 using StudioLaValse.Drawable.WPF.ViewModels;
 using StudioLaValse.Geometry;
@@ -28,7 +29,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             {
                 var model = modelFactory.Create();
                 var scene = sceneFactory.Create(model);
-                var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.BaseBitmapPainter);
+                var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter);
 
                 sceneManager.Rerender();
 
@@ -36,7 +37,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
                 sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
                 CanvasViewModel.SelectionBorder = sceneManager;
-                CanvasViewModel.Pipe = sceneManager.Then(selectionManager);
+                CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
 
                 CanvasViewModel.CenterContent(scene);
             },

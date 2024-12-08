@@ -1,8 +1,8 @@
-﻿using StudioLaValse.Drawable.Avalonia.Controls;
-using StudioLaValse.Drawable.BitmapPainters;
+﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
+using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.WPF.DependencyProperties;
 using StudioLaValse.Drawable.WPF.Painters;
@@ -39,22 +39,22 @@ namespace StudioLaValse.Drawable.WPF.UserControls
 
 
 
-        private IDisposable pipeSubscription;
-        public static readonly DependencyProperty PipeProperty = DependencyPropertyBase
-            .Register<WindowsDrawingContextUserControl, IInputObserver>(nameof(Pipe), (o, e) =>
+        private IDisposable inputObserverSubscription;
+        public static readonly DependencyProperty InputObserverProperty = DependencyPropertyBase
+            .Register<WindowsDrawingContextUserControl, IInputObserver?>(nameof(InputObserver), (o, e) =>
             {
-                o.pipeSubscription?.Dispose();
+                o.inputObserverSubscription?.Dispose();
                 if (e is null)
                 {
                     return;
                 }
 
-                o.pipeSubscription = o.Subscribe(e);
+                o.inputObserverSubscription = o.Subscribe(e);
             }, new BaseInputObserver());
-        public IInputObserver Pipe
+        public IInputObserver? InputObserver
         {
-            get => (IInputObserver)GetValue(PipeProperty);
-            set => SetValue(PipeProperty, value);
+            get => (IInputObserver?)GetValue(InputObserverProperty);
+            set => SetValue(InputObserverProperty, value);
         }
 
 
@@ -128,8 +128,8 @@ namespace StudioLaValse.Drawable.WPF.UserControls
             baseBitmapPainter = new WindowsDrawingContextBitmapPainter(this, textMeasurer);
             drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-            Pipe = new BaseInputObserver();
-            pipeSubscription = this.Subscribe(Pipe);    
+            InputObserver = new BaseInputObserver();
+            inputObserverSubscription = this.Subscribe(InputObserver);    
         }
 
         public override void Refresh()
