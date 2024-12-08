@@ -7,8 +7,8 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// <summary>
     /// An abstract class for visual elements that can be transformed.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseTransformableParent<TEntity> : BaseSelectableParent<TEntity> where TEntity : class
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class BaseTransformableParent<TKey> : BaseSelectableParent<TKey> where TKey : IEquatable<TKey>
     {
         private bool leftMouseIsDown;
         private bool lastMouseIsDownWasOnElement;
@@ -19,13 +19,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         public bool LockTransform { get; set; }
 
         /// <inheritdoc/>
-        protected BaseTransformableParent(TEntity element, ISelectionManager<TEntity> selection) : base(element, selection)
-        {
-
-        }
-
-        /// <inheritdoc/>
-        protected BaseTransformableParent(TEntity element) : base(element)
+        protected BaseTransformableParent(TKey element) : base(element)
         {
 
         }

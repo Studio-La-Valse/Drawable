@@ -6,11 +6,11 @@ using StudioLaValse.Key;
 using StudioLaValse.Drawable.Text;
 
 namespace StudioLaValse.Drawable.Example.Scene;
-public class TextScene : BaseVisualParent<PersistentElement>
+public class TextScene : BaseVisualParent<ElementId>
 {
     private readonly TextModel textModel;
 
-    public TextScene(TextModel textModel) : base(textModel)
+    public TextScene(TextModel textModel) : base(textModel.ElementId)
     {
         this.textModel = textModel;
     }

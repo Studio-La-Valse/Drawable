@@ -1,4 +1,6 @@
-﻿namespace StudioLaValse.Drawable
+﻿using StudioLaValse.Drawable.Exceptions;
+
+namespace StudioLaValse.Drawable
 {
     /// <summary>
     /// An enum defining the possible handling methods when an entity is not found during invalidation.
@@ -14,7 +16,7 @@
         /// </summary>
         Rerender = 1,
         /// <summary>
-        /// Raise an <see cref="InvalidOperationException"/>.
+        /// Raise an <see cref="EntityNotFoundInVisualTreeException"/>.
         /// </summary>
         Throw = 2
     }

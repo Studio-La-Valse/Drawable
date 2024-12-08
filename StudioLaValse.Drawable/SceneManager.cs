@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.ContentWrappers;
+using StudioLaValse.Drawable.Exceptions;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.Private;
 using StudioLaValse.Geometry;
@@ -11,16 +12,13 @@ namespace StudioLaValse.Drawable
     /// <summary>
     /// The main object that invalidates Entity instances associated in the scene.
     /// </summary>
-    /// <typeparam name="TEntity">The entity type</typeparam>
     /// <typeparam name="TKey">The entity key type</typeparam>
-    public class SceneManager<TEntity, TKey> where TEntity : class where TKey : IEquatable<TKey>
+    public class SceneManager<TKey> where TKey : IEquatable<TKey>
     {
-        private readonly Dictionary<TEntity, InvalidationRequest<TEntity>> renderQueue;
-        private readonly VisualTreeCache2<TEntity, TKey> cache;
-        private readonly VisualTree<TEntity> visualTree;
-        private readonly GetKey<TEntity, TKey> keyExtractor;
+        private readonly Dictionary<TKey, InvalidationRequest<TKey>> renderQueue;
+        private readonly VisualTreeCache<TKey> cache;
+        private readonly VisualTree<TKey> visualTree;
         private readonly BaseBitmapPainter bitmapPainter;
-
 
         /// <summary>
         /// The background color of the scene. This value is passed to the associated <see cref="BaseBitmapPainter"></see> in the <see cref="RenderChanges()"/> method.
@@ -31,28 +29,25 @@ namespace StudioLaValse.Drawable
         /// The default constructor
         /// </summary>
         /// <param name="scene"></param>
-        /// <param name="keyExtractor">The key extractor for entities. Note that entities do not have to implement equals, but the keys they provide do.</param>
         /// <param name="bitmapPainter"></param>
-        public SceneManager(BaseVisualParent<TEntity> scene, GetKey<TEntity, TKey> keyExtractor, BaseBitmapPainter bitmapPainter)
+        public SceneManager(BaseVisualParent<TKey> scene, BaseBitmapPainter bitmapPainter)
         {
-            renderQueue = new Dictionary<TEntity, InvalidationRequest<TEntity>>(new KeyEqualityComparer<TEntity, TKey>(keyExtractor));  
-            visualTree = new VisualTree<TEntity>(scene);
-            cache = new VisualTreeCache2<TEntity, TKey>(keyExtractor);
-            this.keyExtractor = keyExtractor;
+            renderQueue = new Dictionary<TKey, InvalidationRequest<TKey>>(new EqualityComparer<TKey>());  
+            visualTree = new VisualTree<TKey>(scene);
+            cache = new VisualTreeCache<TKey>();
             this.bitmapPainter = bitmapPainter;
         }
-
 
         /// <summary>
         /// Adds the specified entity to the invalidation queue.
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>The same instance of the <see cref="SceneManager{TEntity, TKey}"/> to allow chaining of methods.</returns>
-        public SceneManager<TEntity, TKey> AddToQueue(InvalidationRequest<TEntity> request)
+        /// <returns>The same instance of the <see cref="SceneManager{TKey}"/> to allow chaining of methods.</returns>
+        public SceneManager<TKey> AddToQueue(InvalidationRequest<TKey> request)
         {
             if (renderQueue.TryGetValue(request.Entity, out var existing))
             {
-                var updatedExisting = new InvalidationRequest<TEntity>(request.Entity,
+                var updatedExisting = new InvalidationRequest<TKey>(request.Entity,
                     request.NotFoundHandler.GetMax(existing.NotFoundHandler),
                     request.Method.GetMax(existing.Method));
                 renderQueue[request.Entity] = updatedExisting;
@@ -83,8 +78,8 @@ namespace StudioLaValse.Drawable
                 switch (entity.NotFoundHandler)
                 {
                     case NotFoundHandler.Throw:
-                        throw new InvalidOperationException(
-                            $"Entity ({entity} : {keyExtractor(entity.Entity)}) was not found in the visual tree.");
+                        throw new EntityNotFoundInVisualTreeException(
+                            $"Entity with key {entity} was not found in the visual tree.");
                     case NotFoundHandler.Rerender:
                         Rerender();
                         return;
@@ -126,7 +121,7 @@ namespace StudioLaValse.Drawable
         public void Rerender()
         {
             renderQueue.Clear();
-            AddToQueue(new InvalidationRequest<TEntity>(visualTree.Element, NotFoundHandler.Throw, Method.Recursive));
+            AddToQueue(new InvalidationRequest<TKey>(visualTree.Key, NotFoundHandler.Throw, Method.Recursive));
             RenderChanges();
         }
 
@@ -134,22 +129,19 @@ namespace StudioLaValse.Drawable
         /// Traverses the visual tree and handles behavior based on the provided function.
         /// </summary>
         /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
-        protected virtual void TraverseAndHandle(Func<BaseVisualParent<TEntity>, bool> handleBehavior)
+        protected virtual void TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
         {
             visualTree.TraverseAndHandle(handleBehavior);
         }
 
-        
-
-
         /// <summary>
         /// A static method to create a default observable that notifies when the state of an entity has changed. 
-        /// Used by any <see cref="IObserver{T}"/>, or <see cref="SceneManagerExtensions.CreateObserver{TEntity, TKey}(SceneManager{TEntity, TKey})"/> to invalidate and rerender these entities.
+        /// Used by any <see cref="IObserver{T}"/>, or <see cref="SceneManagerExtensions.CreateObserver{TKey}(SceneManager{TKey})"/> to invalidate and rerender these entities.
         /// </summary>
         /// <returns></returns>
-        public static INotifyEntityChanged<TEntity> CreateObservable()
+        public static INotifyEntityChanged<TKey> CreateObservable()
         {
-            return new EntityInvalidator<TEntity>();
+            return new EntityInvalidator<TKey>();
         }
     }
 }

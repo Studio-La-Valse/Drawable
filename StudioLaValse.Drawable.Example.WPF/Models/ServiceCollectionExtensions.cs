@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StudioLaValse.Drawable.Example.WPF.ViewModels;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Key;
@@ -12,8 +13,9 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
         {
             services.AddTransient<IKeyGenerator<int>, IncrementalKeyGenerator>();
 
-            var notifyElementChanged = SceneManager<PersistentElement, ElementId>.CreateObservable();
-            services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyElementChanged, e => e.ElementId));
+            var notifyElementChanged = SceneManager<ElementId>.CreateObservable();
+            services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyElementChanged, e => e.ElementId).InterceptKeys());
+            services.AddSingleton<ISelectionManager<PersistentElement>>(s => s.GetRequiredService<SelectionWithKeyResponse<PersistentElement>>());
             services.AddSingleton(notifyElementChanged);
             services.AddTransient<ModelFactory>();
             services.AddTransient<SceneFactory>();

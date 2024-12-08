@@ -6,12 +6,12 @@ using StudioLaValse.Drawable.Private;
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
     /// <summary>
-    /// Extension methods for the <see cref="ISelectionManager{TEntity}"/> interface.
+    /// Extension methods for the <see cref="ISelectionManager{TKey}"/> interface.
     /// </summary>
     public static class SelectionExtensions
     {
         /// <summary>
-        /// Extends the specified <see cref="ISelectionManager{TEntity}"/> to notify when it's selection has changed. The entities that are (un) selected are emitted by the specified <see cref="INotifyEntityChanged{TEntity}"/>.
+        /// Extends the specified <see cref="ISelectionManager{TKey}"/> to notify when it's selection has changed. The entities that are (un) selected are emitted by the specified <see cref="INotifyEntityChanged{TEntity}"/>.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TKey"></typeparam>
@@ -19,13 +19,12 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="notifyEntityChanged"></param>
         /// <param name="getKey"></param>
         /// <returns></returns>
-        public static ISelectionManager<TEntity> OnChangedNotify<TEntity, TKey>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TEntity> notifyEntityChanged, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
+        public static ISelectionManager<TEntity> OnChangedNotify<TEntity, TKey>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TKey> notifyEntityChanged, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
         {
             void action(IEnumerable<TEntity> left, IEnumerable<TEntity> right)
             {
-                notifyEntityChanged.Invalidate(left, NotFoundHandler.Skip, Method.Recursive);
-                notifyEntityChanged.Invalidate(right, NotFoundHandler.Skip, Method.Recursive);
-                // notifyEntityChanged.RenderChanges();
+                notifyEntityChanged.Invalidate(left.Select(e => getKey(e)), NotFoundHandler.Skip, Method.Recursive);
+                notifyEntityChanged.Invalidate(right.Select(e => getKey(e)), NotFoundHandler.Skip, Method.Recursive);
             }
             return selection.AddChangedHandler(action, getKey);
         }

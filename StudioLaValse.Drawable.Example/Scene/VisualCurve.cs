@@ -8,12 +8,14 @@ using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
-    public class VisualCurve : BaseSelectableParent<PersistentElement>
+    public class VisualCurve : BaseSelectableParent<ElementId>
     {
         private readonly CurveModel curve;
         private readonly ISelectionManager<PersistentElement> selection;
 
-        public VisualCurve(CurveModel curve, ISelectionManager<PersistentElement> selection) : base(curve, selection)
+        public override bool IsSelected => selection.IsSelected(curve);
+
+        public VisualCurve(CurveModel curve, ISelectionManager<PersistentElement> selection) : base(curve.ElementId)
         {
             this.curve = curve;
             this.selection = selection;
@@ -50,6 +52,16 @@ namespace StudioLaValse.Drawable.Example.Scene
         public override BoundingBox BoundingBox()
         {
             return new BoundingBox(GetDrawableElements().OfType<DrawableBezierQuadratic>().Select(e => e.GetBoundingBox()));
+        }
+
+        public override bool Deselect()
+        {
+            return selection.Remove(curve);
+        }
+
+        public override bool Select()
+        {
+            return selection.Add(curve);
         }
     }
 }

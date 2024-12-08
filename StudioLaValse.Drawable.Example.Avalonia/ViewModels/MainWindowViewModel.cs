@@ -18,7 +18,7 @@ public class MainWindowViewModel : ViewModelBase
     private readonly ModelFactory modelFactory;
     private readonly SceneFactory sceneFactory;
     private readonly SelectionWithKeyResponse<PersistentElement> selectionManager;
-    private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+    private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
     private IDisposable? sceneManagerDispatcherDisposable;
 
     public CanvasViewModel CanvasViewModel { get; set; }
@@ -28,7 +28,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new InteractiveSceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue, CanvasViewModel.BaseBitmapPainter);
+            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.BaseBitmapPainter);
 
             sceneManager.Rerender();
 
@@ -48,7 +48,7 @@ public class MainWindowViewModel : ViewModelBase
             CanvasViewModel.EnableZoom = !CanvasViewModel.EnableZoom;
         });
 
-    public MainWindowViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, SelectionWithKeyResponse<PersistentElement> selectionManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+    public MainWindowViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, SelectionWithKeyResponse<PersistentElement> selectionManager, INotifyEntityChanged<ElementId> notifyEntityChanged)
     {
         this.modelFactory = modelFactory;
         this.sceneFactory = sceneFactory;

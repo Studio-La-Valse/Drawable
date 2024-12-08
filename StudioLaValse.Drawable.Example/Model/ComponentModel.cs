@@ -8,7 +8,7 @@ namespace StudioLaValse.Drawable.Example.Model
         private double radius = 10;
         private double x = new Random().NextDouble() * 2000;
         private double y = new Random().NextDouble() * 2000;
-        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
         public PersistentElement Ghost { get; }
 
@@ -23,7 +23,7 @@ namespace StudioLaValse.Drawable.Example.Model
                 }
 
                 radius = value;
-                notifyEntityChanged.Invalidate(this, NotFoundHandler.Throw, Method.Recursive);
+                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
             }
         }
         public double X
@@ -36,7 +36,7 @@ namespace StudioLaValse.Drawable.Example.Model
                     return;
                 }
                 x = value;
-                notifyEntityChanged.Invalidate(this, NotFoundHandler.Throw, Method.Recursive);
+                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
             }
         }
         public double Y
@@ -49,10 +49,10 @@ namespace StudioLaValse.Drawable.Example.Model
                     return;
                 }
                 y = value;
-                notifyEntityChanged.Invalidate(this, NotFoundHandler.Throw, Method.Recursive);
+                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
             }
         }
-        public ComponentModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(keyGenerator)
+        public ComponentModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
         {
             Ghost = ghost;
             this.notifyEntityChanged = notifyEntityChanged;

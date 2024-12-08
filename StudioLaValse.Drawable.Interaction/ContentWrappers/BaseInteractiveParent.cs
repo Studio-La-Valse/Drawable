@@ -9,15 +9,15 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// <summary>
     /// An abstract class meant to be used for a visual parent that needs any basic mouse interaction. 
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseInteractiveParent<TEntity> : BaseVisualParent<TEntity>, IInputObserver where TEntity : class
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class BaseInteractiveParent<TKey> : BaseVisualParent<TKey>, IInputObserver where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// A reference to an entity that will be rerendered on mouse events. 
         /// The default value is a reference to the original associated entity, but for complex nested entities,
         /// you can reference another entity to greately reduce calculation times.
         /// </summary>
-        public virtual TEntity Ghost => AssociatedElement;
+        public virtual TKey Ghost => Key;
 
         /// <summary>
         /// A boolean value indicating wether or not the cursor is currently above the visual element.
@@ -31,7 +31,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
 
 
         /// <inheritdoc/>
-        protected BaseInteractiveParent(TEntity element) : base(element)
+        protected BaseInteractiveParent(TKey element) : base(element)
         {
 
         }

@@ -8,18 +8,29 @@ using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
-    public class VisualCurveControlPoint : BaseTransformableParent<PersistentElement>
+    public class VisualCurveControlPoint : BaseTransformableParent<ElementId>
     {
         private readonly CurveControlPoint controlPoint;
         private readonly VisualCurve host;
+        private readonly ISelectionManager<PersistentElement> selection;
 
-
-        public override PersistentElement Ghost => controlPoint;
-
-        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelectionManager<PersistentElement> selection) : base(controlPoint, selection)
+        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelectionManager<PersistentElement> selection) : base(controlPoint.ElementId)
         {
             this.controlPoint = controlPoint;
             this.host = host;
+            this.selection = selection;
+        }
+
+        public override bool IsSelected => selection.IsSelected(controlPoint);
+
+        public override bool Deselect()
+        {
+            return selection.Remove(controlPoint);
+        }
+
+        public override bool Select()
+        {
+            return selection.Add(controlPoint);
         }
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
@@ -52,7 +63,6 @@ namespace StudioLaValse.Drawable.Example.Scene
                 new DrawableCircle(controlPoint.Point, 5, ghostColor)
             };
         }
-
 
         public override void Transform(double deltaX, double deltaY)
         {

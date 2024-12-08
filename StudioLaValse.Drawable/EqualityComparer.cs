@@ -1,36 +1,36 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace StudioLaValse.Drawable.Private
+namespace StudioLaValse.Drawable
 {
     /// <summary>
     /// The default key equality comparer for entities.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    internal class TreeBranchKeyEqualityComparer<TKey> : IEqualityComparer<VisualTree<TKey>> where TKey : IEquatable<TKey>
+    public class EqualityComparer<TKey> : IEqualityComparer<TKey> where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// The default constructor.
         /// </summary>
-        public TreeBranchKeyEqualityComparer()
+        public EqualityComparer()
         {
 
         }
 
         /// <inheritdoc/>
-        public bool Equals(VisualTree<TKey>? x, VisualTree<TKey>? y)
+        public bool Equals(TKey? x, TKey? y)
         {
             if (x == null || y == null)
             {
                 return false;
             }
 
-            return x.Key.Equals(y.Key);
+            return x.Equals(y);
         }
 
         /// <inheritdoc/>
-        public int GetHashCode([DisallowNull] VisualTree<TKey> obj)
+        public int GetHashCode([DisallowNull] TKey obj)
         {
-            return obj.Key.GetHashCode();
+            return obj.GetHashCode();
         }
     }
 }

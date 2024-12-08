@@ -5,11 +5,11 @@ using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
-    public class VisualComponentGhost : BaseVisualParent<PersistentElement>
+    public class VisualComponentGhost : BaseVisualParent<ElementId>
     {
         private readonly VisualComponent host;
 
-        public VisualComponentGhost(PersistentElement componentGhost, VisualComponent host) : base(componentGhost)
+        public VisualComponentGhost(PersistentElement componentGhost, VisualComponent host) : base(componentGhost.ElementId)
         {
             this.host = host;
         }

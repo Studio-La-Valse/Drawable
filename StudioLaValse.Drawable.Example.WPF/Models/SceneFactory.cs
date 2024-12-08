@@ -9,16 +9,18 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
     public class SceneFactory
     {
         private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
-        public SceneFactory(ISelectionManager<PersistentElement> selection)
+        public SceneFactory(ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged)
         {
             this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
 
-        public BaseVisualParent<PersistentElement> Create(GraphModel model)
+        public BaseVisualParent<ElementId> Create(GraphModel model)
         {
-            var visual = new VisualGraph(model, selection);
+            var visual = new VisualGraph(model, selection, notifyEntityChanged);
             return visual;
         }
     }

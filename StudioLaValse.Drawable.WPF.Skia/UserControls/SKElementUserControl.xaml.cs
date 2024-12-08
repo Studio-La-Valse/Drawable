@@ -13,6 +13,8 @@ using StudioLaValse.Drawable.WPF.UserControls;
 using StudioLaValse.Drawable.WPF.Visuals;
 using System.Windows;
 using StudioLaValse.Drawable.Interaction;
+using StudioLaValse.Drawable.Avalonia.Controls;
+using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 {
@@ -54,7 +56,7 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
                 }
 
                 o.pipeSubscription = o.Subscribe(e);
-            }, BehaviorPipeline.DoNothing());
+            }, new BaseInputObserver());
         public IInputObserver Pipe
         {
             get => (IInputObserver)GetValue(PipeProperty);
@@ -66,14 +68,14 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 
         private IDisposable? selectionBorderSubscription;
         public static readonly DependencyProperty SelectionBorderProperty = DependencyPropertyBase
-            .Register<SKElementUserControl, ObservableBoundingBox>(nameof(SelectionBorder), (o, e) =>
+            .Register<SKElementUserControl, IObservable<BoundingBox>>(nameof(SelectionBorder), (o, e) =>
             {
                 o.selectionBorderSubscription?.Dispose();
                 o.selectionBorderSubscription = e?.Subscribe(o.selectionBorderName.CreateObserver(o));
             });
-        public ObservableBoundingBox? SelectionBorder
+        public IObservable<BoundingBox> SelectionBorder
         {
-            get => (ObservableBoundingBox)GetValue(SelectionBorderProperty);
+            get => (IObservable<BoundingBox>)GetValue(SelectionBorderProperty);
             set => SetValue(SelectionBorderProperty, value);
         }
 
@@ -132,7 +134,7 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
             baseBitmapPainter = new SkiaWpfElementPainter(this, textMeasurer);
             drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-            Pipe = BehaviorPipeline.DoNothing();
+            Pipe = new BaseInputObserver();
             pipeSubscription = this.Subscribe(Pipe);
         }
 

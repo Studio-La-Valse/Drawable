@@ -11,17 +11,17 @@ using System.Drawing;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
-    public class VisualComponent : BaseTransformableParent<PersistentElement>
+    public class VisualComponent : BaseTransformableParent<ElementId>
     {
         private readonly ComponentModel component;
         private readonly ISelectionManager<PersistentElement> selection;
-        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
         public double Radius => component.Radius;
         public double X => component.X;
         public double Y => component.Y;
-        public override PersistentElement Ghost => component.Ghost;
-        public override bool IsSelected => selection.IsSelected(AssociatedElement);
+        public override ElementId Ghost => component.Ghost.ElementId;
+        public override bool IsSelected => selection.IsSelected(component);
         protected override bool IsMouseOver
         {
             get => base.IsMouseOver;
@@ -38,7 +38,7 @@ namespace StudioLaValse.Drawable.Example.Scene
         }
         public bool MouseIsOver => IsMouseOver;
 
-        public VisualComponent(ComponentModel component, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(component, selection)
+        public VisualComponent(ComponentModel component, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(component.ElementId)
         {
             this.component = component;
             this.selection = selection;
@@ -49,7 +49,7 @@ namespace StudioLaValse.Drawable.Example.Scene
         {
             return new List<BaseContentWrapper>()
             {
-                new VisualComponentGhost(Ghost, this)
+                new VisualComponentGhost(component.Ghost, this)
             };
         }
 
@@ -68,6 +68,16 @@ namespace StudioLaValse.Drawable.Example.Scene
                 X + Radius / 2,
                 Y - Radius / 2,
                 Y + Radius / 2);
+        }
+
+        public override bool Deselect()
+        {
+            return selection.Remove(component);
+        }
+
+        public override bool Select()
+        {
+            return selection.Add(component);
         }
 
         public override void Transform(double deltaX, double deltaY)

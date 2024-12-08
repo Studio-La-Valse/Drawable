@@ -3,8 +3,8 @@
     /// <summary>
     /// An interface required to notify and <see cref="IObserver{T}"></see> that the instance has chaned. 
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public interface INotifyEntityChanged<TEntity> : IObservable<InvalidationRequest<TEntity>>
+    /// <typeparam name="TKey"></typeparam>
+    public interface INotifyEntityChanged<TKey> : IObservable<InvalidationRequest<TKey>> where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Notifies listeners that an entity has changed.
@@ -12,21 +12,21 @@
         /// <param name="element"></param>
         /// <param name="notFoundHandler"></param>
         /// <param name="method"></param>
-        void Invalidate(TEntity element, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
+        void Invalidate(TKey element, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
         /// <summary>
         /// Notifies listeners that a number of entities has changed.
         /// </summary>
         /// <param name="elements"></param>
         /// <param name="notFoundHandler"></param>
         /// <param name="method"></param>
-        void Invalidate(IEnumerable<TEntity> elements, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
+        void Invalidate(IEnumerable<TKey> elements, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
         /// <summary>
         /// Notifies listeners that a number of entities has changed.
         /// </summary>
         /// <param name="notFoundHandler"></param>
         /// <param name="method"></param>
         /// <param name="elements"></param>
-        void Invalidate(NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive, params TEntity[] elements);
+        void Invalidate(NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive, params TKey[] elements);
         /// <summary>
         /// Notifies listeners that no more entities will change for now, and that a render update may be called.
         /// </summary>

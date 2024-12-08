@@ -13,7 +13,7 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
         {
             services.AddTransient<IKeyGenerator<int>, IncrementalKeyGenerator>();
 
-            var notifyElementChanged = SceneManager<PersistentElement, ElementId>.CreateObservable();
+            var notifyElementChanged = SceneManager<ElementId>.CreateObservable();
             services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyElementChanged, e => e.ElementId));
             services.AddSingleton(notifyElementChanged);
             services.AddTransient<ModelFactory>();

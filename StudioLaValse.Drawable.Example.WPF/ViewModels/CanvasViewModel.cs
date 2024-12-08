@@ -1,9 +1,11 @@
-﻿using StudioLaValse.Drawable.BitmapPainters;
+﻿using StudioLaValse.Drawable.Avalonia.Controls;
+using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.WPF.ViewModels;
+using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using System;
 using System.Drawing;
@@ -27,7 +29,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             get => GetValue(() => Pipe);
             set => SetValue(() => Pipe, value);
         }
-        public ObservableBoundingBox SelectionBorder
+        public IObservable<BoundingBox> SelectionBorder
         {
             get => GetValue(() => SelectionBorder);
             set => SetValue(() => SelectionBorder, value);
@@ -72,11 +74,9 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
 
             ElementEmitter = emitter;
 
-            SelectionBorder = new ObservableBoundingBox();
-
             Zoom = 1;
 
-            Pipe = BehaviorPipeline.DoNothing();
+            Pipe = new BaseInputObserver();
         }
 
         public void CenterContent(BaseContentWrapper baseContentWrapper)

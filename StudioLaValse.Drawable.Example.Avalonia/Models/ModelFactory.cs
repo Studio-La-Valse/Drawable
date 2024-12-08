@@ -10,9 +10,9 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
     public class ModelFactory
     {
         private readonly IKeyGenerator<int> keyGenerator;
-        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
-        public ModelFactory(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+        public ModelFactory(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<ElementId> notifyEntityChanged)
         {
             this.keyGenerator = keyGenerator;
             this.notifyEntityChanged = notifyEntityChanged;

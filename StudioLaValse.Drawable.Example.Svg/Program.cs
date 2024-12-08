@@ -19,7 +19,7 @@ internal class Program
 
         var canvas = new HTMLCanvas(500, 500);
         var canvasPainter = new HTMLCanvasPainter(canvas);
-        var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId, canvasPainter);
+        var sceneManager = new SceneManager<ElementId>(scene, canvasPainter);
 
         sceneManager.Rerender();
 

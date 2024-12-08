@@ -9,13 +9,13 @@ using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
-    public class VisualGraph : BaseVisualParent<PersistentElement>
+    public class VisualGraph : BaseVisualParent<ElementId>
     {
         private readonly GraphModel graph;
         private readonly ISelectionManager<PersistentElement> selection;
-        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
-        public VisualGraph(GraphModel graph, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(graph)
+        public VisualGraph(GraphModel graph, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(graph.ElementId)
         {
             this.graph = graph;
             this.selection = selection;

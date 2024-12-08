@@ -12,9 +12,8 @@ namespace StudioLaValse.Drawable.Interaction
     /// <summary>
     /// Manages an interactive scene, handling various input events and behaviors.
     /// </summary>
-    /// <typeparam name="TEntity">The type of elements contained in the scene.</typeparam>
     /// <typeparam name="TKey">The type of the key used for identification.</typeparam>
-    public class InteractiveSceneManager<TEntity, TKey> : SceneManager<TEntity, TKey>, IInputObserver, IObservable<BoundingBox> where TEntity : class where TKey : IEquatable<TKey>
+    public class InteractiveSceneManager<TKey> : SceneManager<TKey>, IInputObserver, IObservable<BoundingBox> where TKey : IEquatable<TKey>
     {
         private readonly double dragDelta = 2;
         private readonly HashSet<IObserver<BoundingBox>> observers = [];
@@ -32,10 +31,9 @@ namespace StudioLaValse.Drawable.Interaction
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractiveSceneManager{TEntity, TKey}"/> class.
+        /// Initializes a new instance of the <see cref="InteractiveSceneManager{TKey}"/> class.
         /// </summary>
-        public InteractiveSceneManager(BaseVisualParent<TEntity> scene, GetKey<TEntity, TKey> getKey, BaseBitmapPainter baseBitmapPainter)
-            : base(scene, getKey, baseBitmapPainter)
+        public InteractiveSceneManager(BaseVisualParent<TKey> scene, BaseBitmapPainter baseBitmapPainter) : base(scene, baseBitmapPainter)
         {
 
         }
@@ -176,7 +174,7 @@ namespace StudioLaValse.Drawable.Interaction
 
             TraverseAndHandleBehavior(e =>
             {
-                if(e is BaseTransformableParent<TEntity> transformable)
+                if(e is BaseTransformableParent<TKey> transformable)
                 {
                     using var lockTransform = new LockTransform(transformable);
                     var _continue = transformable.HandleSetMousePosition(lastMousePosition);
@@ -188,7 +186,7 @@ namespace StudioLaValse.Drawable.Interaction
 
                     return _continue;
                 }
-                else if (e is BaseInteractiveParent<TEntity> interactive)
+                else if (e is BaseInteractiveParent<TKey> interactive)
                 {
                     return interactive.HandleSetMousePosition(lastMousePosition);
                 }
@@ -213,7 +211,7 @@ namespace StudioLaValse.Drawable.Interaction
                     return false;
                 }
 
-                if (e is BaseSelectableParent<TEntity> selectable && selectable.IsSelected && selectable.CaptureMouse(lastMouseClickPosition))
+                if (e is BaseSelectableParent<TKey> selectable && selectable.IsSelected && selectable.CaptureMouse(lastMouseClickPosition))
                 {
                     elementOnPoint = true;
                     return false;
@@ -254,10 +252,10 @@ namespace StudioLaValse.Drawable.Interaction
 
             TraverseAndHandle(e =>
             {
-                if (e is BaseInteractiveParent<TEntity> interactive)
+                if (e is BaseInteractiveParent<TKey> interactive)
                 {
                     var _continue = interactive.HandleSetMousePosition(lastMousePosition);
-                    if (e is BaseSelectableParent<TEntity> selectable && selectable.BoundingBox().Overlaps(lastBoundingBox.Value))
+                    if (e is BaseSelectableParent<TKey> selectable && selectable.BoundingBox().Overlaps(lastBoundingBox.Value))
                     {
                         selectable.OnMouseEnter();
                     }
@@ -280,7 +278,7 @@ namespace StudioLaValse.Drawable.Interaction
             {
                 TraverseAndHandle(e =>
                 {
-                    if (e is BaseSelectableParent<TEntity> selectable)
+                    if (e is BaseSelectableParent<TKey> selectable)
                     {
                         if(selectable.BoundingBox().Overlaps(lastBoundingBox.Value))
                         { 
@@ -315,9 +313,9 @@ namespace StudioLaValse.Drawable.Interaction
 
         class LockTransform : IDisposable
         {
-            private readonly BaseTransformableParent<TEntity> baseTransformableParent;
+            private readonly BaseTransformableParent<TKey> baseTransformableParent;
 
-            public LockTransform(BaseTransformableParent<TEntity> baseTransformableParent)
+            public LockTransform(BaseTransformableParent<TKey> baseTransformableParent)
             {
                 this.baseTransformableParent = baseTransformableParent;
                 baseTransformableParent.LockTransform = true;

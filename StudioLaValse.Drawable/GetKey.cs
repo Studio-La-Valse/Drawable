@@ -13,4 +13,4 @@ namespace StudioLaValse.Drawable;
 /// <typeparam name="TKey"></typeparam>
 /// <param name="entity"></param>
 /// <returns></returns>
-public delegate TKey GetKey<TEntity, TKey>(TEntity entity) where TKey : IEquatable<TKey> where TEntity : class;
+public delegate TKey GetKey<TEntity, TKey>(TEntity entity) where TKey : IEquatable<TKey>;

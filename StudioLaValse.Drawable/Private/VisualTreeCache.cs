@@ -1,67 +1,26 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using StudioLaValse.Drawable.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StudioLaValse.Drawable.Private
 {
-    internal class VisualTreeCache<TEntity, TKey> where TKey : IEquatable<TKey> 
-                                                  where TEntity : class
+    internal class VisualTreeCache<TKey> where TKey : IEquatable<TKey>
     {
 
-        private readonly Dictionary<TEntity, VisualTree<TEntity>> dict;
-        private readonly GetKey<TEntity, TKey> keyExtractor;
+        private readonly Dictionary<VisualTree<TKey>, InvalidationRequest<TKey>> dict;
 
-        public VisualTreeCache(GetKey<TEntity, TKey> keyExtractor)
+        public VisualTreeCache()
         {
-            var equalityComparer = new KeyEqualityComparer<TEntity, TKey>(keyExtractor);
-            dict = new Dictionary<TEntity, VisualTree<TEntity>>(equalityComparer);
-            this.keyExtractor = keyExtractor;
+            var equalityComparer = new TreeBranchKeyEqualityComparer<TKey>();
+            dict = new Dictionary<VisualTree<TKey>, InvalidationRequest<TKey>>(equalityComparer);
         }
 
-        public void Rebuild(VisualTree<TEntity> visualTree)
-        {
-            dict.Clear();
-            foreach (var branch in visualTree.SelectBreadth(e => e.ChildBranches))
-            {
-                Add(branch.Element, branch);
-            }
-        }
-
-        public void Add(TEntity entity, VisualTree<TEntity> visualTree)
-        {
-            if (dict.ContainsKey(entity))
-            {
-                throw new Exception($"Entity ({entity} : {keyExtractor(entity)}) has already been added to the visual tree.");
-            }
-
-            dict.Add(entity, visualTree);
-        }
-
-        public bool Find(TEntity entity, [NotNullWhen(true)] out VisualTree<TEntity>? value)
-        {
-            return dict.TryGetValue(entity, out value);
-        }
-    }
-
-    internal class VisualTreeCache2<TEntity, TKey> where TKey : IEquatable<TKey>
-                                                  where TEntity : class
-    {
-
-        private readonly Dictionary<VisualTree<TEntity>, InvalidationRequest<TEntity>> dict;
-        private readonly GetKey<TEntity, TKey> keyExtractor;
-
-        public VisualTreeCache2(GetKey<TEntity, TKey> keyExtractor)
-        {
-            var equalityComparer = new TreeBranchKeyEqualityComparer<TEntity, TKey>(keyExtractor);
-            dict = new Dictionary<VisualTree<TEntity>, InvalidationRequest<TEntity>>(equalityComparer);
-            this.keyExtractor = keyExtractor;
-        }
-
-        public void Rebuild(VisualTree<TEntity> visualTree, Dictionary<TEntity, InvalidationRequest<TEntity>> invalidationRequests, out IEnumerable<InvalidationRequest<TEntity>> notFound)
+        public void Rebuild(VisualTree<TKey> visualTree, Dictionary<TKey, InvalidationRequest<TKey>> invalidationRequests, out IEnumerable<InvalidationRequest<TKey>> notFound)
         {
             dict.Clear();
 
-            void traverse(VisualTree<TEntity> _visualTree, bool parentFound)
+            void traverse(VisualTree<TKey> _visualTree, bool parentFound)
             {
-                var element = _visualTree.Element;
+                var element = _visualTree.Key;
 
                 var contains = invalidationRequests.TryGetValue(element, out var invalidationRequest);
                 if (contains)
@@ -89,16 +48,18 @@ namespace StudioLaValse.Drawable.Private
             notFound = invalidationRequests.Select(e => e.Value).ToList();
         }
 
-        public void Add(VisualTree<TEntity> entity, InvalidationRequest<TEntity> visualTree)
+        public void Add(VisualTree<TKey> entity, InvalidationRequest<TKey> visualTree)
         {
             if (dict.ContainsKey(entity))
             {
-                throw new Exception($"Entity ({entity} : {keyExtractor(entity.Element)}) has already been added to the visual tree.");
+                throw new EntityAlreadyInVisualTreeException($"Entity with key {entity} has already been added to the visual tree.");
             }
 
             dict.Add(entity, visualTree);
         }
 
-        public IEnumerable<KeyValuePair<VisualTree<TEntity>, InvalidationRequest<TEntity>>> Requests() => dict;
+        public IEnumerable<KeyValuePair<VisualTree<TKey>, InvalidationRequest<TKey>>> Requests() => dict;
     }
 }
+
+

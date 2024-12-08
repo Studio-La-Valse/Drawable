@@ -7,7 +7,6 @@ using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
-using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
 using StudioLaValse.Geometry;
 using System.Drawing;
@@ -169,7 +168,7 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         baseBitmapPainter = new GraphicsPainter(this, textMeasurer);
         drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-        pipe = new EmptyPipeline();
+        pipe = new BaseInputObserver();
         pipeSubscription = this.Subscribe(pipe);
     }
 
@@ -183,53 +182,5 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         selectionBorderSubscription?.Dispose();
         pipeSubscription.Dispose();
         elementEmitterSubscription?.Dispose();
-    }
-}
-
-internal class EmptyPipeline : IInputObserver
-{
-    internal EmptyPipeline()
-    {
-
-    }
-
-    public bool HandleLeftMouseButtonDown()
-    {
-        return true;
-    }
-
-    public bool HandleLeftMouseButtonUp()
-    {
-        return true;
-    }
-
-    public bool HandleMouseWheel(double delta)
-    {
-        return true;
-    }
-
-    public bool HandleRightMouseButtonDown()
-    {
-        return true;
-    }
-
-    public bool HandleRightMouseButtonUp()
-    {
-        return true;
-    }
-
-    public bool HandleSetMousePosition(XY position)
-    {
-        return true;
-    }
-
-    public bool HandleKeyDown(Key key)
-    {
-        return true;
-    }
-
-    public bool HandleKeyUp(Key key)
-    {
-        return true;
     }
 }
