@@ -54,10 +54,9 @@ namespace StudioLaValse.Drawable.Example.Scene
         }
 
 
-        public override InvalidationRequest<PersistentElement> Transform(double deltaX, double deltaY)
+        public override void Transform(double deltaX, double deltaY)
         {
             controlPoint.Set(controlPoint.Point.X + deltaX, controlPoint.Point.Y + deltaY);
-            return new InvalidationRequest<PersistentElement>(host.AssociatedElement);
         }
     }
 }

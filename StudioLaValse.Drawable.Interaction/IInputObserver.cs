@@ -11,41 +11,49 @@ namespace StudioLaValse.Drawable.Interaction
         /// <summary>
         /// Called on mouse left button down.
         /// </summary>
-        void HandleLeftMouseButtonDown();
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleLeftMouseButtonDown();
 
         /// <summary>
         /// Called on mouse left button up.
         /// </summary>
-        void HandleLeftMouseButtonUp();
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleLeftMouseButtonUp();
 
         /// <summary>
         /// Called on mouse right button down.
         /// </summary>
-        void HandleRightMouseButtonDown();
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleRightMouseButtonDown();
 
         /// <summary>
         /// Called on mouse right button up.
         /// </summary>
-        void HandleRightMouseButtonUp();
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleRightMouseButtonUp();
 
         /// <summary>
         /// Called on mouse move.
         /// </summary>
-        void HandleSetMousePosition(XY position);
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleSetMousePosition(XY position);
 
         /// <summary>
         /// Called on mouse wheel scroll.
         /// </summary>
-        void HandleMouseWheel(double delta);
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleMouseWheel(double delta);
 
         /// <summary>
         /// Called on key up.
         /// </summary>
-        void HandleKeyUp(Key key);
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleKeyUp(Key key);
 
         /// <summary>
         /// Called on key down.
         /// </summary>
-        void HandleKeyDown(Key key);
+        /// <returns>True if the behavior is allowed to be propagated.</returns>
+        bool HandleKeyDown(Key key);
     }
 }

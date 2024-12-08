@@ -13,6 +13,10 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         private bool leftMouseIsDown;
         private bool lastMouseIsDownWasOnElement;
 
+        /// <summary>
+        /// A flag that prevents element transformation on mouse drag.
+        /// </summary>
+        public bool LockTransform { get; set; }
 
         /// <inheritdoc/>
         protected BaseTransformableParent(TEntity element, ISelectionManager<TEntity> selection) : base(element, selection)
@@ -31,39 +35,36 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// </summary>
         /// <param name="deltaX"></param>
         /// <param name="deltaY"></param>
-        public abstract InvalidationRequest<TEntity>? Transform(double deltaX, double deltaY);
+        public abstract void Transform(double deltaX, double deltaY);
 
 
         /// <inheritdoc/>
-        public override bool HandleLeftMouseButtonDown(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public override bool HandleLeftMouseButtonDown()
         {
             leftMouseIsDown = true;
             lastMouseIsDownWasOnElement = CaptureMouse(LastMousePosition);
 
-            return base.HandleLeftMouseButtonDown(invalidationRequests);
+            return base.HandleLeftMouseButtonDown();
         }
 
         /// <inheritdoc/>
-        public override bool HandleLeftMouseButtonUp(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public override bool HandleLeftMouseButtonUp()
         {
             leftMouseIsDown = false;
-            return base.HandleLeftMouseButtonUp(invalidationRequests);
+            return base.HandleLeftMouseButtonUp();
         }
 
         /// <inheritdoc/>
-        public override bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public override bool HandleSetMousePosition(XY position)
         {
-            if (IsSelected && leftMouseIsDown && lastMouseIsDownWasOnElement && position.DistanceTo(LastMousePosition) > DragDelta)
+            if (!LockTransform && leftMouseIsDown && lastMouseIsDownWasOnElement && IsSelected && position.DistanceTo(LastMousePosition) > DragDelta)
             {
                 var deltaX = position.X - LastMousePosition.X;
                 var deltaY = position.Y - LastMousePosition.Y;
-                if (Transform(deltaX, deltaY) is InvalidationRequest<TEntity> e)
-                {
-                    invalidationRequests.Enqueue(e);
-                } 
+                Transform(deltaX, deltaY);
             }
 
-            return base.HandleSetMousePosition(position, invalidationRequests);
+            return base.HandleSetMousePosition(position);
         }
     }
 }

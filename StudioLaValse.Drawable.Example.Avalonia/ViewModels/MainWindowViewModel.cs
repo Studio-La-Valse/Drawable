@@ -17,7 +17,7 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly ModelFactory modelFactory;
     private readonly SceneFactory sceneFactory;
-    private readonly ISelectionManager<PersistentElement> selectionManager;
+    private readonly SelectionWithKeyResponse<PersistentElement> selectionManager;
     private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
     private IDisposable? sceneManagerDispatcherDisposable;
 
@@ -28,15 +28,15 @@ public class MainWindowViewModel : ViewModelBase
         {
             var model = modelFactory.Create();
             var scene = sceneFactory.Create(model);
-            var sceneManager = new InteractiveSceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue, CanvasViewModel.BaseBitmapPainter, selectionManager);
+            var sceneManager = new InteractiveSceneManager<PersistentElement, int>(scene, e => e.ElementId.IntValue, CanvasViewModel.BaseBitmapPainter);
 
             sceneManager.Rerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
-            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager);
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
             CanvasViewModel.SelectionBorder = sceneManager;
-            CanvasViewModel.Pipe = sceneManager;
+            CanvasViewModel.Pipe = sceneManager.Then(selectionManager);
 
             CanvasViewModel.CenterContent(scene);
         });
@@ -48,7 +48,7 @@ public class MainWindowViewModel : ViewModelBase
             CanvasViewModel.EnableZoom = !CanvasViewModel.EnableZoom;
         });
 
-    public MainWindowViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, ISelectionManager<PersistentElement> selectionManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+    public MainWindowViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, SelectionWithKeyResponse<PersistentElement> selectionManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
     {
         this.modelFactory = modelFactory;
         this.sceneFactory = sceneFactory;

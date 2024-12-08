@@ -28,50 +28,67 @@
         }
 
         /// <inheritdoc/>
-        public void Add(TEntity element)
+        public bool Add(TEntity element)
         {
-            hashSet.Add(element);
+            return hashSet.Add(element);
         }
         /// <inheritdoc/>
-        public void Set(TEntity element)
+        public bool Set(TEntity element)
         {
             hashSet.Clear();
-            hashSet.Add(element);
+            return hashSet.Add(element);
         }
         /// <inheritdoc/>
-        public void Remove(TEntity element)
+        public bool Remove(TEntity element)
         {
-            hashSet.Remove(element);
+            return hashSet.Remove(element);
         }
         /// <inheritdoc/>
-        public void RemoveRange(IEnumerable<TEntity> elements)
+        public bool RemoveRange(IEnumerable<TEntity> elements)
         {
+            var changed = false;
             foreach (var element in elements)
             {
-                hashSet.Remove(element);
+                changed = hashSet.Remove(element);
             }
+            return changed;
         }
         /// <inheritdoc/>
-        public void Clear()
+        public bool Clear()
         {
+            if(hashSet.Count == 0)
+            {
+                return false;
+            }
+
             hashSet.Clear();
+            return true;
         }
         /// <inheritdoc/>
-        public void SetRange(IEnumerable<TEntity> entities)
+        public bool SetRange(IEnumerable<TEntity> entities)
         {
+            if(entities.All(e => hashSet.Contains(e)))
+            {
+                return false;
+            }
+
             hashSet.Clear();
             foreach (var element in entities)
             {
                 hashSet.Add(element);
             }
+            return true;
         }
         /// <inheritdoc/>
-        public void AddRange(IEnumerable<TEntity> entities)
+        public bool AddRange(IEnumerable<TEntity> entities)
         {
+            var changed = false;
             foreach (var element in entities)
             {
-                hashSet.Add(element);
+                changed = hashSet.Add(element);
             }
+
+            return changed;
         }
 
         /// <inheritdoc/>

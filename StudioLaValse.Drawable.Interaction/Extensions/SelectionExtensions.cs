@@ -44,5 +44,21 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
             var selectionWithHandler = new SelectionWithChangedHandler<TEntity, TKey>(selection, action, getKey);
             return selectionWithHandler;
         }
+
+        /// <summary>
+        /// Extends the specified <see cref="ISelectionManager{TEntity}"/> to intercept keyboard keys.
+        /// When setting the selection:
+        ///     if shift is pressed, the selection is appended,
+        ///     if control is pressed, the selection is removed.
+        /// Pressing (releasing) escape clears the selection.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="selectionManager"></param>
+        /// <returns></returns>
+        public static SelectionWithKeyResponse<TEntity> InterceptKeys<TEntity>(this ISelectionManager<TEntity> selectionManager) where TEntity : class
+        {
+            var selectionWithKeys = new SelectionWithKeyResponse<TEntity>(selectionManager);
+            return selectionWithKeys;
+        }
     }
 }

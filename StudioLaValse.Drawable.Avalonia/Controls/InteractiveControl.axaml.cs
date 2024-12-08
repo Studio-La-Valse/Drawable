@@ -193,43 +193,43 @@ internal class EmptyPipeline : IInputObserver
 
     }
 
-    public void HandleLeftMouseButtonDown()
+    public bool HandleLeftMouseButtonDown()
     {
-
+        return true;
     }
 
-    public void HandleLeftMouseButtonUp()
+    public bool HandleLeftMouseButtonUp()
     {
-
+        return true;
     }
 
-    public void HandleMouseWheel(double delta)
+    public bool HandleMouseWheel(double delta)
     {
-
+        return true;
     }
 
-    public void HandleRightMouseButtonDown()
+    public bool HandleRightMouseButtonDown()
     {
-
+        return true;
     }
 
-    public void HandleRightMouseButtonUp()
+    public bool HandleRightMouseButtonUp()
     {
-
+        return true;
     }
 
-    public void HandleSetMousePosition(XY position)
+    public bool HandleSetMousePosition(XY position)
     {
-
+        return true;
     }
 
-    public void HandleKeyDown(Key key)
+    public bool HandleKeyDown(Key key)
     {
-
+        return true;
     }
 
-    public void HandleKeyUp(Key key)
+    public bool HandleKeyUp(Key key)
     {
-
+        return true;
     }
 }

@@ -1,14 +1,61 @@
-﻿using StudioLaValse.Key;
+﻿using StudioLaValse.Geometry;
+using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Model
 {
     public class ComponentModel : PersistentElement
     {
+        private double radius = 10;
+        private double x = new Random().NextDouble() * 2000;
+        private double y = new Random().NextDouble() * 2000;
+        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+
         public PersistentElement Ghost { get; }
 
-        public ComponentModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost) : base(keyGenerator)
+        public double Radius
+        {
+            get => radius;
+            set
+            {
+                if(Math.Abs(radius - value) <= BaseGeometry.threshold)
+                {
+                    return;
+                }
+
+                radius = value;
+                notifyEntityChanged.Invalidate(this, NotFoundHandler.Throw, Method.Recursive);
+            }
+        }
+        public double X
+        {
+            get => x; 
+            set
+            {
+                if(x == value)
+                {
+                    return;
+                }
+                x = value;
+                notifyEntityChanged.Invalidate(this, NotFoundHandler.Throw, Method.Recursive);
+            }
+        }
+        public double Y
+        {
+            get => y;
+            set
+            {
+                if(y == value)
+                {
+                    return;
+                }
+                y = value;
+                notifyEntityChanged.Invalidate(this, NotFoundHandler.Throw, Method.Recursive);
+            }
+        }
+        public ComponentModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(keyGenerator)
         {
             Ghost = ghost;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
     }
 }

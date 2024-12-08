@@ -39,38 +39,6 @@ namespace StudioLaValse.Drawable.Extensions
         }
 
         /// <summary>
-        /// Try to find the associated <see cref="BaseVisualParent{TEntity}"/> that is associated with the specified entity in the scene of the specified <see cref="SceneManager{TEntity, TKey}"/>.
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="sceneManager"></param>
-        /// <param name="entity"></param>
-        /// <param name="visualTreeBranch"></param>
-        /// <returns></returns>
-        public static bool TryLocate<TEntity>(this IEnumerable<BaseVisualParent<TEntity>> sceneManager, TEntity entity, [NotNullWhen(true)] out BaseVisualParent<TEntity>? visualTreeBranch) where TEntity : class
-        {
-            visualTreeBranch = sceneManager.FirstOrDefault(c => c.AssociatedElement == entity);
-            return visualTreeBranch is not null;
-        }
-
-        /// <summary>
-        /// Tries to find the visual element that is associated with the specified entity. Throws an exception if it is not found.
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="sceneManager"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static BaseVisualParent<TEntity> LocateOrThrow<TEntity>(this IEnumerable<BaseVisualParent<TEntity>> sceneManager, TEntity entity) where TEntity : class
-        {
-            if (sceneManager.TryLocate(entity, out var branch))
-            {
-                return branch;
-            }
-
-            throw new Exception("Specified branch not found in children.");
-        }
-
-        /// <summary>
         /// Creates an observer for an invalidation request that dispatches the observations to the specified scene manager.
         /// This implementation invalidates a TEntity on <see cref="IObserver{T}.OnNext(T)"/> and renders changes in the scene on <see cref="IObserver{T}.OnCompleted"/>.
         /// </summary>
@@ -88,7 +56,7 @@ namespace StudioLaValse.Drawable.Extensions
         /// </summary>
         /// <param name="bitmapPainter"></param>
         /// <param name="contentWrapper"></param>
-        public static void DrawContentWrapper(this BaseBitmapPainter bitmapPainter, BaseContentWrapper contentWrapper)
+        public static BaseBitmapPainter DrawContentWrapper(this BaseBitmapPainter bitmapPainter, BaseContentWrapper contentWrapper)
         {
             foreach (var wrapper in contentWrapper.SelectBreadth(p => p.GetContentWrappers()))
             {
@@ -97,6 +65,8 @@ namespace StudioLaValse.Drawable.Extensions
                     bitmapPainter.DrawElement(element);
                 }
             }
+
+            return bitmapPainter;
         }
     }
 }

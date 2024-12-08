@@ -62,7 +62,8 @@ file static class Extensions
         services.AddTransient<IKeyGenerator<int>, IncrementalKeyGenerator>();
 
         var notifyElementChanged = SceneManager<PersistentElement, ElementId>.CreateObservable();
-        services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyElementChanged, e => e.ElementId));
+        services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyElementChanged, e => e.ElementId).InterceptKeys());
+        services.AddSingleton<ISelectionManager<PersistentElement>>(s => s.GetRequiredService<SelectionWithKeyResponse<PersistentElement>>());
         services.AddSingleton(notifyElementChanged);
         services.AddTransient<ModelFactory>();
         services.AddTransient<SceneFactory>();

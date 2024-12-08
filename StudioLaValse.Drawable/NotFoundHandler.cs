@@ -16,6 +16,6 @@
         /// <summary>
         /// Raise an <see cref="InvalidOperationException"/>.
         /// </summary>
-        Raise = 2
+        Throw = 2
     }
 }

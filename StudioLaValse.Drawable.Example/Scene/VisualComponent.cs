@@ -15,18 +15,34 @@ namespace StudioLaValse.Drawable.Example.Scene
     {
         private readonly ComponentModel component;
         private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
 
-        public double Radius { get; set; } = 10;
-        public double X { get; set; } = new Random().NextDouble() * 2000;
-        public double Y { get; set; } = new Random().NextDouble() * 2000;
+        public double Radius => component.Radius;
+        public double X => component.X;
+        public double Y => component.Y;
         public override PersistentElement Ghost => component.Ghost;
         public override bool IsSelected => selection.IsSelected(AssociatedElement);
-        public bool MouseIsOver => base.IsMouseOver;
+        protected override bool IsMouseOver
+        {
+            get => base.IsMouseOver;
+            set
+            {
+                if (value == base.IsMouseOver)
+                {
+                    return;
+                }
 
-        public VisualComponent(ComponentModel component, ISelectionManager<PersistentElement> selection) : base(component, selection)
+                base.IsMouseOver = value;
+                notifyEntityChanged.Invalidate(Ghost, NotFoundHandler.Throw, Method.Shallow);
+            }
+        }
+        public bool MouseIsOver => IsMouseOver;
+
+        public VisualComponent(ComponentModel component, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(component, selection)
         {
             this.component = component;
             this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
@@ -54,11 +70,10 @@ namespace StudioLaValse.Drawable.Example.Scene
                 Y + Radius / 2);
         }
 
-        public override InvalidationRequest<PersistentElement> Transform(double deltaX, double deltaY)
+        public override void Transform(double deltaX, double deltaY)
         {
-            X += deltaX;
-            Y += deltaY;
-            return new InvalidationRequest<PersistentElement>(AssociatedElement);
+            component.X += deltaX;
+            component.Y += deltaY;
         }
 
         public override bool CaptureMouse(XY point)
@@ -67,19 +82,13 @@ namespace StudioLaValse.Drawable.Example.Scene
             return distance <= Radius;
         }
 
-        public override bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<PersistentElement>> invalidationRequests)
+        public override bool HandleSetMousePosition(XY position)
         {
-            var oldRadius = Radius;
             var distance = new XY(X, Y).DistanceTo(position);
             var radius = distance.Map(0, 500, 20, 5).Clip(5, 20);
-            Radius = radius;
+            component.Radius = radius;
 
-            if(oldRadius != Radius)
-            {
-                invalidationRequests.Enqueue(new InvalidationRequest<PersistentElement>(AssociatedElement, Method: Method.Recursive));
-            }
-
-            return base.HandleSetMousePosition(position, invalidationRequests);
+            return base.HandleSetMousePosition(position);
         }
     }
 }

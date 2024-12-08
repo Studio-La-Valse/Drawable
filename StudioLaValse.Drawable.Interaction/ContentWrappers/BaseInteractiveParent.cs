@@ -1,6 +1,7 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Geometry;
+using System.Reflection.Metadata.Ecma335;
 
 namespace StudioLaValse.Drawable.Interaction.ContentWrappers
 {
@@ -9,7 +10,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
     /// An abstract class meant to be used for a visual parent that needs any basic mouse interaction. 
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseInteractiveParent<TEntity> : BaseVisualParent<TEntity>, IBehaviorElement<TEntity> where TEntity : class
+    public abstract class BaseInteractiveParent<TEntity> : BaseVisualParent<TEntity>, IInputObserver where TEntity : class
     {
         /// <summary>
         /// A reference to an entity that will be rerendered on mouse events. 
@@ -21,7 +22,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// <summary>
         /// A boolean value indicating wether or not the cursor is currently above the visual element.
         /// </summary>
-        protected bool IsMouseOver { get; set; }
+        protected virtual bool IsMouseOver { get; set; }
 
         /// <summary>
         /// The last recorded mouse position.
@@ -39,30 +40,28 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// Custom logic on mouse enter.
         /// </summary>
         /// <returns></returns>
-        public virtual InvalidationRequest<TEntity>? OnMouseEnter()
+        public virtual void OnMouseEnter()
         {
             if (IsMouseOver)
             {
-                return null;
+                return;
             }
 
             IsMouseOver = true;
-            return new InvalidationRequest<TEntity>(Ghost, Method: Method.Recursive);
         }
 
         /// <summary>
         /// Custom logic on mouse enter.
         /// </summary>
         /// <returns></returns>
-        public virtual InvalidationRequest<TEntity>? OnMouseLeave()
+        public virtual void OnMouseLeave()
         {
             if (!IsMouseOver)
             {
-                return null;
+                return;
             }
 
             IsMouseOver = false;
-            return new InvalidationRequest<TEntity>(Ghost, Method: Method.Recursive);
         }
 
         /// <summary>
@@ -77,68 +76,65 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleLeftMouseButtonDown(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleLeftMouseButtonDown()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleLeftMouseButtonUp(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleLeftMouseButtonUp()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleRightMouseButtonDown(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleRightMouseButtonDown()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleRightMouseButtonUp(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleRightMouseButtonUp()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleSetMousePosition(XY position)
         {
             LastMousePosition = position;
 
+            var wasOverBefore = IsMouseOver;
             var isNowOver = CaptureMouse(position);
 
-            if (isNowOver)
+            if(wasOverBefore != isNowOver)
             {
-                if (OnMouseEnter() is InvalidationRequest<TEntity> e)
+                if (isNowOver)
                 {
-                    invalidationRequests.Enqueue(e);
+                    OnMouseEnter();
+                }
+                else
+                {
+                    OnMouseLeave();
                 }
             }
-            else
-            {
-                if (OnMouseLeave() is InvalidationRequest<TEntity> e)
-                {
-                    invalidationRequests.Enqueue(e);
-                }
-            }
-
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleMouseWheel(double delta, Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleMouseWheel(double delta)
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleKeyUp(Key key, Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleKeyUp(Key key)
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleKeyDown(Key key, Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public virtual bool HandleKeyDown(Key key)
         {
             return true;
         }

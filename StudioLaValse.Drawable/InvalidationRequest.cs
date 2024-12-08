@@ -7,5 +7,5 @@
     /// <param name="Entity"></param>
     /// <param name="NotFoundHandler"></param>
     /// <param name="Method"></param>
-    public record InvalidationRequest<TEntity>(TEntity Entity, NotFoundHandler NotFoundHandler = NotFoundHandler.Raise, Method Method = Method.Recursive);
+    public record InvalidationRequest<TEntity>(TEntity Entity, NotFoundHandler NotFoundHandler = NotFoundHandler.Throw, Method Method = Method.Recursive);
 }

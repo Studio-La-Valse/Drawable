@@ -46,86 +46,63 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// Deselect the element.
         /// Returns true if the selection has been succesfully changed.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the selection has been changed in any way.</returns>
         /// <exception cref="InvalidSelectionProviderException"></exception>
-        public virtual InvalidationRequest<TEntity>? Deselect()
+        public virtual bool Deselect()
         {
             if (selection is null)
             {
                 throw new InvalidSelectionProviderException();
             }
 
-            if (!selection.IsSelected(AssociatedElement))
-            {
-                return null;
-            }
-
-            selection.Remove(AssociatedElement);
-            return new InvalidationRequest<TEntity>(AssociatedElement);
+            return selection.Remove(AssociatedElement);
         }
 
         /// <summary>
         /// Select the element.
-        /// Returns true if the selection has been succesfully changed.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the selection has been changed in any way.</returns>
         /// <exception cref="InvalidSelectionProviderException"></exception>
-        public virtual InvalidationRequest<TEntity>? Select()
+        public virtual bool Select()
         {
             if (selection is null)
             {
                 throw new InvalidSelectionProviderException();
             }
 
-            if (selection.IsSelected(AssociatedElement))
-            {
-                return null;
-            }
-
-            selection.Set(AssociatedElement);
-            return new InvalidationRequest<TEntity>(AssociatedElement);
+            return selection.Add(AssociatedElement);
         }
 
         /// <inheritdoc/>
-        public override bool HandleLeftMouseButtonDown(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public override bool HandleLeftMouseButtonDown()
         {
             LastPositionOnMouseLeftDown = LastMousePosition;
             return true;
         }
 
         /// <inheritdoc/>
-        public override bool HandleLeftMouseButtonUp(Queue<InvalidationRequest<TEntity>> invalidationRequests)
+        public override bool HandleLeftMouseButtonUp()
         {
             var wasClick = LastMousePosition.DistanceTo(LastPositionOnMouseLeftDown) <= DragDelta;
             if (wasClick)
             {
                 if (IsMouseOver)
                 {
-                    if (Select() is InvalidationRequest<TEntity> e)
+                    if (Select())
                     {
-                        invalidationRequests.Enqueue(e);
                         return false;
                     }
                 }
                 else
                 {
-                    if (Deselect() is InvalidationRequest<TEntity> e)
+                    if (Deselect())
                     {
-                        invalidationRequests.Enqueue(e);
                         return false;
                     }
                 }
             }
 
             return true;
-        }
-
-        /// <inheritdoc/>
-        public override bool HandleSetMousePosition(XY position, Queue<InvalidationRequest<TEntity>> invalidationRequests)
-        {
-            LastMousePosition = position;
-
-            return base.HandleSetMousePosition(position, invalidationRequests);
         }
     }
 }

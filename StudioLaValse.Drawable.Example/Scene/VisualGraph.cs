@@ -13,16 +13,18 @@ namespace StudioLaValse.Drawable.Example.Scene
     {
         private readonly GraphModel graph;
         private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
 
-        public VisualGraph(GraphModel graph, ISelectionManager<PersistentElement> selection) : base(graph)
+        public VisualGraph(GraphModel graph, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(graph)
         {
             this.graph = graph;
             this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
         {
-            return graph.Components.Select(c => new VisualComponent(c, selection));
+            return graph.Components.Select(c => new VisualComponent(c, selection, notifyEntityChanged));
         }
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()

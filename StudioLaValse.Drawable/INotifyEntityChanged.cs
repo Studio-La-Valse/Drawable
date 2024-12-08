@@ -12,21 +12,21 @@
         /// <param name="element"></param>
         /// <param name="notFoundHandler"></param>
         /// <param name="method"></param>
-        void Invalidate(TEntity element, NotFoundHandler notFoundHandler = NotFoundHandler.Raise, Method method = Method.Recursive);
+        void Invalidate(TEntity element, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
         /// <summary>
         /// Notifies listeners that a number of entities has changed.
         /// </summary>
         /// <param name="elements"></param>
         /// <param name="notFoundHandler"></param>
         /// <param name="method"></param>
-        void Invalidate(IEnumerable<TEntity> elements, NotFoundHandler notFoundHandler = NotFoundHandler.Raise, Method method = Method.Recursive);
+        void Invalidate(IEnumerable<TEntity> elements, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
         /// <summary>
         /// Notifies listeners that a number of entities has changed.
         /// </summary>
         /// <param name="notFoundHandler"></param>
         /// <param name="method"></param>
         /// <param name="elements"></param>
-        void Invalidate(NotFoundHandler notFoundHandler = NotFoundHandler.Raise, Method method = Method.Recursive, params TEntity[] elements);
+        void Invalidate(NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive, params TEntity[] elements);
         /// <summary>
         /// Notifies listeners that no more entities will change for now, and that a render update may be called.
         /// </summary>
