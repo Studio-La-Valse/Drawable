@@ -18,9 +18,9 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
         }
 
 
-        public BaseVisualParent<ElementId> Create(GraphModel model)
+        public BaseVisualParent<ElementId> Create(PointsModel model)
         {
-            var visual = new VisualGraph(model, selection, notifyEntityChanged);
+            var visual = new VisualPoints(model, selection, notifyEntityChanged);
             return visual;
         }
     }

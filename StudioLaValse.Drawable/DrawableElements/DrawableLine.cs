@@ -103,7 +103,7 @@ namespace StudioLaValse.Drawable.DrawableElements
             new DrawableTrapezoid(new XY(X1, Y1), new XY(X2, Y2), Thickness, Color);
 
         /// <inheritdoc/>
-        public override BoundingBox GetBoundingBox() =>
+        public override BoundingBox BoundingBox() =>
             new BoundingBox(X1 - Thickness / 2, X2 + Thickness / 2, Y1 - Thickness / 2, Y2 + Thickness / 2);
 
         /// <summary>

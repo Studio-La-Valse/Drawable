@@ -52,6 +52,10 @@ namespace StudioLaValse.Drawable.BitmapPainters
                     Cache.Add(c => DrawElement(c, bezier));
                     break;
 
+                case DrawableBezierCubic bezier:
+                    Cache.Add(c => DrawElement(c, bezier));
+                    break;
+
                 case DrawablePolygon polygon:
                     Cache.Add((c) => DrawElement(c, polygon));
                     break;

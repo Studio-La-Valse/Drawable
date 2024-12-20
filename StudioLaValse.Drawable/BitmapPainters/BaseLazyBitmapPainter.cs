@@ -47,6 +47,10 @@ namespace StudioLaValse.Drawable.BitmapPainters
                     drawActions.Enqueue(c => DrawElement(c, curve));
                     break;
 
+                case DrawableBezierCubic curve:
+                    drawActions.Enqueue(c => DrawElement(c, curve));
+                    break;
+
                 case DrawablePolygon polygon:
                     drawActions.Enqueue((c) => DrawElement(c, polygon));
                     break;

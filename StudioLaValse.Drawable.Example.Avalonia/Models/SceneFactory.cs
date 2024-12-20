@@ -18,12 +18,12 @@ namespace StudioLaValse.Drawable.Example.Avalonia.Models
         }
 
 
-        public BaseVisualParent<ElementId> Create(GraphModel model)
+        public BaseVisualParent<ElementId> Create(PointsModel model)
         {
             //var scene = new TextScene(model);
             //return scene;
 
-            var visual = new VisualGraph(model, selection, notifyEntityChanged);
+            var visual = new VisualPoints(model, selection, notifyEntityChanged);
             return visual;
 
             //var visual = new VisualCurveScene(model, selection);

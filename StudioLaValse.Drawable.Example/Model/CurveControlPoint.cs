@@ -1,17 +1,19 @@
 ﻿using StudioLaValse.Geometry;
 using StudioLaValse.Key;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace StudioLaValse.Drawable.Example.Model
 {
     public class CurveControlPoint : PersistentElement
     {
         private XY point;
-        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
         public XY Point => point;
         public CurveModel ControlFor { get; }
 
-        public CurveControlPoint(IKeyGenerator<int> keyGenerator, CurveModel controlFor, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(keyGenerator)
+
+        public CurveControlPoint(IKeyGenerator<int> keyGenerator, CurveModel controlFor, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
         {
             point = new XY(Random.Shared.Next(200), Random.Shared.Next(200));
             ControlFor = controlFor;
@@ -27,7 +29,7 @@ namespace StudioLaValse.Drawable.Example.Model
             }
 
             this.point = point;
-            notifyEntityChanged.Invalidate(ControlFor, NotFoundHandler.Throw, Method.Recursive);
+            notifyEntityChanged.Invalidate(ControlFor.ElementId, NotFoundHandler.Throw, Method.Deep);
         }
     }
 }

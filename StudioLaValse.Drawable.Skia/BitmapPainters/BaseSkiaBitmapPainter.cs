@@ -133,5 +133,10 @@ namespace StudioLaValse.Drawable.Skia.BitmapPainters
         {
             throw new NotImplementedException();
         }
+
+        protected override void DrawElement(SKCanvas canvas, DrawableBezierCubic bezier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

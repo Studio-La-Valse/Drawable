@@ -5,6 +5,8 @@ using StudioLaValse.Drawable.Interaction.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
+using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
@@ -13,15 +15,34 @@ namespace StudioLaValse.Drawable.Example.Scene
         private readonly CurveControlPoint controlPoint;
         private readonly VisualCurve host;
         private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
+        private bool isMouseOver;
 
-        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelectionManager<PersistentElement> selection) : base(controlPoint.ElementId)
+        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(controlPoint.ElementId)
         {
             this.controlPoint = controlPoint;
             this.host = host;
             this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
         public override bool IsSelected => selection.IsSelected(controlPoint);
+
+        protected override bool IsMouseOver
+        {
+            get => isMouseOver;
+            set
+            {
+                if (value == isMouseOver)
+                {
+                    return;
+                }
+
+                isMouseOver = value;
+                notifyEntityChanged.Invalidate(host.Key, method: Method.Deep);
+            }
+        }
+        public bool MouseIsOver => IsMouseOver;
 
         public override bool Deselect()
         {
@@ -30,38 +51,46 @@ namespace StudioLaValse.Drawable.Example.Scene
 
         public override bool Select()
         {
-            return selection.Add(controlPoint);
+            var hasChanged = selection.Add(controlPoint);
+
+            if (selection.Add(controlPoint.ControlFor))
+            {
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+            {
+                notifyEntityChanged.Invalidate(controlPoint.ControlFor.ElementId, method: Method.Deep);
+            }
+
+            return hasChanged;
         }
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
         {
-            return new List<BaseContentWrapper>();
+            yield break;
         }
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
-            if (!host.IsSelected && !IsSelected)
+            if (!host.IsSelected)
             {
-                return new List<BaseDrawableElement>();
-            }
-
-            var alpha = 0;
-            if (IsMouseOver)
-            {
-                alpha += 100;
+                yield break;
             }
 
             if (IsSelected)
             {
-                alpha += 100;
+                yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, ColorARGB.Transparant, new ColorARGB(1, 255, 0, 0), 5);
+                yield break;
             }
 
-            var ghostColor = new ColorARGB(alpha, 255, 0, 0);
-            return new List<BaseDrawableElement>()
+            if (IsMouseOver)
             {
-                new DrawableCircle(controlPoint.Point, 5, ColorARGB.White),
-                new DrawableCircle(controlPoint.Point, 5, ghostColor)
-            };
+                yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, new ColorARGB(0.5, 255, 0, 0));
+                yield break;
+            }
+
+            yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, ColorARGB.White);
         }
 
         public override void Transform(double deltaX, double deltaY)

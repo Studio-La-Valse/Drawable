@@ -194,7 +194,7 @@ namespace StudioLaValse.Drawable.DrawableElements
 
 
         /// <inheritdoc/>
-        public override BoundingBox GetBoundingBox()
+        public override BoundingBox BoundingBox()
         {
             var dimensions = this.dimensions ??= ExternalTextMeasure.TextMeasurer.Measure(Text, FontFamily, FontSize);
             var topleftX = OriginX;
@@ -230,13 +230,13 @@ namespace StudioLaValse.Drawable.DrawableElements
         /// <inheritdoc/>
         public override XY ClosestPointEdge(XY other)
         {
-            return GetBoundingBox().ClosestPointEdge(other);
+            return BoundingBox().ClosestPointEdge(other);
         }
 
         /// <inheritdoc/>
         public override XY ClosestPointShape(XY other)
         {
-            return GetBoundingBox().ClosestPointShape(other);
+            return BoundingBox().ClosestPointShape(other);
         }
     }
 }

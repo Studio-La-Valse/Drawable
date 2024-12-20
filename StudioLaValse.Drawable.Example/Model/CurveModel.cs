@@ -21,7 +21,7 @@ namespace StudioLaValse.Drawable.Example.Model
 
         public CurveControlPoint Fourth => this.fourth;
 
-        public CurveModel(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<PersistentElement> notifyEntityChanged) : base(keyGenerator)
+        public CurveModel(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
         {
             this.keyGenerator = keyGenerator;
             first = new CurveControlPoint(keyGenerator, this, notifyEntityChanged);

@@ -109,11 +109,11 @@ internal class ChainedInputObserver : IInputObserver
         return false;
     }
 
-    public bool HandleSetMousePosition(XY position)
+    public bool HandleMouseMove(XY position)
     {
-        if (observer.HandleSetMousePosition(position))
+        if (observer.HandleMouseMove(position))
         {
-            return next.HandleSetMousePosition(position);
+            return next.HandleMouseMove(position);
         }
 
         return false;

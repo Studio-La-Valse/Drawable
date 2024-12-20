@@ -129,9 +129,9 @@ namespace StudioLaValse.Drawable
         /// Traverses the visual tree and handles behavior based on the provided function.
         /// </summary>
         /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
-        protected virtual void TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
+        protected virtual bool TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
         {
-            visualTree.TraverseAndHandle(handleBehavior);
+            return visualTree.TraverseAndHandle(handleBehavior);
         }
 
         /// <summary>

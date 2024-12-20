@@ -15,14 +15,14 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         public abstract bool IsSelected { get; }
 
         /// <summary>
-        /// The last position when the left mouse button was pressed.
-        /// </summary>
-        protected XY LastPositionOnMouseLeftDown { get; set; }
-
-        /// <summary>
         /// The minimum drag before a drag transformation is performed.
         /// </summary>
         protected virtual double DragDelta { get; set; } = 2;
+
+        /// <summary>
+        /// A boolean flag that inidicates if the mouse is now over the element.
+        /// </summary>
+        protected virtual bool IsMouseOver { get; set; }
 
         /// <inheritdoc/>
         public BaseSelectableParent(TKey element) : base(element)
@@ -44,10 +44,54 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// <returns>True if the selection has been changed in any way.</returns>
         public abstract bool Select();
 
-        /// <inheritdoc/>
-        public override bool HandleLeftMouseButtonDown()
+        /// <summary>
+        /// Custom logic on mouse enter.
+        /// </summary>
+        /// <returns></returns>
+        public virtual void OnMouseEnter()
         {
-            LastPositionOnMouseLeftDown = LastMousePosition;
+            IsMouseOver = true;
+        }
+
+        /// <summary>
+        /// Custom logic on mouse enter.
+        /// </summary>
+        /// <returns></returns>
+        public virtual void OnMouseLeave()
+        {
+            IsMouseOver = false;
+        }
+
+        /// <summary>
+        /// An abstract method called to check wether the current mouse position should trigger any kind of response.
+        /// By default, this method returns true if the position is contained in the default bounding box of the content wrapper.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public virtual bool CaptureMouse(XY point)
+        {
+            return GetDrawableElements().Any(e => e.ContainsPosition(point));
+        }
+
+        /// <inheritdoc/>
+        public override bool HandleMouseMove(XY position)
+        {
+            LastMousePosition = position;
+
+            var wasOverBefore = IsMouseOver;
+            var isNowOver = CaptureMouse(position);
+
+            if (wasOverBefore != isNowOver)
+            {
+                if (isNowOver)
+                {
+                    OnMouseEnter();
+                }
+                else
+                {
+                    OnMouseLeave();
+                }
+            }
             return true;
         }
 

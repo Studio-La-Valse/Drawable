@@ -155,34 +155,11 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
     /// <inheritdoc/>
     protected override void DrawElement(DrawingContext canvas, DrawableBezierQuadratic bezier)
     {
-        var enumerated = bezier.Points.ToList();
-        if (enumerated.Count < 2)
-        {
-            return;
-        }
-
-        if (enumerated.Count == 2)
-        {
-            var _pen = new Pen(bezier.Color.ToBrush(), bezier.StrokeWeight);
-            canvas.DrawLine(_pen, enumerated[0].ToPoint(), enumerated[1].ToPoint());
-            return;
-        }
-
         var segments = new PathSegments();
-        PathSegment segment = enumerated.Count switch
+        var segment = new global::Avalonia.Media.QuadraticBezierSegment()
         {
-            3 => new global::Avalonia.Media.QuadraticBezierSegment()
-            {
-                Point1 = enumerated[1].ToPoint(),
-                Point2 = enumerated[2].ToPoint(),
-            },
-            4 => new BezierSegment()
-            {
-                Point1 = enumerated[1].ToPoint(),
-                Point2 = enumerated[2].ToPoint(),
-                Point3 = enumerated[3].ToPoint(),
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(bezier)),
+            Point1 = bezier.Second.ToPoint(),
+            Point2 = bezier.Third.ToPoint(),
         };
         segments.Add(segment);
 
@@ -190,7 +167,38 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
         {
             new PathFigure()
             {
-                StartPoint = enumerated[0].ToPoint(),
+                StartPoint = bezier.First.ToPoint(),
+                Segments = segments,
+                IsFilled = false,
+                IsClosed = false
+            }
+        };
+        var geometry = new PathGeometry()
+        {
+            Figures = pathFigures,
+        };
+
+        var pen = new Pen(bezier.Color.ToBrush(), bezier.StrokeWeight);
+        canvas.DrawGeometry(null, pen, geometry);
+    }
+
+    /// <inheritdoc/>
+    protected override void DrawElement(DrawingContext canvas, DrawableBezierCubic bezier)
+    {
+        var segments = new PathSegments();
+        var segment = new BezierSegment()
+        {
+            Point1 = bezier.Second.ToPoint(),
+            Point2 = bezier.Third.ToPoint(),
+            Point3 = bezier.Fourth.ToPoint(),
+        };
+        segments.Add(segment);
+
+        var pathFigures = new PathFigures()
+        {
+            new PathFigure()
+            {
+                StartPoint = bezier.First.ToPoint(),
                 Segments = segments,
                 IsFilled = false,
                 IsClosed = false

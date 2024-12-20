@@ -11,34 +11,34 @@ using System.Drawing;
 
 namespace StudioLaValse.Drawable.Example.Scene
 {
-    public class VisualComponent : BaseTransformableParent<ElementId>
+    public class VisualPoint : BaseTransformableParent<ElementId>
     {
-        private readonly ComponentModel component;
+        private readonly PointModel component;
         private readonly ISelectionManager<PersistentElement> selection;
         private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
+        private bool isMouseOver;
 
         public double Radius => component.Radius;
         public double X => component.X;
         public double Y => component.Y;
-        public override ElementId Ghost => component.Ghost.ElementId;
         public override bool IsSelected => selection.IsSelected(component);
+
         protected override bool IsMouseOver
         {
-            get => base.IsMouseOver;
+            get => isMouseOver;
             set
             {
-                if (value == base.IsMouseOver)
+                if (value == isMouseOver)
                 {
                     return;
                 }
 
-                base.IsMouseOver = value;
-                notifyEntityChanged.Invalidate(Ghost, NotFoundHandler.Throw, Method.Shallow);
+                isMouseOver = value;
+                notifyEntityChanged.Invalidate(component.ElementId, method: Method.Shallow);
             }
         }
-        public bool MouseIsOver => IsMouseOver;
 
-        public VisualComponent(ComponentModel component, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(component.ElementId)
+        public VisualPoint(PointModel component, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(component.ElementId)
         {
             this.component = component;
             this.selection = selection;
@@ -47,18 +47,25 @@ namespace StudioLaValse.Drawable.Example.Scene
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
         {
-            return new List<BaseContentWrapper>()
-            {
-                new VisualComponentGhost(component.Ghost, this)
-            };
+            yield break;
         }
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
-            return new List<BaseDrawableElement>()
+            if (IsSelected)
             {
-                new DrawableCircle(X, Y, Radius, ColorARGB.White)
-            };
+                yield return new DrawableCircle(X, Y, Radius, ColorARGB.White, new ColorARGB(1, 255, 0, 0), 5);
+                yield break;
+            }
+
+            if (isMouseOver)
+            {
+                yield return new DrawableCircle(X, Y, Radius, new ColorARGB(1, 255, 127, 127));
+                yield break;
+            }
+
+            yield return new DrawableCircle(X, Y, Radius, ColorARGB.White);
+            yield break;
         }
 
         public override BoundingBox BoundingBox()
@@ -92,13 +99,13 @@ namespace StudioLaValse.Drawable.Example.Scene
             return distance <= Radius;
         }
 
-        public override bool HandleSetMousePosition(XY position)
+        public override bool HandleMouseMove(XY position)
         {
             var distance = new XY(X, Y).DistanceTo(position);
             var radius = distance.Map(0, 500, 20, 5).Clip(5, 20);
             component.Radius = radius;
 
-            return base.HandleSetMousePosition(position);
+            return base.HandleMouseMove(position);
         }
     }
 }

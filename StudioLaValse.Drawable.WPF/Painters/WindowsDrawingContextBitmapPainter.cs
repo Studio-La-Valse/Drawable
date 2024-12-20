@@ -120,26 +120,29 @@ namespace StudioLaValse.Drawable.WPF.Painters
 
         protected override void DrawElement(DrawingContext canvas, DrawableBezierQuadratic bezier)
         {
-            var enumerated = bezier.Points.ToList();
-            if (enumerated.Count < 2)
-            {
-                return;
-            }
-
-            if (enumerated.Count == 2)
-            {
-                var _pen = new Pen(bezier.Color.ToWindowsBrush(), bezier.StrokeWeight);
-                canvas.DrawLine(_pen, enumerated[0].ToWindowsPoint(), enumerated[1].ToWindowsPoint());
-                return;
-            }
-
             var segments = new PathSegmentCollection();
             var segment = new PolyBezierSegment(bezier.Points.Skip(1).Select(p => p.ToWindowsPoint()), true);
             segments.Add(segment);
 
             var pathFigures = new List<PathFigure>()
             {
-                new PathFigure(enumerated[0].ToWindowsPoint(), segments, false)
+                new PathFigure(bezier.First.ToWindowsPoint(), segments, false)
+            };
+            var geometry = new PathGeometry(pathFigures);
+
+            var pen = new Pen(bezier.Color.ToWindowsBrush(), bezier.StrokeWeight);
+            canvas.DrawGeometry(null, pen, geometry);
+        }
+
+        protected override void DrawElement(DrawingContext canvas, DrawableBezierCubic bezier)
+        {
+            var segments = new PathSegmentCollection();
+            var segment = new PolyBezierSegment(bezier.Points.Skip(1).Select(p => p.ToWindowsPoint()), true);
+            segments.Add(segment);
+
+            var pathFigures = new List<PathFigure>()
+            {
+                new PathFigure(bezier.First.ToWindowsPoint(), segments, false)
             };
             var geometry = new PathGeometry(pathFigures);
 

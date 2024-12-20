@@ -15,13 +15,13 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
             this.notifyEntityChanged = notifyEntityChanged;
         }
 
-        public GraphModel Create()
+        public PointsModel Create()
         {
             // return new TextModel(keyGenerator);
 
             var n = 5000;
-            var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator), notifyEntityChanged)).ToArray();
-            var graph = new GraphModel(keyGenerator, components);
+            var components = Enumerable.Range(0, n).Select(i => new PointModel(keyGenerator, new BaseGhost(keyGenerator), notifyEntityChanged)).ToArray();
+            var graph = new PointsModel(keyGenerator, components);
             return graph;
 
             //var curve = new CurveModel(keyGenerator);

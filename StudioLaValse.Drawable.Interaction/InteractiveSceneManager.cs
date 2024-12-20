@@ -13,21 +13,20 @@ namespace StudioLaValse.Drawable.Interaction
     /// Manages an interactive scene, handling various input events and behaviors.
     /// </summary>
     /// <typeparam name="TKey">The type of the key used for identification.</typeparam>
-    public class InteractiveSceneManager<TKey> : SceneManager<TKey>, IInputObserver, IObservable<BoundingBox> where TKey : IEquatable<TKey>
+    public class InteractiveSceneManager<TKey> : SceneManager<TKey>, IInputObserver where TKey : IEquatable<TKey>
     {
         private readonly double dragDelta = 2;
-        private readonly HashSet<IObserver<BoundingBox>> observers = [];
 
         private BoundingBox? lastBoundingBox;
         private XY deltaPosition;
         private XY lastMousePosition;
-        private XY lastMouseClickPosition;
+        private XY lastMouseDownPosition;
         private bool leftMouseIsDown;
 
         private bool Dragging =>
-            leftMouseIsDown && lastMousePosition.DistanceTo(lastMouseClickPosition) > dragDelta;
+            leftMouseIsDown && lastMousePosition.DistanceTo(lastMouseDownPosition) > dragDelta;
         private bool DirectionRight =>
-            lastMousePosition.X > lastMouseClickPosition.X;
+            lastMousePosition.X > lastMouseDownPosition.X;
 
 
         /// <summary>
@@ -42,9 +41,9 @@ namespace StudioLaValse.Drawable.Interaction
         /// Travels down the visual tree and does some behavior.
         /// </summary>
         /// <param name="handleBehavior"></param>
-        protected void TraverseAndHandleBehavior(Func<IInputObserver, bool> handleBehavior)
+        protected bool TraverseAndHandleBehavior(Func<IInputObserver, bool> handleBehavior)
         {
-            base.TraverseAndHandle(e =>
+            return base.TraverseAndHandle(e =>
             {
                 if (e is IInputObserver behavior)
                 {
@@ -61,7 +60,7 @@ namespace StudioLaValse.Drawable.Interaction
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleSetMousePosition(XY position)
+        public virtual bool HandleMouseMove(XY position)
         {
             deltaPosition = position - lastMousePosition;
 
@@ -71,7 +70,7 @@ namespace StudioLaValse.Drawable.Interaction
             {
                 if (HandleMassTransform())
                 {
-                    TraverseAndHandleBehavior(e => e.HandleSetMousePosition(position));
+                    TraverseAndHandleBehavior(e => e.HandleMouseMove(position));
                 }
             }
 
@@ -83,11 +82,11 @@ namespace StudioLaValse.Drawable.Interaction
         /// <inheritdoc/>
         public virtual bool HandleLeftMouseButtonDown()
         {
-            lastMouseClickPosition = lastMousePosition;
+            lastMouseDownPosition = lastMousePosition;
 
-            if (HandleInitBoundingBox())
+            if (TraverseAndHandleBehavior(e => e.HandleLeftMouseButtonDown()))
             {
-                TraverseAndHandleBehavior(e => e.HandleLeftMouseButtonDown());
+                HandleInitBoundingBox();
             }
 
             RenderChanges();
@@ -177,7 +176,7 @@ namespace StudioLaValse.Drawable.Interaction
                 if(e is BaseTransformableParent<TKey> transformable)
                 {
                     using var lockTransform = new LockTransform(transformable);
-                    var _continue = transformable.HandleSetMousePosition(lastMousePosition);
+                    var _continue = transformable.HandleMouseMove(lastMousePosition);
 
                     if (transformable.IsSelected)
                     {
@@ -188,7 +187,7 @@ namespace StudioLaValse.Drawable.Interaction
                 }
                 else if (e is BaseInteractiveParent<TKey> interactive)
                 {
-                    return interactive.HandleSetMousePosition(lastMousePosition);
+                    return interactive.HandleMouseMove(lastMousePosition);
                 }
                 return true;
             });
@@ -196,11 +195,28 @@ namespace StudioLaValse.Drawable.Interaction
             return false;
         }
 
+        private SelectionBorder? _selectionBorder = null;
+        /// <summary>
+        /// Add a selection border to the scene manager to allow a drag selection border.
+        /// </summary>
+        /// <param name="selectionBorder"></param>
+        /// <returns></returns>
+        public InteractiveSceneManager<TKey> AddSelectionBorder(SelectionBorder selectionBorder)
+        {
+            _selectionBorder = selectionBorder;
+            return this;
+        }
+
         /// <summary>
         /// Handles initalizing a selection border.
         /// </summary>
         public virtual bool HandleInitBoundingBox()
         {
+            if(_selectionBorder is null)
+            {
+                return true;
+            }
+
             lastBoundingBox = null;
 
             var elementOnPoint = false;
@@ -211,7 +227,7 @@ namespace StudioLaValse.Drawable.Interaction
                     return false;
                 }
 
-                if (e is BaseSelectableParent<TKey> selectable && selectable.IsSelected && selectable.CaptureMouse(lastMouseClickPosition))
+                if (e is BaseSelectableParent<TKey> selectable && selectable.IsSelected && selectable.CaptureMouse(lastMouseDownPosition))
                 {
                     elementOnPoint = true;
                     return false;
@@ -224,7 +240,7 @@ namespace StudioLaValse.Drawable.Interaction
                 return true;
             }
 
-            lastBoundingBox = new BoundingBox(lastMouseClickPosition, lastMousePosition);
+            lastBoundingBox = new BoundingBox(lastMouseDownPosition, lastMousePosition);
 
             return true;
         }
@@ -234,6 +250,11 @@ namespace StudioLaValse.Drawable.Interaction
         /// </summary>
         public virtual bool HandleDragBoundingBox()
         {
+            if (_selectionBorder is null)
+            {
+                return true;
+            }
+
             if (!Dragging)
             {
                 return true;
@@ -244,25 +265,28 @@ namespace StudioLaValse.Drawable.Interaction
                 return true;
             }
 
-            lastBoundingBox = new BoundingBox(lastMouseClickPosition, lastMousePosition);
-            foreach (var observer in observers)
-            {
-                observer.OnNext(lastBoundingBox.Value);
-            }
+            lastBoundingBox = new BoundingBox(lastMouseDownPosition, lastMousePosition);
+            _selectionBorder.Set(lastBoundingBox.Value);
 
             TraverseAndHandle(e =>
             {
-                if (e is BaseInteractiveParent<TKey> interactive)
+                if (e is BaseSelectableParent<TKey> selectable)
                 {
-                    var _continue = interactive.HandleSetMousePosition(lastMousePosition);
-                    if (e is BaseSelectableParent<TKey> selectable && selectable.BoundingBox().Overlaps(lastBoundingBox.Value))
+                    var overlap = DirectionRight ?
+                        lastBoundingBox.Value.Contains(selectable.BoundingBox()) :
+                        selectable.BoundingBox().Overlaps(lastBoundingBox.Value);
+                    if (overlap)
                     {
                         selectable.OnMouseEnter();
+                        return false;
                     }
-
-                    return _continue;
+                    else
+                    {
+                        selectable.OnMouseLeave();
+                    }
+                    return true;
                 }
-                
+
                 return true;
             });
 
@@ -274,13 +298,21 @@ namespace StudioLaValse.Drawable.Interaction
         /// </summary>
         public virtual bool HandleHideBoundingBox()
         {
+            if (_selectionBorder is null)
+            {
+                return true;
+            }
+
             if (Dragging && lastBoundingBox.HasValue)
             {
                 TraverseAndHandle(e =>
                 {
                     if (e is BaseSelectableParent<TKey> selectable)
                     {
-                        if(selectable.BoundingBox().Overlaps(lastBoundingBox.Value))
+                        var select = DirectionRight ?
+                            lastBoundingBox.Value.Contains(selectable.BoundingBox()) :
+                            selectable.BoundingBox().Overlaps(lastBoundingBox.Value);
+                        if(select)
                         { 
                             selectable.Select(); 
                         }
@@ -291,25 +323,14 @@ namespace StudioLaValse.Drawable.Interaction
                     }
                     return true;
                 });
-
-                lastBoundingBox = null;
             }
 
-            foreach (var observer in observers)
-            {
-                observer.OnCompleted();
-            }
+            lastBoundingBox = null;
+            _selectionBorder.Hide();
 
             return true;
         }
 
-
-        /// <inheritdoc/>
-        public IDisposable Subscribe(IObserver<BoundingBox> observer)
-        {
-            observers.Add(observer);
-            return new DefaultUnsubscriber<BoundingBox>(observer, observers);
-        }
 
         class LockTransform : IDisposable
         {
@@ -323,6 +344,44 @@ namespace StudioLaValse.Drawable.Interaction
             public void Dispose()
             {
                 baseTransformableParent.LockTransform = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// A selection border that may be observed.
+    /// </summary>
+    public class SelectionBorder : IObservable<BoundingBox>
+    {
+        private readonly HashSet<IObserver<BoundingBox>> observers = [];
+
+        /// <inheritdoc/>
+        public IDisposable Subscribe(IObserver<BoundingBox> observer)
+        {
+            observers.Add(observer);
+            return new DefaultUnsubscriber<BoundingBox>(observer, observers);
+        }
+        
+        /// <summary>
+        /// Set the specified bounding box to be the next selection border.
+        /// </summary>
+        /// <param name="boundingBox"></param>
+        public void Set(BoundingBox boundingBox)
+        {
+            foreach (var observer in observers)
+            {
+                observer.OnNext(boundingBox);
+            }
+        }
+
+        /// <summary>
+        /// Hide the selection border. 
+        /// </summary>
+        public void Hide()
+        {
+            foreach (var observer in observers)
+            {
+                observer.OnCompleted();
             }
         }
     }

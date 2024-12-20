@@ -2,16 +2,16 @@
 
 namespace StudioLaValse.Drawable.Example.Model
 {
-    public class GraphModel : PersistentElement, IEquatable<GraphModel>
+    public class PointsModel : PersistentElement, IEquatable<PointsModel>
     {
-        public IEnumerable<ComponentModel> Components { get; }
+        public IEnumerable<PointModel> Components { get; }
 
-        public GraphModel(IKeyGenerator<int> keyGenerator, IEnumerable<ComponentModel> components) : base(keyGenerator)
+        public PointsModel(IKeyGenerator<int> keyGenerator, IEnumerable<PointModel> components) : base(keyGenerator)
         {
             Components = components;
         }
 
-        public bool Equals(GraphModel? other)
+        public bool Equals(PointsModel? other)
         {
             if (other is null)
             {

@@ -30,10 +30,10 @@ namespace StudioLaValse.Drawable.Example.Winforms
 
             var selection = SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyEntityChanged, e => e.ElementId).InterceptKeys();
             var keyGenerator = new IncrementalKeyGenerator();
-            var components = Enumerable.Range(0, 5000).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator), notifyEntityChanged)).ToArray();
+            var components = Enumerable.Range(0, 5000).Select(i => new PointModel(keyGenerator, new BaseGhost(keyGenerator), notifyEntityChanged)).ToArray();
 
-            var graph = new GraphModel(keyGenerator, components);
-            var scene = new VisualGraph(graph, selection, notifyEntityChanged);
+            var graph = new PointsModel(keyGenerator, components);
+            var scene = new VisualPoints(graph, selection, notifyEntityChanged);
 
             var canvas = new ControlContainer();
             var textMeasurer = new TextMeasurer();

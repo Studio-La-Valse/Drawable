@@ -78,5 +78,11 @@ namespace StudioLaValse.Drawable.HTML
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        protected override void DrawElement(HTMLCanvas canvas, DrawableBezierCubic bezier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

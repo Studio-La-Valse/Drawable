@@ -13,7 +13,7 @@ namespace StudioLaValse.Drawable.DrawableElements
         /// Calculates the bounding box. Optimizations may be provided per geometric primitive.
         /// </summary>
         /// <returns></returns>
-        public abstract BoundingBox GetBoundingBox();
+        public abstract BoundingBox BoundingBox();
 
         /// <summary>
         /// Returns a new position that is the closest point on the edges of the element relative to the specified point.

@@ -190,7 +190,7 @@ namespace StudioLaValse.Drawable.Interaction.Selection
         }
 
         /// <inheritdoc/>
-        public bool HandleSetMousePosition(XY position)
+        public bool HandleMouseMove(XY position)
         {
             return true;
         }

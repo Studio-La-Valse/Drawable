@@ -49,7 +49,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         }
 
         /// <inheritdoc/>
-        public override bool HandleSetMousePosition(XY position)
+        public override bool HandleMouseMove(XY position)
         {
             if (!LockTransform && leftMouseIsDown && lastMouseIsDownWasOnElement && IsSelected && position.DistanceTo(LastMousePosition) > DragDelta)
             {
@@ -58,7 +58,7 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
                 Transform(deltaX, deltaY);
             }
 
-            return base.HandleSetMousePosition(position);
+            return base.HandleMouseMove(position);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace StudioLaValse.Drawable.Interaction.Private
             return true;
         }
 
-        public bool HandleSetMousePosition(XY position)
+        public bool HandleMouseMove(XY position)
         {
             var positionOnHost = canvas.CanvasToHost(position);
 

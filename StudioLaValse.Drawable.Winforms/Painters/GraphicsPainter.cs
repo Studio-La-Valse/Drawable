@@ -90,5 +90,10 @@ namespace StudioLaValse.Drawable.Winforms.Painters
         {
             throw new NotImplementedException();
         }
+
+        protected override void DrawElement(Graphics canvas, DrawableBezierCubic bezier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

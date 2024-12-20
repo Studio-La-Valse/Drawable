@@ -39,7 +39,7 @@ public class BaseInputObserver : IInputObserver
         return true;
     }
     /// <inheritdoc/>
-    public virtual bool HandleSetMousePosition(XY position)
+    public virtual bool HandleMouseMove(XY position)
     {
         return true;
     }

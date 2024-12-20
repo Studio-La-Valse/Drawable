@@ -40,7 +40,7 @@ namespace StudioLaValse.Drawable.DrawableElements
         }
 
         /// <inheritdoc/>
-        public override BoundingBox GetBoundingBox()
+        public override BoundingBox BoundingBox()
         {
             var minX = 0d;
             var maxX = 0d;

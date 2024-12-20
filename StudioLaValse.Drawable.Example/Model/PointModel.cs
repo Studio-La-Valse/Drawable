@@ -3,7 +3,7 @@ using StudioLaValse.Key;
 
 namespace StudioLaValse.Drawable.Example.Model
 {
-    public class ComponentModel : PersistentElement
+    public class PointModel : PersistentElement
     {
         private double radius = 10;
         private double x = new Random().NextDouble() * 2000;
@@ -52,7 +52,7 @@ namespace StudioLaValse.Drawable.Example.Model
                 notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
             }
         }
-        public ComponentModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
+        public PointModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
         {
             Ghost = ghost;
             this.notifyEntityChanged = notifyEntityChanged;

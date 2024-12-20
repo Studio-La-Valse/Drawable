@@ -21,7 +21,7 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
             var collection = new Queue<IDisposable>();
             var list = new List<IDisposable>()
             {
-                canvas.MouseMove.Subscribe(e => behavior.HandleSetMousePosition(e)),
+                canvas.MouseMove.Subscribe(e => behavior.HandleMouseMove(e)),
                 canvas.MouseLeftButtonDown.Subscribe(e =>
                 {
                     if (e)

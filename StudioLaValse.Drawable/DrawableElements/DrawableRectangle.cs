@@ -84,19 +84,19 @@ namespace StudioLaValse.Drawable.DrawableElements
         }
 
         /// <inheritdoc/>
-        public override BoundingBox GetBoundingBox() =>
+        public override BoundingBox BoundingBox() =>
             new (TopLeftX, TopLeftX + Width, TopLeftY, TopLeftY + Height);
 
         /// <inheritdoc/>
         public override XY ClosestPointEdge(XY other)
         {
-            return GetBoundingBox().ClosestPointEdge(other);
+            return BoundingBox().ClosestPointEdge(other);
         }
 
         /// <inheritdoc/>
         public override XY ClosestPointShape(XY other)
         {
-            return GetBoundingBox().ClosestPointShape(other);
+            return BoundingBox().ClosestPointShape(other);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace StudioLaValse.Drawable.DrawableElements
 
 
         /// <inheritdoc/>
-        public override BoundingBox GetBoundingBox() =>
+        public override BoundingBox BoundingBox() =>
             new BoundingBox(
                 CenterX - Width / 2,
                 CenterX + Width / 2,

@@ -1,83 +1,38 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Geometry;
-using System.Reflection.Metadata.Ecma335;
 
 namespace StudioLaValse.Drawable.Interaction.ContentWrappers
 {
-
     /// <summary>
-    /// An abstract class meant to be used for a visual parent that needs any basic mouse interaction. 
+    /// Defines a visual parent that has the potential to assign behavior to.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     public abstract class BaseInteractiveParent<TKey> : BaseVisualParent<TKey>, IInputObserver where TKey : IEquatable<TKey>
     {
         /// <summary>
-        /// A reference to an entity that will be rerendered on mouse events. 
-        /// The default value is a reference to the original associated entity, but for complex nested entities,
-        /// you can reference another entity to greately reduce calculation times.
-        /// </summary>
-        public virtual TKey Ghost => Key;
-
-        /// <summary>
-        /// A boolean value indicating wether or not the cursor is currently above the visual element.
-        /// </summary>
-        protected virtual bool IsMouseOver { get; set; }
-
-        /// <summary>
         /// The last recorded mouse position.
         /// </summary>
         protected XY LastMousePosition { get; set; }
 
+        /// <summary>
+        /// The last position when the left mouse button was pressed.
+        /// </summary>
+        protected XY LastPositionOnMouseLeftDown { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// The default constructor.
+        /// </summary>
+        /// <param name="element"></param>
         protected BaseInteractiveParent(TKey element) : base(element)
         {
-
-        }
-
-        /// <summary>
-        /// Custom logic on mouse enter.
-        /// </summary>
-        /// <returns></returns>
-        public virtual void OnMouseEnter()
-        {
-            if (IsMouseOver)
-            {
-                return;
-            }
-
-            IsMouseOver = true;
-        }
-
-        /// <summary>
-        /// Custom logic on mouse enter.
-        /// </summary>
-        /// <returns></returns>
-        public virtual void OnMouseLeave()
-        {
-            if (!IsMouseOver)
-            {
-                return;
-            }
-
-            IsMouseOver = false;
-        }
-
-        /// <summary>
-        /// An abstract method called to check wether the current mouse position should trigger any kind of response.
-        /// By default, this method returns true if the position is contained in the default bounding box of the content wrapper.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public virtual bool CaptureMouse(XY point)
-        {
-            return GetDrawableElements().Any(e => e.ContainsPosition(point));
+            
         }
 
         /// <inheritdoc/>
         public virtual bool HandleLeftMouseButtonDown()
         {
+            LastPositionOnMouseLeftDown = LastMousePosition;
             return true;
         }
 
@@ -100,24 +55,9 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         }
 
         /// <inheritdoc/>
-        public virtual bool HandleSetMousePosition(XY position)
+        public virtual bool HandleMouseMove(XY position)
         {
             LastMousePosition = position;
-
-            var wasOverBefore = IsMouseOver;
-            var isNowOver = CaptureMouse(position);
-
-            if(wasOverBefore != isNowOver)
-            {
-                if (isNowOver)
-                {
-                    OnMouseEnter();
-                }
-                else
-                {
-                    OnMouseLeave();
-                }
-            }
             return true;
         }
 

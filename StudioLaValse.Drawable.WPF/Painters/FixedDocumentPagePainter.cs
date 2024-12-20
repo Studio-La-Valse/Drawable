@@ -89,5 +89,10 @@ namespace StudioLaValse.Drawable.WPF.Painters
         {
             throw new NotImplementedException();
         }
+
+        protected override void DrawElement(FixedPage canvas, DrawableBezierCubic bezier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

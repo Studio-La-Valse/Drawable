@@ -26,8 +26,17 @@
 		</Grid.ColumnDefinitions>
 
 		<StackPanel>
-			<Button Command="{Binding NewSceneCommand}"
-                    Content="New scene"/>
+			<Button Command="{Binding PointsSceneCommand}"
+                    Content="Points scene"/>
+
+			<Button Command="{Binding CurveSceneCommand}"
+                    Content="Curve scene"/>
+
+			<Button Command="{Binding GraphSceneCommand}"
+                    Content="Graph scene"/>
+
+			<Button Command="{Binding TextSceneCommand}"
+                    Content="Text scene"/>
 
 			<Button Command="{Binding ToggleZoom}"
                     Content="Toggle Zoom"/>

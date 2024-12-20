@@ -36,7 +36,7 @@ namespace StudioLaValse.Drawable.Interaction
         /// Called on mouse move.
         /// </summary>
         /// <returns>True if the behavior is allowed to be propagated.</returns>
-        bool HandleSetMousePosition(XY position);
+        bool HandleMouseMove(XY position);
 
         /// <summary>
         /// Called on mouse wheel scroll.
