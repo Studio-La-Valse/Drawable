@@ -98,8 +98,8 @@ public class Program
         var keyGenerator = new IncrementalKeyGenerator();
 
         // Create the models.
-        var firstNode = new Node(keyGenerator);
-        var secondNode = new Node(keyGenerator);
+        var firstNode = new NodeModel(keyGenerator);
+        var secondNode = new NodeModel(keyGenerator);
 
         // Create the visual representation, the canvas and the canvas painter.
         var graph = new VisualGraph(firstNode, secondNode);
@@ -112,12 +112,12 @@ public class Program
     }
 }
 
-public class Node
+public class NodeModel
 {
     public XY Position { get; }
     public int Id { get; }
 
-    public Node(IKeyGenerator<int> keyGenerator)
+    public NodeModel(IKeyGenerator<int> keyGenerator)
     {
         Id = keyGenerator.Generate();
         Position = new XY(Random.Shared.Next(300), Random.Shared.Next(300));
@@ -126,10 +126,10 @@ public class Node
 
 public class VisualNode : BaseVisualParent<int>
 {
-    private readonly Node node;
+    private readonly NodeModel node;
     private readonly double radius = 50;
 
-    public VisualNode(Node node) : base(node.Id)
+    public VisualNode(NodeModel node) : base(node.Id)
     {
         this.node = node;
     }
@@ -143,10 +143,10 @@ public class VisualNode : BaseVisualParent<int>
 
 public class VisualGraph : BaseContentWrapper
 {
-    private readonly Node firstNode;
-    private readonly Node secondNode;
+    private readonly NodeModel firstNode;
+    private readonly NodeModel secondNode;
 
-    public VisualGraph(Node firstNode, Node secondNode)
+    public VisualGraph(NodeModel firstNode, NodeModel secondNode)
     {
         this.firstNode = firstNode;
         this.secondNode = secondNode;
@@ -175,8 +175,8 @@ public class Program
         var notifyEntityChanged = SceneManager<int>.CreateObservable();
 
         // Create the models.
-        var firstNode = new Node(keyGenerator, notifyEntityChanged);
-        var secondNode = new Node(keyGenerator, notifyEntityChanged);
+        var firstNode = new NodeModel(keyGenerator, notifyEntityChanged);
+        var secondNode = new NodeModel(keyGenerator, notifyEntityChanged);
 
         // Create the canvas, canvas painter and scene.
         var sceneId = keyGenerator.Generate();
@@ -207,7 +207,7 @@ public class Program
     }
 }
 
-public class Node
+public class NodeModel
 {
     private readonly INotifyEntityChanged<int> notifyEntityChanged;
     private XY position;
@@ -228,7 +228,7 @@ public class Node
 
     public int Id { get; }
 
-    public Node(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<int> notifyEntityChanged)
+    public NodeModel(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<int> notifyEntityChanged)
     {
         this.notifyEntityChanged = notifyEntityChanged;
 
@@ -239,10 +239,10 @@ public class Node
 
 public class VisualNode : BaseVisualParent<int>
 {
-    private readonly Node node;
+    private readonly NodeModel node;
     private readonly double radius = 50;
 
-    public VisualNode(Node node) : base(node.Id)
+    public VisualNode(NodeModel node) : base(node.Id)
     {
         this.node = node;
     }
@@ -258,10 +258,10 @@ public class VisualNode : BaseVisualParent<int>
 
 public class VisualGraph : BaseVisualParent<int>
 {
-    private readonly Node firstNode;
-    private readonly Node secondNode;
+    private readonly NodeModel firstNode;
+    private readonly NodeModel secondNode;
 
-    public VisualGraph(Node firstNode, Node secondNode, int sceneId) : base(sceneId)
+    public VisualGraph(NodeModel firstNode, NodeModel secondNode, int sceneId) : base(sceneId)
     {
         this.firstNode = firstNode;
         this.secondNode = secondNode;
