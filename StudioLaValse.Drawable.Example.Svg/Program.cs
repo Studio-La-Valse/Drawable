@@ -102,12 +102,12 @@ public class VisualNode : BaseVisualParent<int>
     }
 }
 
-public class MyGraph : BaseVisualParent<int>
+public class VisualGraph : BaseVisualParent<int>
 {
     private readonly Node firstNode;
     private readonly Node secondNode;
 
-    public MyGraph(Node firstNode, Node secondNode, int sceneId) : base(sceneId)
+    public VisualGraph(Node firstNode, Node secondNode, int sceneId) : base(sceneId)
     {
         this.firstNode = firstNode;
         this.secondNode = secondNode;
