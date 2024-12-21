@@ -1,6 +1,6 @@
 ﻿using StudioLaValse.Key;
 
-namespace StudioLaValse.Drawable.Example
+namespace Example
 {
     public class IncrementalKeyGenerator : IKeyGenerator<int>
     {

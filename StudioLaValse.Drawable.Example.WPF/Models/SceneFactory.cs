@@ -1,24 +1,27 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Example.Scene;
+using Example.Model;
+using Example.Scene;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Key;
+using StudioLaValse.Drawable;
 
-namespace StudioLaValse.Drawable.Example.WPF.Models
+namespace Example.WPF.Models
 {
     public class SceneFactory
     {
         private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
-        public SceneFactory(ISelectionManager<PersistentElement> selection)
+        public SceneFactory(ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged)
         {
             this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
 
-        public BaseVisualParent<PersistentElement> Create(GraphModel model)
+        public BaseVisualParent<ElementId> Create(PointsModel model)
         {
-            var visual = new VisualGraph(model, selection);
+            var visual = new VisualPoints(model, selection, notifyEntityChanged);
             return visual;
         }
     }

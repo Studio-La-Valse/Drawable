@@ -7,6 +7,8 @@ namespace StudioLaValse.Drawable.DrawableElements
     /// </summary>
     public sealed class DrawableCircle : DrawableEllipse
     {
+        private readonly double radius; 
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -27,7 +29,7 @@ namespace StudioLaValse.Drawable.DrawableElements
                 stroke,
                 strokeWeight)
         {
-
+            radius = circle.Radius;
         }
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace StudioLaValse.Drawable.DrawableElements
                 stroke,
                 strokeWeight)
         {
-
+            this.radius = radius;
         }
 
         /// <summary>
@@ -79,7 +81,21 @@ namespace StudioLaValse.Drawable.DrawableElements
                 stroke,
                 strokeWeight)
         {
+            this.radius = radius;
+        }
 
+        /// <inheritdoc/>
+        public override XY ClosestPointEdge(XY other)
+        {
+            var xy = new Circle(CenterX, CenterY, radius).ClosestPointEdge(other);
+            return xy;
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointShape(XY other)
+        {
+            var xy = new Circle(CenterX, CenterY, radius).ClosestPointShape(other);
+            return xy;
         }
     }
 }

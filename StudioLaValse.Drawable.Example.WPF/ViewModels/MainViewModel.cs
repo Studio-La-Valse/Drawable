@@ -1,8 +1,11 @@
-﻿using StudioLaValse.Drawable.Example.WPF.Models;
+﻿using Example.WPF.Models;
+using StudioLaValse.Drawable;
 using StudioLaValse.Drawable.Extensions;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 using StudioLaValse.Drawable.WPF.Commands;
 using StudioLaValse.Drawable.WPF.ViewModels;
 using StudioLaValse.Geometry;
@@ -10,14 +13,14 @@ using StudioLaValse.Key;
 using System;
 using System.Windows.Input;
 
-namespace StudioLaValse.Drawable.Example.WPF.ViewModels
+namespace Example.WPF.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
         private readonly ModelFactory modelFactory;
         private readonly SceneFactory sceneFactory;
-        private readonly ISelectionManager<PersistentElement> selectionManager;
-        private readonly INotifyEntityChanged<PersistentElement> notifyEntityChanged;
+        private readonly SelectionWithKeyResponse<PersistentElement> selectionManager;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
         private IDisposable? sceneManagerDispatcherDisposable;
 
         public CanvasViewModel CanvasViewModel { get; }
@@ -27,19 +30,16 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             {
                 var model = modelFactory.Create();
                 var scene = sceneFactory.Create(model);
-                var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId, CanvasViewModel.BaseBitmapPainter).WithBackground(ColorARGB.Black).WithRerender();
+                var selectionBorder = new SelectionBorder();
+                var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
+
+                sceneManager.Rerender();
 
                 sceneManagerDispatcherDisposable?.Dispose();
-                sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager);
+                sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
-                CanvasViewModel.Pipe = BehaviorPipeline.DoNothing()
-                    .InterceptKeys(selectionManager, out var _selectionManager)
-                    .ThenHandleDefaultMouseInteraction(sceneManager.VisualParents, notifyEntityChanged)
-                    .ThenHandleMouseHover(sceneManager.VisualParents, notifyEntityChanged)
-                    .ThenHandleDefaultClick(sceneManager.VisualParents, _selectionManager)
-                    .ThenHandleSelectionBorder(sceneManager.VisualParents, _selectionManager, CanvasViewModel.SelectionBorder, notifyEntityChanged)
-                    .ThenHandleTransformations(_selectionManager, sceneManager.VisualParents, notifyEntityChanged)
-                    .ThenRender(notifyEntityChanged);
+                CanvasViewModel.SelectionBorder = selectionBorder;
+                CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
 
                 CanvasViewModel.CenterContent(scene);
             },
@@ -57,7 +57,7 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             () => true);
 
 
-        public MainViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, ISelectionManager<PersistentElement> selectionManager, INotifyEntityChanged<PersistentElement> notifyEntityChanged)
+        public MainViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, SelectionWithKeyResponse<PersistentElement> selectionManager, INotifyEntityChanged<ElementId> notifyEntityChanged)
         {
             CanvasViewModel = canvasViewModel;
             this.modelFactory = modelFactory;

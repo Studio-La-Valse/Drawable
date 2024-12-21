@@ -76,6 +76,9 @@ namespace StudioLaValse.Drawable.Winforms.Controls
                     Keys.LControlKey => Key.Control,
                     Keys.LShiftKey => Key.Shift,
                     Keys.Escape => Key.Escape,
+                    Keys.R => Key.R,
+                    Keys.Z => Key.Z,
+                    Keys.Delete => Key.Delete,
                     _ => Key.Unknown
                 });
         }

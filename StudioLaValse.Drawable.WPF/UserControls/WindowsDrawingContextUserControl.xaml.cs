@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
@@ -7,6 +8,7 @@ using StudioLaValse.Drawable.WPF.DependencyProperties;
 using StudioLaValse.Drawable.WPF.Painters;
 using StudioLaValse.Drawable.WPF.Text;
 using StudioLaValse.Drawable.WPF.Visuals;
+using StudioLaValse.Geometry;
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -37,22 +39,22 @@ namespace StudioLaValse.Drawable.WPF.UserControls
 
 
 
-        private IDisposable pipeSubscription;
-        public static readonly DependencyProperty PipeProperty = DependencyPropertyBase
-            .Register<WindowsDrawingContextUserControl, IBehavior>(nameof(Pipe), (o, e) =>
+        private IDisposable inputObserverSubscription;
+        public static readonly DependencyProperty InputObserverProperty = DependencyPropertyBase
+            .Register<WindowsDrawingContextUserControl, IInputObserver?>(nameof(InputObserver), (o, e) =>
             {
-                o.pipeSubscription?.Dispose();
+                o.inputObserverSubscription?.Dispose();
                 if (e is null)
                 {
                     return;
                 }
 
-                o.pipeSubscription = o.Subscribe(e);
-            }, BehaviorPipeline.DoNothing());
-        public IBehavior Pipe
+                o.inputObserverSubscription = o.Subscribe(e);
+            }, new BaseInputObserver());
+        public IInputObserver? InputObserver
         {
-            get => (IBehavior)GetValue(PipeProperty);
-            set => SetValue(PipeProperty, value);
+            get => (IInputObserver?)GetValue(InputObserverProperty);
+            set => SetValue(InputObserverProperty, value);
         }
 
 
@@ -60,14 +62,14 @@ namespace StudioLaValse.Drawable.WPF.UserControls
 
         private IDisposable? selectionBorderSubscription;
         public static readonly DependencyProperty SelectionBorderProperty = DependencyPropertyBase
-            .Register<WindowsDrawingContextUserControl, ObservableBoundingBox>(nameof(SelectionBorder), (o, e) =>
+            .Register<WindowsDrawingContextUserControl, IObservable<BoundingBox>?>(nameof(SelectionBorder), (o, e) =>
             {
                 o.selectionBorderSubscription?.Dispose();
                 o.selectionBorderSubscription = e?.Subscribe(o.selectionBorderName.CreateObserver(o));
             });
-        public ObservableBoundingBox? SelectionBorder
+        public IObservable<BoundingBox>? SelectionBorder
         {
-            get => (ObservableBoundingBox)GetValue(SelectionBorderProperty);
+            get => (IObservable<BoundingBox>)GetValue(SelectionBorderProperty);
             set => SetValue(SelectionBorderProperty, value);
         }
 
@@ -121,13 +123,11 @@ namespace StudioLaValse.Drawable.WPF.UserControls
             InitializeComponent();
 
             var textMeasurer = new WPFTextMeasurer();
-            ExternalTextMeasure.TextMeasurer = textMeasurer;
-
             baseBitmapPainter = new WindowsDrawingContextBitmapPainter(this, textMeasurer);
             drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-            Pipe = BehaviorPipeline.DoNothing();
-            pipeSubscription = this.Subscribe(Pipe);    
+            InputObserver = new BaseInputObserver();
+            inputObserverSubscription = this.Subscribe(InputObserver);    
         }
 
         public override void Refresh()

@@ -1,25 +1,26 @@
-﻿using StudioLaValse.Drawable.Example.Model;
+﻿using Example.Model;
+using StudioLaValse.Drawable;
 using StudioLaValse.Key;
 using System.Linq;
 
-namespace StudioLaValse.Drawable.Example.WPF.Models
+namespace Example.WPF.Models
 {
     public class ModelFactory
     {
         private readonly IKeyGenerator<int> keyGenerator;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
 
-        public ModelFactory(IKeyGenerator<int> keyGenerator)
+        public ModelFactory(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<ElementId> notifyEntityChanged)
         {
             this.keyGenerator = keyGenerator;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
-        public GraphModel Create()
+        public PointsModel Create()
         {
             // return new TextModel(keyGenerator);
 
-            var n = 5000;
-            var components = Enumerable.Range(0, n).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
-            var graph = new GraphModel(keyGenerator, components);
+            var graph = new PointsModel(keyGenerator, notifyEntityChanged);
             return graph;
 
             //var curve = new CurveModel(keyGenerator);

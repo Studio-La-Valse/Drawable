@@ -58,4 +58,8 @@
 	  <ProjectReference Include="..\StudioLaValse.Drawable.Interaction\StudioLaValse.Drawable.Interaction.csproj" />
 	  <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Converters\" />
+	</ItemGroup>
 </Project>

@@ -74,7 +74,13 @@ namespace StudioLaValse.Drawable.HTML
         }
 
         /// <inheritdoc/>
-        protected override void DrawElement(HTMLCanvas canvas, DrawableBezierCurve bezier)
+        protected override void DrawElement(HTMLCanvas canvas, DrawableBezierQuadratic bezier)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        protected override void DrawElement(HTMLCanvas canvas, DrawableBezierCubic bezier)
         {
             throw new NotImplementedException();
         }

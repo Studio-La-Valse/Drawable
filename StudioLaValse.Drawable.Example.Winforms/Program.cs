@@ -1,5 +1,5 @@
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Example.Scene;
+using Example.Model;
+using Example.Scene;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
@@ -9,9 +9,11 @@ using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using StudioLaValse.Drawable.Text;
+using StudioLaValse.Drawable.Interaction;
+using StudioLaValse.Drawable;
 
 
-namespace StudioLaValse.Drawable.Example.Winforms
+namespace Example.Winforms
 {
     internal static class Program
     {
@@ -25,30 +27,21 @@ namespace StudioLaValse.Drawable.Example.Winforms
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            var notifyEntityChanged = SceneManager<PersistentElement, ElementId>.CreateObservable();
+            var notifyEntityChanged = SceneManager<ElementId>.CreateObservable();
 
-            var selection = SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId);
+            var selection = SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyEntityChanged, e => e.ElementId).InterceptKeys();
             var keyGenerator = new IncrementalKeyGenerator();
-            var components = Enumerable.Range(0, 5000).Select(i => new ComponentModel(keyGenerator, new BaseGhost(keyGenerator))).ToArray();
 
-            var graph = new GraphModel(keyGenerator, components);
-            var scene = new VisualGraph(graph, selection);
+            var graph = new PointsModel(keyGenerator, notifyEntityChanged);
+            var scene = new VisualPoints(graph, selection, notifyEntityChanged);
 
             var canvas = new ControlContainer();
             var textMeasurer = new TextMeasurer();
-            ExternalTextMeasure.TextMeasurer = textMeasurer;
             var canvasPainter = new GraphicsPainter(canvas, textMeasurer);
-            var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId, canvasPainter)
-                .WithBackground(ColorARGB.Black)
-                .WithRerender();
+            var sceneManager = new InteractiveSceneManager<ElementId>(scene, canvasPainter);
 
-            var pipe = BehaviorPipeline.DoNothing()
-                .InterceptKeys(selection, out var _selectionManager)
-                .ThenHandleDefaultMouseInteraction(sceneManager.VisualParents, notifyEntityChanged)
-                .ThenHandleMouseHover(sceneManager.VisualParents, notifyEntityChanged)
-                .ThenHandleDefaultClick(sceneManager.VisualParents, _selectionManager)
-                .ThenHandleTransformations(_selectionManager, sceneManager.VisualParents, notifyEntityChanged)
-                .ThenRender(notifyEntityChanged);
+            canvas.Subscribe(sceneManager.Then(selection));
+            sceneManager.Rerender();
 
             var content = new ContentWrapperControl(canvas);
             Application.Run(new Form1(canvas));

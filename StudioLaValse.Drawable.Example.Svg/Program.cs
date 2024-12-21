@@ -1,11 +1,11 @@
-﻿using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Example.Scene;
+﻿using Example.Model;
+using Example.Scene;
+using StudioLaValse.Drawable;
 using StudioLaValse.Drawable.HTML;
-using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using System.Diagnostics;
 
-namespace StudioLaValse.Drawable.Example.Svg;
+namespace Example.Svg;
 
 internal class Program
 {
@@ -19,7 +19,7 @@ internal class Program
 
         var canvas = new HTMLCanvas(500, 500);
         var canvasPainter = new HTMLCanvasPainter(canvas);
-        var sceneManager = new SceneManager<PersistentElement, ElementId>(scene, e => e.ElementId, canvasPainter);
+        var sceneManager = new SceneManager<ElementId>(scene, canvasPainter);
 
         sceneManager.Rerender();
 

@@ -5,6 +5,7 @@ using Avalonia.Media;
 using StudioLaValse.Drawable.Avalonia.Painters;
 using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Drawable.Text;
@@ -44,49 +45,49 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         }
     }
 
-    private IBehavior pipe;
-    private IDisposable pipeSubscription;
+    private IInputObserver inputObserver;
+    private IDisposable inputObserverSubscription;
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DirectProperty<InteractiveControl, IBehavior> PipeProperty =
-         AvaloniaProperty.RegisterDirect<InteractiveControl, IBehavior>(
-             nameof(Pipe),
-             e => e.Pipe,
-             (e, v) => e.Pipe = v);
+    public static readonly DirectProperty<InteractiveControl, IInputObserver> InputObserverProperty =
+         AvaloniaProperty.RegisterDirect<InteractiveControl, IInputObserver>(
+             nameof(InputObserver),
+             e => e.InputObserver,
+             (e, v) => e.InputObserver = v);
     /// <summary>
     /// 
     /// </summary>
-    public IBehavior Pipe
+    public IInputObserver InputObserver
     {
-        get => pipe;
+        get => InputObserver;
         set
         {
-            pipeSubscription?.Dispose();
-            SetAndRaise(PipeProperty, ref pipe, value);
-            if(pipe is null)
+            inputObserverSubscription?.Dispose();
+            SetAndRaise(InputObserverProperty, ref inputObserver, value);
+            if(inputObserver is null)
             {
                 return;
             }
 
-            pipeSubscription = this.Subscribe(pipe);
+            inputObserverSubscription = this.Subscribe(inputObserver);
         }
     }
 
-    private ObservableBoundingBox? _selectionBorder;
+    private IObservable<BoundingBox>? _selectionBorder;
     private IDisposable? selectionBorderSubscription;
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DirectProperty<InteractiveControl, ObservableBoundingBox?> SelectionBorderProperty =
-         AvaloniaProperty.RegisterDirect<InteractiveControl, ObservableBoundingBox?>(
+    public static readonly DirectProperty<InteractiveControl, IObservable<BoundingBox>?> SelectionBorderProperty =
+         AvaloniaProperty.RegisterDirect<InteractiveControl, IObservable<BoundingBox>?>(
              nameof(SelectionBorder),
              e => e.SelectionBorder,
              (e, v) => e.SelectionBorder = v);
     /// <summary>
     /// 
     /// </summary>
-    public ObservableBoundingBox? SelectionBorder
+    public IObservable<BoundingBox>? SelectionBorder
     {
         get => _selectionBorder;
         set
@@ -163,13 +164,11 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         InitializeComponent();
 
         var textMeasurer = new AvaloniaTextMeasurer();
-        ExternalTextMeasure.TextMeasurer = textMeasurer;
-
         baseBitmapPainter = new GraphicsPainter(this, textMeasurer);
         drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-        pipe = BehaviorPipeline.DoNothing();
-        pipeSubscription = this.Subscribe(pipe);
+        inputObserver = new BaseInputObserver();
+        inputObserverSubscription = this.Subscribe(inputObserver);
     }
 
     /// <summary>
@@ -180,7 +179,7 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         enableZoomSubscription?.Dispose();
         enablePanSubscription?.Dispose();
         selectionBorderSubscription?.Dispose();
-        pipeSubscription.Dispose();
+        inputObserverSubscription.Dispose();
         elementEmitterSubscription?.Dispose();
     }
 }

@@ -23,7 +23,7 @@ namespace StudioLaValse.Drawable.HTML
         /// <summary>
         /// The background color of the canvas.
         /// </summary>
-        public ColorRGB Background { get; set; } = ColorRGB.White;
+        public ColorARGB Background { get; set; } = ColorARGB.White;
 
         /// <summary>
         /// The primary constructor.

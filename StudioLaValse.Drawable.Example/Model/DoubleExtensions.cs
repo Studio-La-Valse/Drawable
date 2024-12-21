@@ -1,10 +1,10 @@
-﻿namespace StudioLaValse.Drawable.Example.Model
+﻿namespace Example.Model
 {
     public static class DoubleExtensions
     {
         public static double Map(this double value, double minStart, double maxStart, double minEnd, double maxEnd)
         {
-            double fraction = maxStart - minStart;
+            var fraction = maxStart - minStart;
 
             if (fraction == 0)
             {

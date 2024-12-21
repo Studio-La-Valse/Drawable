@@ -9,42 +9,49 @@
         /// <summary>
         /// Clears the selection.
         /// </summary>
-        void Clear();
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool Clear();
 
         /// <summary>
         /// Sets the selection to a single element.
         /// </summary>
         /// <param name="element"></param>
-        void Set(TEntity element);
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool Set(TEntity element);
 
         /// <summary>
         /// Sets the selection to the specified range.
         /// </summary>
         /// <param name="entities"></param>
-        void SetRange(IEnumerable<TEntity> entities);
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool SetRange(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Adds the specified element to the current selection.
         /// </summary>
         /// <param name="element"></param>
-        void Add(TEntity element);
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool Add(TEntity element);
 
         /// <summary>
         /// Adds the specified elements to the current selection.
         /// </summary>
         /// <param name="entities"></param>
-        void AddRange(IEnumerable<TEntity> entities);
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool AddRange(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Removes the element from the selection.
         /// </summary>
         /// <param name="element"></param>
-        void Remove(TEntity element);
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool Remove(TEntity element);
 
         /// <summary>
         /// Removes the specified elements from the selection.
         /// </summary>
         /// <param name="element"></param>
-        void RemoveRange(IEnumerable<TEntity> element);
+        /// <returns>True if the selection has been changed in any way.</returns>
+        bool RemoveRange(IEnumerable<TEntity> element);
     }
 }

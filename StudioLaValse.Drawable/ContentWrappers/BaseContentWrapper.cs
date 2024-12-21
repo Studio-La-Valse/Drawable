@@ -14,7 +14,12 @@ namespace StudioLaValse.Drawable.ContentWrappers
         /// <returns></returns>
         public virtual BoundingBox BoundingBox()
         {
-            return new BoundingBox(GetDrawableElements().Select(element => element.GetBoundingBox()));
+            if (GetDrawableElements().Any())
+            {
+                return new BoundingBox(GetDrawableElements().Select(element => element.BoundingBox()));
+            }
+
+            return new BoundingBox(GetContentWrappers().Select(element => element.BoundingBox()));
         }
 
         /// <summary>

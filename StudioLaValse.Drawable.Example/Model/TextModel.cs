@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudioLaValse.Drawable.Example.Model;
+namespace Example.Model;
 
 
 public class TextModel : PersistentElement

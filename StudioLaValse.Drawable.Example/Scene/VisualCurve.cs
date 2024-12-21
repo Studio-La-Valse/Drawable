@@ -1,36 +1,53 @@
-﻿using StudioLaValse.Drawable.ContentWrappers;
-using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Interaction.ContentWrappers;
-using StudioLaValse.Drawable.Interaction.Selection;
-using StudioLaValse.Geometry;
-using StudioLaValse.Key;
-
-namespace StudioLaValse.Drawable.Example.Scene
+﻿namespace Example.Scene
 {
-    public class VisualCurve : BaseSelectableParent<PersistentElement>
+    public class VisualCurve : BaseSelectableParent<ElementId>
     {
         private readonly CurveModel curve;
-        private readonly ISelection<PersistentElement> selection;
+        private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
+        private readonly HashSet<VisualCurveControlPoint> controlPoints = [];
+        private bool isMouseOver;
 
-        public VisualCurve(CurveModel curve, ISelection<PersistentElement> selection) : base(curve, selection)
+        public override bool IsSelected => selection.IsSelected(curve);
+        protected override bool IsMouseOver
+        {
+            get => isMouseOver;
+            set
+            {
+                if (value == isMouseOver)
+                {
+                    return;
+                }
+
+                isMouseOver = value;
+                notifyEntityChanged.Invalidate(curve.ElementId, renderMethod: RenderMethod.Deep);
+            }
+        }
+
+        public VisualCurve(CurveModel curve, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(curve.ElementId)
         {
             this.curve = curve;
             this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
         }
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
         {
-            var list = new List<BaseContentWrapper>(curve.ControlPoints.Select(p => new VisualCurveControlPoint(p, this, selection)));
-            return list;
+            controlPoints.Clear();
+            foreach(var controlPoint in curve.ControlPoints)
+            {
+                var visualPoint = new VisualCurveControlPoint(controlPoint, this, selection, notifyEntityChanged);
+                controlPoints.Add(visualPoint);
+                yield return visualPoint;
+            }
         }
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
-            var color = IsMouseOver ? new ColorARGB(255, new ColorRGB(255, 0, 0)) : ColorARGB.White;
+            var color = IsSelected ? new ColorARGB(1, 255, 0, 0) : isMouseOver ? new ColorARGB(0.5, 255, 0, 0) : ColorARGB.White;
             var list = new List<BaseDrawableElement>()
             {
-                new DrawableBezierCurve(curve.ControlPoints.Select(p => p.Point), color, 2)
+                new DrawableBezierCubic(curve.First.Point, curve.Second.Point, curve.Third.Point, curve.Fourth.Point, color, 2)
             };
 
             if (IsSelected)
@@ -41,19 +58,40 @@ namespace StudioLaValse.Drawable.Example.Scene
             return list;
         }
 
-        public override bool OnMouseMove(XY mousePosition)
+        public override bool CaptureMouse(XY point)
         {
-            return false;
-        }
-
-        public override bool Respond(XY point)
-        {
-            return new DrawableBezierCurve(curve.ControlPoints.Select(p => p.Point), ColorARGB.White, 2).ClosestPoint(point).DistanceTo(point) < 10;
+            var margin = 1;
+            return new CubicBezierSegment(curve.First.Point, curve.Second.Point, curve.Third.Point, curve.Fourth.Point).ClosestPoint(point).DistanceTo(point) < margin;
         }
 
         public override BoundingBox BoundingBox()
         {
-            return new DrawableBezierCurve(curve.ControlPoints.Select(p => p.Point), ColorARGB.Black, 2).GetBoundingBox();
+            return new BoundingBox(GetDrawableElements().OfType<DrawableBezierCubic>().Select(e => e.BoundingBox()));
+        }
+
+        public override bool Deselect()
+        {
+            if(controlPoints.Any(e => e.MouseIsOver))
+            {
+                return false;
+            }
+
+            var anyChanged = false;
+            if (selection.RemoveRange(curve.ControlPoints))
+            {
+                anyChanged = true;
+            }
+
+            if (selection.Remove(curve))
+            {
+                anyChanged = true;
+            }
+            return anyChanged;
+        }
+
+        public override bool Select()
+        {
+            return selection.Add(curve);
         }
     }
 }

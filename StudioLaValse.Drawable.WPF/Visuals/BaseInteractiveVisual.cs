@@ -104,6 +104,9 @@ namespace StudioLaValse.Drawable.WPF.Visuals
                     Key.LeftCtrl => Interaction.UserInput.Key.Control,
                     Key.LeftShift => Interaction.UserInput.Key.Shift,
                     Key.Escape => Interaction.UserInput.Key.Escape,
+                    Key.R => Interaction.UserInput.Key.R,
+                    Key.Z => Interaction.UserInput.Key.Z,
+                    Key.Delete => Interaction.UserInput.Key.Delete,
                     _ => Interaction.UserInput.Key.Unknown
                 });
 

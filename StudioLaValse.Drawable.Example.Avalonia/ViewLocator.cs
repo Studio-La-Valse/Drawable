@@ -4,7 +4,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Microsoft.Extensions.DependencyInjection;
-using StudioLaValse.Drawable.Example.Avalonia.ViewModels;
+using StudioLaValse.Drawable.Interaction.ViewModels;
 
 namespace MsExtensionsHostingSample;
 

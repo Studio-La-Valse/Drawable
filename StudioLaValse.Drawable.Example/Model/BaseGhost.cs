@@ -1,6 +1,6 @@
 ﻿using StudioLaValse.Key;
 
-namespace StudioLaValse.Drawable.Example.Model
+namespace Example.Model
 {
     public class BaseGhost : PersistentElement
     {

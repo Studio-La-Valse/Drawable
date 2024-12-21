@@ -1,73 +1,85 @@
-﻿using StudioLaValse.Drawable.ContentWrappers;
-using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Interaction.ContentWrappers;
-using StudioLaValse.Drawable.Interaction.Selection;
-using StudioLaValse.Geometry;
-using StudioLaValse.Key;
+﻿namespace Example.Scene;
 
-namespace StudioLaValse.Drawable.Example.Scene
+public class VisualComponent : BaseTransformableParent<ElementId>
 {
-    public class VisualComponent : BaseTransformableParent<PersistentElement>
+    private readonly Component component;
+    private readonly ISelectionManager<PersistentElement> selectionManager;
+    private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
+    private bool isMouseOver;
+
+    public XY Position => component.Position;
+    public double Width { get; } = 100;
+    public double Height { get; } = 50;
+    public XY Center => Position + new XY(Width / 2, Height / 2);
+    public XY Left => Center - new XY(Width / 2, 0);
+    public XY Right => Center + new XY(Width / 2, 0);
+
+    public VisualComponent(Component component, ISelectionManager<PersistentElement> selectionManager, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(component.ElementId)
     {
-        private readonly ComponentModel component;
+        this.component = component;
+        this.selectionManager = selectionManager;
+        this.notifyEntityChanged = notifyEntityChanged;
+    }
 
-        public double Radius { get; set; } = 10;
-        public double X { get; set; } = new Random().NextDouble() * 2000;
-        public double Y { get; set; } = new Random().NextDouble() * 2000;
-        public override PersistentElement Ghost => component.Ghost;
+    public override bool IsSelected => selectionManager.IsSelected(component);
 
-
-        public VisualComponent(ComponentModel component, ISelection<PersistentElement> selection) : base(component, selection)
+    protected override bool IsMouseOver
+    {
+        get => isMouseOver;
+        set
         {
-            this.component = component;
-        }
-
-        public override IEnumerable<BaseContentWrapper> GetContentWrappers()
-        {
-            return new List<BaseContentWrapper>()
+            if (value == isMouseOver)
             {
-                new VisualComponentGhost(Ghost, this)
-            };
-        }
+                return;
+            }
 
-        public override IEnumerable<BaseDrawableElement> GetDrawableElements()
-        {
-            return new List<BaseDrawableElement>()
-            {
-                new DrawableCircle(X, Y, Radius, new ColorARGB(255, ColorRGB.White))
-            };
+            isMouseOver = value;
+            notifyEntityChanged.Invalidate(component.ElementId, renderMethod: RenderMethod.Shallow);
         }
+    }
 
-        public override BoundingBox BoundingBox()
-        {
-            return new BoundingBox(
-                X - Radius / 2,
-                X + Radius / 2,
-                Y - Radius / 2,
-                Y + Radius / 2);
-        }
+    public Component Component => component;
 
-        public override bool OnMouseMove(XY mousePosition)
-        {
-            var oldRadius = Radius;
-            var distance = new XY(X, Y).DistanceTo(mousePosition);
-            var radius = distance.Map(0, 500, 20, 5).Clip(5, 20);
-            Radius = radius;
+    public override bool Select()
+    {
+        return selectionManager.Add(component);
+    }
 
-            return oldRadius != radius;
-        }
+    public override bool Deselect()
+    {
+        return selectionManager.Remove(component);
+    }
 
-        public override bool Transform(double deltaX, double deltaY)
-        {
-            X += deltaX;
-            Y += deltaY;
-            return true;
-        }
+    public override void Transform(double deltaX, double deltaY)
+    {
+        var vector = new XY(deltaX, deltaY);
+        component.SetPosition(component.Position + vector);
+        notifyEntityChanged.Invalidate(component.ElementId, renderMethod: RenderMethod.Recursive);
+        notifyEntityChanged.Invalidate(component.Incomming.Select(e => e.ElementId));
+        notifyEntityChanged.Invalidate(component.Outgoing.Select(e => e.ElementId));
+    }
 
-        public override bool Respond(XY point)
-        {
-            return point.DistanceTo(new XY(X, Y)) < Radius;
-        }
+    public override IEnumerable<BaseContentWrapper> GetContentWrappers()
+    {
+        yield break;
+    }
+
+    public override IEnumerable<BaseDrawableElement> GetDrawableElements()
+    {
+        var opacity = IsSelected ? 1 : isMouseOver ? 0.5 : 0;
+        var fill = new ColorARGB(opacity, 255, 0, 0);
+        yield return new DrawableRectangle(component.Position.X, component.Position.Y, 100, 50, fill, 2, ColorARGB.White);
+        yield return new DrawableCircle(Left, 3, ColorARGB.White);
+        yield return new DrawableCircle(Right, 3, ColorARGB.White);
+    }
+
+    public override bool CaptureMouse(XY point)
+    {
+        return BoundingBox().Contains(point);
+    }
+
+    public override BoundingBox BoundingBox()
+    {
+        return new BoundingBox(Position, Position + new XY(Width, Height));
     }
 }

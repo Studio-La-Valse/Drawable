@@ -1,16 +1,25 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.Selection;
+using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.ContentWrappers
 {
     /// <summary>
     /// An abstract class for visual elements that can be transformed.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public abstract class BaseTransformableParent<TEntity> : BaseSelectableParent<TEntity> where TEntity : class
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class BaseTransformableParent<TKey> : BaseSelectableParent<TKey> where TKey : IEquatable<TKey>
     {
+        private bool leftMouseIsDown;
+        private bool lastMouseIsDownWasOnElement;
+
+        /// <summary>
+        /// A flag that prevents element transformation on mouse drag.
+        /// </summary>
+        public bool LockTransform { get; set; }
+
         /// <inheritdoc/>
-        protected BaseTransformableParent(TEntity element, ISelection<TEntity> selection) : base(element, selection)
+        protected BaseTransformableParent(TKey element) : base(element)
         {
 
         }
@@ -20,17 +29,44 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         /// </summary>
         /// <param name="deltaX"></param>
         /// <param name="deltaY"></param>
-        /// <returns>A boolean value to indicate wether the update should require a rerender of the element returned by <see cref="OnTransformInvalidate"/> method.</returns>
-        public abstract bool Transform(double deltaX, double deltaY);
+        public abstract void Transform(double deltaX, double deltaY);
 
-        /// <summary>
-        /// A method called during transformation to check which item to rerender.
-        /// By default returns a reference to the <see cref="BaseVisualParent{TEntity}.AssociatedElement"/>
-        /// </summary>
-        /// <returns></returns>
-        public virtual TEntity OnTransformInvalidate()
+
+        /// <inheritdoc/>
+        public override bool HandleLeftMouseButtonDown()
         {
-            return AssociatedElement;
+            leftMouseIsDown = true;
+            lastMouseIsDownWasOnElement = CaptureMouse(LastMousePosition);
+            if (lastMouseIsDownWasOnElement)
+            {
+                Select();
+            }
+            else
+            {
+                Deselect();
+            }
+
+            return base.HandleLeftMouseButtonDown();
+        }
+
+        /// <inheritdoc/>
+        public override bool HandleLeftMouseButtonUp()
+        {
+            leftMouseIsDown = false;
+            return base.HandleLeftMouseButtonUp();
+        }
+
+        /// <inheritdoc/>
+        public override bool HandleMouseMove(XY position)
+        {
+            if (!LockTransform && leftMouseIsDown && lastMouseIsDownWasOnElement && IsSelected && position.DistanceTo(LastMousePosition) > DragDelta)
+            {
+                var deltaX = position.X - LastMousePosition.X;
+                var deltaY = position.Y - LastMousePosition.Y;
+                Transform(deltaX, deltaY);
+            }
+
+            return base.HandleMouseMove(position);
         }
     }
 }

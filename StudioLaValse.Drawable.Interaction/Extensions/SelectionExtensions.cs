@@ -6,12 +6,12 @@ using StudioLaValse.Drawable.Private;
 namespace StudioLaValse.Drawable.Interaction.Extensions
 {
     /// <summary>
-    /// Extension methods for the <see cref="ISelectionManager{TEntity}"/> interface.
+    /// Extension methods for the <see cref="ISelectionManager{TKey}"/> interface.
     /// </summary>
     public static class SelectionExtensions
     {
         /// <summary>
-        /// Extends the specified <see cref="ISelectionManager{TEntity}"/> to notify when it's selection has changed. The entities that are (un) selected are emitted by the specified <see cref="INotifyEntityChanged{TEntity}"/>.
+        /// Extends the specified <see cref="ISelectionManager{TKey}"/> to notify when it's selection has changed. The entities that are (un) selected are emitted by the specified <see cref="INotifyEntityChanged{TEntity}"/>.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TKey"></typeparam>
@@ -19,13 +19,12 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <param name="notifyEntityChanged"></param>
         /// <param name="getKey"></param>
         /// <returns></returns>
-        public static ISelectionManager<TEntity> OnChangedNotify<TEntity, TKey>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TEntity> notifyEntityChanged, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
+        public static ISelectionManager<TEntity> OnChangedNotify<TEntity, TKey>(this ISelectionManager<TEntity> selection, INotifyEntityChanged<TKey> notifyEntityChanged, GetKey<TEntity, TKey> getKey) where TEntity : class where TKey : IEquatable<TKey>
         {
             void action(IEnumerable<TEntity> left, IEnumerable<TEntity> right)
             {
-                notifyEntityChanged.Invalidate(left, NotFoundHandler.Skip, Method.Deep);
-                notifyEntityChanged.Invalidate(right, NotFoundHandler.Skip, Method.Deep);
-                notifyEntityChanged.RenderChanges();
+                notifyEntityChanged.Invalidate(left.Select(e => getKey(e)), NotFoundHandler.Skip, RenderMethod.Recursive);
+                notifyEntityChanged.Invalidate(right.Select(e => getKey(e)), NotFoundHandler.Skip, RenderMethod.Recursive);
             }
             return selection.AddChangedHandler(action, getKey);
         }
@@ -43,6 +42,22 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         {
             var selectionWithHandler = new SelectionWithChangedHandler<TEntity, TKey>(selection, action, getKey);
             return selectionWithHandler;
+        }
+
+        /// <summary>
+        /// Extends the specified <see cref="ISelectionManager{TEntity}"/> to intercept keyboard keys.
+        /// When setting the selection:
+        ///     while shift is pressed, the selection is appended,
+        ///     while control is pressed, the selection is removed.
+        /// Pressing (releasing) escape clears the selection.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="selectionManager"></param>
+        /// <returns></returns>
+        public static SelectionWithKeyResponse<TEntity> InterceptKeys<TEntity>(this ISelectionManager<TEntity> selectionManager) where TEntity : class
+        {
+            var selectionWithKeys = new SelectionWithKeyResponse<TEntity>(selectionManager);
+            return selectionWithKeys;
         }
     }
 }

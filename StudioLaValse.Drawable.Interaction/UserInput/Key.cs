@@ -6,7 +6,7 @@
     public enum Key
     {
         /// <summary>
-        /// Key nog recognized
+        /// Key not recognized
         /// </summary>
         Unknown,
         /// <summary>
@@ -28,6 +28,10 @@
         /// <summary>
         /// the default r key
         /// </summary>
-        R
+        R,
+        /// <summary>
+        /// The delete key
+        /// </summary>
+        Delete
     }
 }

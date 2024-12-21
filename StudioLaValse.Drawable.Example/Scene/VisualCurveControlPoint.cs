@@ -1,78 +1,101 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
+using Example.Model;
 using StudioLaValse.Drawable.Interaction.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
+using System.ComponentModel;
+using System.Security.Cryptography;
 
-namespace StudioLaValse.Drawable.Example.Scene
+namespace Example.Scene
 {
-    public class VisualCurveControlPoint : BaseTransformableParent<PersistentElement>
+    public class VisualCurveControlPoint : BaseTransformableParent<ElementId>
     {
         private readonly CurveControlPoint controlPoint;
         private readonly VisualCurve host;
+        private readonly ISelectionManager<PersistentElement> selection;
+        private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
+        private bool isMouseOver;
 
-
-        public override PersistentElement Ghost => controlPoint;
-
-        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelection<PersistentElement> selection) : base(controlPoint, selection)
+        public VisualCurveControlPoint(CurveControlPoint controlPoint, VisualCurve host, ISelectionManager<PersistentElement> selection, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(controlPoint.ElementId)
         {
             this.controlPoint = controlPoint;
             this.host = host;
+            this.selection = selection;
+            this.notifyEntityChanged = notifyEntityChanged;
+        }
+
+        public override bool IsSelected => selection.IsSelected(controlPoint);
+
+        protected override bool IsMouseOver
+        {
+            get => isMouseOver;
+            set
+            {
+                if (value == isMouseOver)
+                {
+                    return;
+                }
+
+                isMouseOver = value;
+                notifyEntityChanged.Invalidate(host.Key, renderMethod: RenderMethod.Deep);
+            }
+        }
+        public bool MouseIsOver => IsMouseOver;
+
+        public override bool Deselect()
+        {
+            return selection.Remove(controlPoint);
+        }
+
+        public override bool Select()
+        {
+            var hasChanged = selection.Add(controlPoint);
+
+            if (selection.Add(controlPoint.ControlFor))
+            {
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+            {
+                notifyEntityChanged.Invalidate(controlPoint.ControlFor.ElementId, renderMethod: RenderMethod.Deep);
+            }
+
+            return hasChanged;
         }
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
         {
-            return new List<BaseContentWrapper>();
+            yield break;
         }
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()
         {
-            if (!host.IsSelected && !IsSelected)
+            if (!host.IsSelected)
             {
-                return new List<BaseDrawableElement>();
-            }
-
-            var alpha = 0;
-            if (IsMouseOver)
-            {
-                alpha += 100;
+                yield break;
             }
 
             if (IsSelected)
             {
-                alpha += 100;
+                yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, ColorARGB.White, new ColorARGB(1, 255, 0, 0), 0.5);
+                yield break;
             }
 
-            var ghostColor = new ColorARGB(alpha, new ColorRGB(255, 0, 0));
-            return new List<BaseDrawableElement>()
+            if (IsMouseOver)
             {
-                new DrawableCircle(controlPoint.Point, 5, ColorARGB.White),
-                new DrawableCircle(controlPoint.Point, 5, ghostColor)
-            };
+                yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, new ColorARGB(0.5, 255, 0, 0));
+                yield break;
+            }
+
+            yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, ColorARGB.White);
         }
 
-        public override bool Respond(XY point)
-        {
-            var distance = point.DistanceTo(controlPoint.Point);
-            return distance < 5;
-        }
-
-        public override bool OnMouseMove(XY mousePosition)
-        {
-            return false;
-        }
-
-        public override bool Transform(double deltaX, double deltaY)
+        public override void Transform(double deltaX, double deltaY)
         {
             controlPoint.Set(controlPoint.Point.X + deltaX, controlPoint.Point.Y + deltaY);
-            return true;
-        }
-
-        public override PersistentElement OnTransformInvalidate()
-        {
-            return host.AssociatedElement;
         }
     }
 }

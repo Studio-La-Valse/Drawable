@@ -1,45 +1,65 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using StudioLaValse.Drawable.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StudioLaValse.Drawable.Private
 {
-    internal class VisualTreeCache<TEntity, TKey> where TKey : IEquatable<TKey> 
-                                                  where TEntity : class
+    internal class VisualTreeCache<TKey> where TKey : IEquatable<TKey>
     {
 
-        private readonly Dictionary<TEntity, VisualTree<TEntity>> dict;
-        private readonly GetKey<TEntity, TKey> keyExtractor;
+        private readonly Dictionary<VisualTree<TKey>, InvalidationRequest<TKey>> dict;
 
-        public IEnumerable<(TEntity, VisualTree<TEntity>)> Entries => dict.Select(e => (e.Key, e.Value));
-
-        public VisualTreeCache(GetKey<TEntity, TKey> keyExtractor)
+        public VisualTreeCache()
         {
-            var equalityComparer = new KeyEqualityComparer<TEntity, TKey>(keyExtractor);
-            dict = new Dictionary<TEntity, VisualTree<TEntity>>(equalityComparer);
-            this.keyExtractor = keyExtractor;
+            var equalityComparer = new TreeBranchKeyEqualityComparer<TKey>();
+            dict = new Dictionary<VisualTree<TKey>, InvalidationRequest<TKey>>(equalityComparer);
         }
 
-        public void Rebuild(VisualTree<TEntity> visualTree)
+        public void Rebuild(VisualTree<TKey> visualTree, Dictionary<TKey, InvalidationRequest<TKey>> invalidationRequests, out IEnumerable<InvalidationRequest<TKey>> notFound)
         {
             dict.Clear();
-            foreach (var branch in visualTree.SelectRecursive(e => e.ChildBranches))
+
+            void traverse(VisualTree<TKey> _visualTree, bool parentFound)
             {
-                Add(branch.Element, branch);
+                var element = _visualTree.Key;
+
+                var contains = invalidationRequests.TryGetValue(element, out var invalidationRequest);
+                if (contains)
+                {
+                    if (!parentFound)
+                    {
+                        Add(_visualTree, invalidationRequest!);
+                    }
+                    invalidationRequests.Remove(element);
+                }
+
+                if (invalidationRequests.Count == 0)
+                {
+                    return;
+                }
+
+                foreach (var branch in _visualTree.ChildBranches)
+                {
+                    traverse(branch, contains);
+                }
             }
+
+            traverse(visualTree, false);
+
+            notFound = invalidationRequests.Select(e => e.Value).ToList();
         }
 
-        public void Add(TEntity entity, VisualTree<TEntity> visualTree)
+        public void Add(VisualTree<TKey> entity, InvalidationRequest<TKey> visualTree)
         {
             if (dict.ContainsKey(entity))
             {
-                throw new Exception($"Entity ({entity} : {keyExtractor(entity)}) has already been added to the visual tree.");
+                throw new EntityAlreadyInVisualTreeException($"Entity with key {entity} has already been added to the visual tree.");
             }
 
             dict.Add(entity, visualTree);
         }
 
-        public bool Find(TEntity entity, [NotNullWhen(true)] out VisualTree<TEntity>? value)
-        {
-            return dict.TryGetValue(entity, out value);
-        }
+        public IEnumerable<KeyValuePair<VisualTree<TKey>, InvalidationRequest<TKey>>> Requests() => dict;
     }
 }
+
+
