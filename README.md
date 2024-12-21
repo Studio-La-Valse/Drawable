@@ -161,7 +161,8 @@ public class VisualGraph : BaseContentWrapper
 ```
 
 * Because now the visual representation of the node is coupled to the ID of the node, we can rerender only parts of the scene, for example lets change the position of only the first node. Notice how we don't rerender the second node.
-
+We use an observable that emits the ID of the model and some additional information about the render method.
+If a scene manager is subscribed to the observable, it will render the visual tree branch (and its children) using the given id.
 ```cs
 using StudioLaValse.Drawable.HTML;
 using StudioLaValse.Drawable.Extensions;
@@ -274,6 +275,27 @@ public class VisualGraph : BaseVisualParent<int>
     }
 }
 ```
+
+## Why not just use MVVM?
+While the MVVM (Model-View-ViewModel) pattern is a well-established approach for building user interfaces, it may not be the ideal solution for every scenario, especially when it comes to complex, dynamic visualizations. 
+Consider for example the effort you have to go through just to connect two ellipses with a line from center to center (try it!), or exporting your components to PDF or SVG for a static webview. 
+
+- Separation of Models and Views:
+
+StudioLaValse.Drawable still allows for a strict separation of models and views without strictly adhering to the MVVM pattern. 
+This flexibility enables you to create and manage visual representations of models in a way that best suits your application's requirements.
+
+- Versatile Rendering:
+
+StudioLaValse.Drawable supports multiple rendering targets, including WPF, Avalonia, WinForms, PDF, Skia, and SVG. 
+This versatility allows your scenes to be rendered to different environments without being tied to a specific UI framework.
+
+- Dynamic and Interactive Scenes:
+
+The library is designed to handle dynamic scenes where users can interact with the visual elements using mouse and keyboard inputs. 
+Ofcourse interactivity is supported for MVVM, but most of the time resorting to code behind for custom components is the way to go and at that point you are fully locked into the UI framework - which I personally don't like.
+
+If the above points do not ring a bell for you, that's fine and it's probaly best to stick with a strict MVVM pattern, especially if you're working with  WPF or Avalonia.
 
 ## Help
 
