@@ -46,26 +46,7 @@ dotnet restore
 
 ### How to use
 
-* Lets start with a basic scene:
-```cs
-public class VisualGraph : BaseContentWrapper
-{
-    public override IEnumerable<BaseDrawableElement> GetDrawableElements()
-    {
-        var radius = 50;
-        var firstPoint = new XY(Random.Shared.Next(300), Random.Shared.Next(300));
-        var secondPoint = new XY(Random.Shared.Next(300), Random.Shared.Next(300));
-
-        // Draw two white circles with a random position and a radius of 5.
-        yield return new DrawableCircle(firstPoint, radius, ColorARGB.White);
-        yield return new DrawableCircle(secondPoint, radius, ColorARGB.White);
-    }
-}
-```
-
-* Now let's render it as html/svg. 
-Remember that you can natively render to WPF, Avalonia, Skia, Winforms, HTML/SVG, or you can implement to your own canvas adapter. 
-We'll use HTML/SVG strings for sake of simplicity.
+* Lets start with a basic scene and render it to html/svg:
 ```cs
 using StudioLaValse.Drawable.HTML;
 using StudioLaValse.Drawable.Extensions;
@@ -83,7 +64,23 @@ public class Program
         Console.WriteLine(result);
     }
 }
+
+public class VisualGraph : BaseContentWrapper
+{
+    public override IEnumerable<BaseDrawableElement> GetDrawableElements()
+    {
+        var radius = 50;
+        var firstPoint = new XY(Random.Shared.Next(300), Random.Shared.Next(300));
+        var secondPoint = new XY(Random.Shared.Next(300), Random.Shared.Next(300));
+
+        // Draw two white circles with a random position and a radius of 50.
+        yield return new DrawableCircle(firstPoint, radius, ColorARGB.White);
+        yield return new DrawableCircle(secondPoint, radius, ColorARGB.White);
+    }
+}
 ```
+Remember that you can natively render to WPF, Avalonia, Skia, Winforms, HTML/SVG, or you can implement to your own canvas adapter. 
+We'll use HTML/SVG strings for sake of simplicity.
 
 * Great, but I want to base my scene on a model that can be serialized/persisted independent of it's visual representation.
 ```cs
