@@ -1,10 +1,5 @@
-﻿using StudioLaValse.Drawable.Interaction.UserInput;
-using StudioLaValse.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StudioLaValse.Drawable.Interaction.Private;
+using StudioLaValse.Drawable.Interaction.Selection;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions;
 
@@ -26,96 +21,86 @@ public static class InputObserverExtensions
         var chainedObserver = new ChainedInputObserver(observer, next);
         return chainedObserver;
     }
-}
 
-internal class ChainedInputObserver : IInputObserver
-{
-    private readonly IInputObserver observer;
-    private readonly IInputObserver next;
-
-    public ChainedInputObserver(IInputObserver observer, IInputObserver next)
+    /// <summary>
+    /// Add another input observer that executes its responses regardless of the result of the first.
+    /// </summary>
+    /// <param name="observser"></param>
+    /// <param name="next"></param>
+    /// <returns></returns>
+    public static IInputObserver Always(this IInputObserver observser, IInputObserver next)
     {
-        this.observer = observer;
-        this.next = next;
+        var chainedObserver = new AlwaysInputObserver(observser, next);
+        return chainedObserver;
     }
 
-    public bool HandleKeyDown(Key key)
+    /// <summary>
+    /// Notifies the selection for key presses and releases.
+    /// Added using the <see cref="Then(IInputObserver, IInputObserver)"/> method which means the selected <paramref name="inputObserver"/> must allow the behavior to happen.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="inputObserver"></param>
+    /// <param name="selection"></param>
+    /// <returns></returns>
+    public static IInputObserver NotifySelection<TKey>(this IInputObserver inputObserver, SelectionWithKeyResponse<TKey> selection) where TKey : IEquatable<TKey>
     {
-        if (observer.HandleKeyDown(key))
-        {
-            return next.HandleKeyDown(key);
-        }
-
-        return false;
+        return inputObserver.Then(selection);
     }
 
-    public bool HandleKeyUp(Key key)
+    /// <summary>
+    /// Add a selection border that allows a group selection.
+    /// Added using the <see cref="Then(IInputObserver, IInputObserver)"/> method which means the selected <paramref name="observer"/> must allow the behavior to happen.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="observer"></param>
+    /// <param name="sceneManager"></param>
+    /// <param name="selectionBorder"></param>
+    /// <returns></returns>
+    public static IInputObserver AddSelectionBorder<TKey>(this IInputObserver observer, SceneManager<TKey> sceneManager, SelectionBorder selectionBorder) where TKey : IEquatable<TKey>
     {
-        if (observer.HandleKeyUp(key))
-        {
-            return next.HandleKeyUp(key);
-        }
-
-        return false;
+        var behavior = new SelectionBorderBehavior<TKey>(sceneManager, selectionBorder);
+        return observer.Then(behavior);
     }
 
-    public bool HandleLeftMouseButtonDown()
+    /// <summary>
+    /// Handle mass transformations on drag.    
+    /// Added using the <see cref="Then(IInputObserver, IInputObserver)"/> method which means the selected <paramref name="observer"/> must allow the behavior to happen.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="observer"></param>
+    /// <param name="sceneManager"></param>
+    /// <returns></returns>
+    public static IInputObserver AddMassTransformations<TKey>(this IInputObserver observer, SceneManager<TKey> sceneManager) where TKey : IEquatable<TKey>
     {
-        if (observer.HandleLeftMouseButtonDown())
-        {
-            return next.HandleLeftMouseButtonDown();
-        }
-
-        return false;
+        var behavior = new MassTransformBehavior<TKey>(sceneManager);
+        return observer.Then(behavior);
     }
 
-    public bool HandleLeftMouseButtonUp()
+    /// <summary>
+    /// Add the default behavior by propagating through the visual tree.
+    /// Added using the <see cref="Then(IInputObserver, IInputObserver)"/> method which means the selected <paramref name="observer"/> must allow the default behavior to happen.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="observer"></param>
+    /// <param name="sceneManager"></param>
+    /// <returns></returns>
+    public static IInputObserver AddDefaultBehavior<TKey>(this IInputObserver observer, SceneManager<TKey> sceneManager) where TKey : IEquatable<TKey>
     {
-        if (observer.HandleLeftMouseButtonUp())
-        {
-            return next.HandleLeftMouseButtonUp();
-        }
-
-        return false;
+        var behavior = new DefaultBehavior<TKey>(sceneManager);
+        return observer.Then(behavior);
     }
 
-    public bool HandleMouseWheel(double delta)
+    /// <summary>
+    /// Calls <see cref="INotifyEntityChanged{TKey}.RenderChanges"/> after handling behavior. 
+    /// Chained using <see cref="Always(IInputObserver, IInputObserver)"/> method which means it is executed regardless of the <paramref name="observer"/>'s result.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <param name="observer"></param>
+    /// <param name="notifyEntityChanged"></param>
+    /// <returns></returns>
+    public static IInputObserver AddRerender<TKey>(this IInputObserver observer, INotifyEntityChanged<TKey> notifyEntityChanged) where TKey: IEquatable<TKey>
     {
-        if (observer.HandleMouseWheel(delta))
-        {
-            return next.HandleMouseWheel(delta);
-        }
-
-        return false;
-    }
-
-    public bool HandleRightMouseButtonDown()
-    {
-        if (observer.HandleRightMouseButtonDown())
-        {
-            return next.HandleRightMouseButtonDown();
-        }
-
-        return false;
-    }
-
-    public bool HandleRightMouseButtonUp()
-    {
-        if (observer.HandleRightMouseButtonUp())
-        {
-            return next.HandleRightMouseButtonUp();
-        }
-
-        return false;
-    }
-
-    public bool HandleMouseMove(XY position)
-    {
-        if (observer.HandleMouseMove(position))
-        {
-            return next.HandleMouseMove(position);
-        }
-
-        return false;
+        var behavior = new RerenderBehavior<TKey>(notifyEntityChanged);
+        return observer.Always(behavior);
     }
 }

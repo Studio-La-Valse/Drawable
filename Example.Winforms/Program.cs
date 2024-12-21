@@ -38,9 +38,9 @@ namespace Example.Winforms
             var canvas = new ControlContainer();
             var textMeasurer = new TextMeasurer();
             var canvasPainter = new GraphicsPainter(canvas, textMeasurer);
-            var sceneManager = new InteractiveSceneManager<ElementId>(scene, canvasPainter);
+            var sceneManager = new SceneManager<ElementId>(scene, canvasPainter);
 
-            canvas.Subscribe(sceneManager.Then(selection));
+            canvas.Subscribe(new BaseInputObserver().NotifySelection(selection));
             sceneManager.Rerender();
 
             var content = new ContentWrapperControl(canvas);

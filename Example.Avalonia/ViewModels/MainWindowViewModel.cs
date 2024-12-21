@@ -27,21 +27,32 @@ public class MainWindowViewModel : ViewModelBase
 
     public CanvasViewModel CanvasViewModel { get; set; }
 
+    public static IInputObserver CreateDefaultObserver(SelectionWithKeyResponse<PersistentElement> selectionManager,
+        SceneManager<ElementId> sceneManager,
+        SelectionBorder selectionBorder,
+        INotifyEntityChanged<ElementId> notifyEntityChanged)
+    {
+        return new BaseInputObserver()
+            .NotifySelection(selectionManager)
+            .AddSelectionBorder(sceneManager, selectionBorder)
+            .AddMassTransformations(sceneManager)
+            .AddDefaultBehavior(sceneManager)
+            .AddRerender(notifyEntityChanged);
+    }
+
     public ICommand PointsSceneCommand => ReactiveCommand.Create(
         () =>
         {
             var model = new PointsModel(keyGenerator, notifyEntityChanged);
             var scene = new VisualPoints(model, selectionManager, notifyEntityChanged);
             var selectionBorder = new SelectionBorder();
-            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
-
-            sceneManager.Rerender();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
             sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
             CanvasViewModel.SelectionBorder = selectionBorder;
-            CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
 
             CanvasViewModel.CenterContent(scene);
         });
@@ -52,15 +63,13 @@ public class MainWindowViewModel : ViewModelBase
             var model = new CurveModel(keyGenerator, notifyEntityChanged);
             var scene = new VisualCurve(model, selectionManager, notifyEntityChanged);
             var selectionBorder = new SelectionBorder();
-            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
-
-            sceneManager.Rerender();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
             sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
             CanvasViewModel.SelectionBorder = selectionBorder;
-            CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
 
             CanvasViewModel.CenterContent(scene);
         });
@@ -71,15 +80,13 @@ public class MainWindowViewModel : ViewModelBase
             var model = new Graph(keyGenerator);
             var scene = new VisualGraph(model, selectionManager, notifyEntityChanged);
             var selectionBorder = new SelectionBorder();
-            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
-
-            sceneManager.Rerender();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
             sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
             CanvasViewModel.SelectionBorder = selectionBorder;
-            CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
 
             CanvasViewModel.CenterContent(scene);
         });
@@ -90,15 +97,13 @@ public class MainWindowViewModel : ViewModelBase
             var model = new TextModel(keyGenerator);
             var scene = new TextScene(model);
             var selectionBorder = new SelectionBorder();
-            var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
-
-            sceneManager.Rerender();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
 
             sceneManagerDispatcherDisposable?.Dispose();
             sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
             CanvasViewModel.SelectionBorder = selectionBorder;
-            CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
 
             CanvasViewModel.CenterContent(scene);
         });

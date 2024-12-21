@@ -131,10 +131,11 @@ namespace StudioLaValse.Drawable
         }
 
         /// <summary>
-        /// Traverses the visual tree and handles behavior based on the provided function.
+        /// Traverses the visual tree and handles behavior based on the provided function. 
+        /// The handle behavior should return a boolean flag to indicate wether or not to continue the propagation into the visual tree.
         /// </summary>
         /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
-        protected virtual bool TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
+        public virtual bool TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
         {
             return visualTree.TraverseAndHandle(handleBehavior);
         }
