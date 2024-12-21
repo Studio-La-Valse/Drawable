@@ -20,17 +20,22 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel>
-            <Button Command="{Binding NewSceneCommand}"
-                    Content="New scene"/>
-
-            <Button Command="{Binding ToggleZoom}"
-                    Content="Toggle Zoom"/>
-
+            <Button
+                Command="{Binding PointsSceneCommand}"
+                Content="Points scene" />
+            <Button
+                Command="{Binding CurveSceneCommand}"
+                Content="Curve scene" />
+            <Button
+                Command="{Binding GraphSceneCommand}"
+                Content="Graph scene" />
+            <Button
+                Command="{Binding TextSceneCommand}"
+                Content="Text scene" />
         </StackPanel>
-        
-       
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+
         <Grid  Grid.Column="2"
                DataContext="{Binding CanvasViewModel}">
             <usercontrols:WindowsDrawingContextUserControl ElementEmitter="{Binding ElementEmitter, Mode=TwoWay}"

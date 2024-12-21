@@ -1,4 +1,6 @@
-﻿using Example.WPF.Models;
+﻿using Example.Model;
+using Example.Scene;
+using Example.WPF.Models;
 using StudioLaValse.Drawable;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.Interaction;
@@ -17,51 +19,99 @@ namespace Example.WPF.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly ModelFactory modelFactory;
-        private readonly SceneFactory sceneFactory;
+        private readonly IKeyGenerator<int> keyGenerator;
         private readonly SelectionWithKeyResponse<PersistentElement> selectionManager;
         private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
         private IDisposable? sceneManagerDispatcherDisposable;
 
         public CanvasViewModel CanvasViewModel { get; }
 
-        public ICommand NewSceneCommand => new RelayCommand(
-            () =>
-            {
-                var model = modelFactory.Create();
-                var scene = sceneFactory.Create(model);
-                var selectionBorder = new SelectionBorder();
-                var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
+        public static IInputObserver CreateDefaultObserver(SelectionWithKeyResponse<PersistentElement> selectionManager,
+        SceneManager<ElementId> sceneManager,
+        SelectionBorder selectionBorder,
+        INotifyEntityChanged<ElementId> notifyEntityChanged)
+    {
+        return new BaseInputObserver()
+            .NotifySelection(selectionManager)
+            .AddSelectionBorder(sceneManager, selectionBorder)
+            .AddMassTransformations(sceneManager)
+            .AddDefaultBehavior(sceneManager)
+            .AddRerender(notifyEntityChanged);
+    }
 
-                sceneManager.Rerender();
+    public ICommand PointsSceneCommand => new RelayCommand(
+        () =>
+        {
+            var model = new PointsModel(keyGenerator, notifyEntityChanged);
+            var scene = new VisualPoints(model, selectionManager, notifyEntityChanged);
+            var selectionBorder = new SelectionBorder();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
 
-                sceneManagerDispatcherDisposable?.Dispose();
-                sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
+            sceneManagerDispatcherDisposable?.Dispose();
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
-                CanvasViewModel.SelectionBorder = selectionBorder;
-                CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
+            CanvasViewModel.SelectionBorder = selectionBorder;
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
 
-                CanvasViewModel.CenterContent(scene);
-            },
-            () =>
-            {
-                return true;
-            });
+            CanvasViewModel.CenterContent(scene);
+        });
 
-        public ICommand ToggleZoom => new RelayCommand(
-            () => 
-            { 
-                CanvasViewModel.EnablePan = !CanvasViewModel.EnablePan;
-                CanvasViewModel.EnableZoom = CanvasViewModel.EnablePan;
-            },
-            () => true);
+    public ICommand CurveSceneCommand => new RelayCommand(
+        () =>
+        {
+            var model = new CurveModel(keyGenerator, notifyEntityChanged);
+            var scene = new VisualCurve(model, selectionManager, notifyEntityChanged);
+            var selectionBorder = new SelectionBorder();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
+
+            sceneManagerDispatcherDisposable?.Dispose();
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
+
+            CanvasViewModel.SelectionBorder = selectionBorder;
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
+
+            CanvasViewModel.CenterContent(scene);
+        });
+
+    public ICommand GraphSceneCommand => new RelayCommand(
+        () =>
+        {
+            var model = new Graph(keyGenerator);
+            var scene = new VisualGraph(model, selectionManager, notifyEntityChanged);
+            var selectionBorder = new SelectionBorder();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
+
+            sceneManagerDispatcherDisposable?.Dispose();
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
+
+            CanvasViewModel.SelectionBorder = selectionBorder;
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
+
+            CanvasViewModel.CenterContent(scene);
+        });
+
+    public ICommand TextSceneCommand => new RelayCommand(
+        () =>
+        {
+            var model = new TextModel(keyGenerator);
+            var scene = new TextScene(model);
+            var selectionBorder = new SelectionBorder();
+            var sceneManager = new SceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).WithRerender();
+
+            sceneManagerDispatcherDisposable?.Dispose();
+            sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
+
+            CanvasViewModel.SelectionBorder = selectionBorder;
+            CanvasViewModel.InputObserver = CreateDefaultObserver(selectionManager, sceneManager, selectionBorder, notifyEntityChanged);
+
+            CanvasViewModel.CenterContent(scene);
+        });
 
 
-        public MainViewModel(CanvasViewModel canvasViewModel, ModelFactory modelFactory, SceneFactory sceneFactory, SelectionWithKeyResponse<PersistentElement> selectionManager, INotifyEntityChanged<ElementId> notifyEntityChanged)
+        public MainViewModel(CanvasViewModel canvasViewModel, IKeyGenerator<int> keyGenerator, SelectionWithKeyResponse<PersistentElement> selectionManager, INotifyEntityChanged<ElementId> notifyEntityChanged)
         {
             CanvasViewModel = canvasViewModel;
-            this.modelFactory = modelFactory;
-            this.sceneFactory = sceneFactory;
+            this.keyGenerator = keyGenerator;
             this.selectionManager = selectionManager;
             this.notifyEntityChanged = notifyEntityChanged;
         }
