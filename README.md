@@ -141,12 +141,12 @@ public class VisualNode : BaseVisualParent<int>
     }
 }
 
-public class MyGraph : BaseContentWrapper
+public class VisualGraph : BaseContentWrapper
 {
     private readonly Node firstNode;
     private readonly Node secondNode;
 
-    public MyGraph(Node firstNode, Node secondNode)
+    public VisualGraph(Node firstNode, Node secondNode)
     {
         this.firstNode = firstNode;
         this.secondNode = secondNode;
@@ -162,7 +162,7 @@ public class MyGraph : BaseContentWrapper
 
 * Because now the visual representation of the node is coupled to the ID of the node, we can rerender only parts of the scene, for example lets change the position of only the first node. Notice how we don't rerender the second node.
 
-```
+```cs
 using StudioLaValse.Drawable.HTML;
 using StudioLaValse.Drawable.Extensions;
 
@@ -256,12 +256,12 @@ public class VisualNode : BaseVisualParent<int>
     }
 }
 
-public class MyGraph : BaseVisualParent<int>
+public class VisualGraph : BaseVisualParent<int>
 {
     private readonly Node firstNode;
     private readonly Node secondNode;
 
-    public MyGraph(Node firstNode, Node secondNode, int sceneId) : base(sceneId)
+    public VisualGraph(Node firstNode, Node secondNode, int sceneId) : base(sceneId)
     {
         this.firstNode = firstNode;
         this.secondNode = secondNode;
