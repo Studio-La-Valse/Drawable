@@ -48,7 +48,7 @@ dotnet restore
 
 * Lets start with a basic scene:
 ```cs
-public class MyGraph : BaseContentWrapper
+public class VisualGraph : BaseContentWrapper
 {
     public override IEnumerable<BaseDrawableElement> GetDrawableElements()
     {
@@ -74,7 +74,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var graph = new MyGraph();
+        var graph = new VisualGraph();
         var canvas = new HTMLCanvas(width: 1920, height: 1080);
         var canvasPainter = new HTMLCanvasPainter(canvas);
         canvasPainter.DrawContentWrapper(graph).FinishDrawing();
@@ -102,7 +102,7 @@ public class Program
         var secondNode = new Node(keyGenerator);
 
         // Create the visual representation, the canvas and the canvas painter.
-        var graph = new MyGraph(firstNode, secondNode);
+        var graph = new VisualGraph(firstNode, secondNode);
         var canvas = new HTMLCanvas(width: 1920, height: 1080);
         var canvasPainter = new HTMLCanvasPainter(canvas);
         canvasPainter.DrawContentWrapper(graph).FinishDrawing();
@@ -180,7 +180,7 @@ public class Program
 
         // Create the canvas, canvas painter and scene.
         var sceneId = keyGenerator.Generate();
-        var graph = new MyGraph(firstNode, secondNode, sceneId);
+        var graph = new VisualGraph(firstNode, secondNode, sceneId);
 
         // Create the canvas and canvas painter.
         var canvas = new HTMLCanvas(width: 1920, height: 1080);
@@ -248,7 +248,7 @@ public class VisualNode : BaseVisualParent<int>
     }
 
     public override IEnumerable<BaseDrawableElement> GetDrawableElements()
-    {        
+    {
         Console.WriteLine("--");
         Console.WriteLine($"Visual node with id {node.Id} has regenerated it's drawable elements.");
         Console.WriteLine("--");
@@ -273,7 +273,6 @@ public class VisualGraph : BaseVisualParent<int>
         yield return new VisualNode(secondNode);
     }
 }
-
 ```
 
 ## Help

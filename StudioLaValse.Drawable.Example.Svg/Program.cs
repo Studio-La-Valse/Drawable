@@ -26,7 +26,7 @@ public class Program
 
         // Create the canvas, canvas painter and scene.
         var sceneId = keyGenerator.Generate();
-        var graph = new MyGraph(firstNode, secondNode, sceneId);
+        var graph = new VisualGraph(firstNode, secondNode, sceneId);
 
         // Create the canvas and canvas painter.
         var canvas = new HTMLCanvas(width: 1920, height: 1080);
@@ -39,16 +39,16 @@ public class Program
         using var subscription = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
         var result = canvas.SVGContent();
-        Console.WriteLine(result);
         Console.WriteLine("--");
+        Console.WriteLine(result);
         Console.WriteLine("--");
 
         // Change your model, and the changes will be reflected on the canvas.
         firstNode.Position = new XY(100, 100);
 
         result = canvas.SVGContent();
-        Console.WriteLine(result);
         Console.WriteLine("--");
+        Console.WriteLine(result);
         Console.WriteLine("--");
     }
 }
@@ -95,8 +95,8 @@ public class VisualNode : BaseVisualParent<int>
 
     public override IEnumerable<BaseDrawableElement> GetDrawableElements()
     {
-        Console.WriteLine($"Visual node with id {node.Id} has regenerated it's drawable elements.");
         Console.WriteLine("--");
+        Console.WriteLine($"Visual node with id {node.Id} has regenerated it's drawable elements.");
         Console.WriteLine("--");
         yield return new DrawableCircle(node.Position, radius, ColorARGB.White);
     }
