@@ -273,6 +273,11 @@ public class VisualGraph : BaseVisualParent<int>
 }
 ```
 
+- Excersise:
+I leave it up to the reader to connect the two nodes with a line, that moves with its parent nodes when they are moved. 
+Bonus points if the connection or the nodes may be added/deleted and allow for mouse/keyboard input.
+You can find the answer under Example/Scene/VisualGraph.
+
 ## Why not just use MVVM?
 While the MVVM (Model-View-ViewModel) pattern is a well-established approach for building user interfaces, it may not be the ideal solution for every scenario, especially when it comes to complex, dynamic visualizations. 
 Consider for example the effort you have to go through just to connect two ellipses with a line from center to center (try it!), or exporting your components to PDF or SVG for a static webview. 
@@ -292,7 +297,7 @@ This versatility allows your scenes to be rendered to different environments wit
 The library is designed to handle dynamic scenes where users can interact with the visual elements using mouse and keyboard inputs. 
 Ofcourse interactivity is supported for MVVM, but most of the time resorting to code behind for custom components is the way to go and at that point you are fully locked into the UI framework - which I personally don't like.
 
-If the above points do not ring a bell for you, that's fine and it's probaly best to stick with a strict MVVM pattern, especially if you're working with  WPF or Avalonia.
+If the above points do not resonate with you, that's fine and it's probaly best to stick with a strict MVVM pattern, especially if you're working with  WPF or Avalonia.
 
 ## Help
 
