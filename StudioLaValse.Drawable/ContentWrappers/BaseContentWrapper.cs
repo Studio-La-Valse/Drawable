@@ -26,12 +26,18 @@ namespace StudioLaValse.Drawable.ContentWrappers
         /// Override this method to provide the <see cref="BaseDrawableElement"/>s that represents the visual model in this layer.
         /// </summary>
         /// <returns></returns>
-        public abstract IEnumerable<BaseDrawableElement> GetDrawableElements();
+        public virtual IEnumerable<BaseDrawableElement> GetDrawableElements()
+        {
+            yield break;
+        }
 
         /// <summary>
         /// Called to get all child <see cref="BaseContentWrapper"/>s of this layer. Implement to create a tree-like visual representaion of the model.
         /// </summary>
         /// <returns></returns>
-        public abstract IEnumerable<BaseContentWrapper> GetContentWrappers();
+        public virtual IEnumerable<BaseContentWrapper> GetContentWrappers()
+        {
+            yield break;
+        }
     }
 }
