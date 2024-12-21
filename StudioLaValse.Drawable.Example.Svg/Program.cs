@@ -1,36 +1,121 @@
 ﻿using Example.Model;
 using Example.Scene;
 using StudioLaValse.Drawable;
+using StudioLaValse.Drawable.ContentWrappers;
+using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.HTML;
+using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using System.Diagnostics;
 
 namespace Example.Svg;
 
-internal class Program
+
+public class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
-        // note how a static svg canvas does not need a text measurer!
-
+        // Create dependencies.
         var keyGenerator = new IncrementalKeyGenerator();
-        var model = new TextModel(keyGenerator);
-        var scene = new TextScene(model);
+        var notifyEntityChanged = SceneManager<int>.CreateObservable();
 
-        var canvas = new HTMLCanvas(500, 500);
+        // Create the models.
+        var firstNode = new Node(keyGenerator, notifyEntityChanged);
+        var secondNode = new Node(keyGenerator, notifyEntityChanged);
+
+        // Create the canvas, canvas painter and scene.
+        var sceneId = keyGenerator.Generate();
+        var graph = new MyGraph(firstNode, secondNode, sceneId);
+
+        // Create the canvas and canvas painter.
+        var canvas = new HTMLCanvas(width: 1920, height: 1080);
         var canvasPainter = new HTMLCanvasPainter(canvas);
-        var sceneManager = new SceneManager<ElementId>(scene, canvasPainter);
 
-        sceneManager.Rerender();
+        // Create a scene manager and subscribe to the notify entity changed, to invalidate models to the canvas.
+        var sceneManager = new SceneManager<int>(graph, canvasPainter)
+            .WithBackground(ColorARGB.Black)
+            .WithRerender();
+        using var subscription = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
-        var file = Path.Combine(Environment.CurrentDirectory, "index.html");
-        var svgContent = canvas.SVGContent();
-        File.WriteAllText(file, svgContent);
+        var result = canvas.SVGContent();
+        Console.WriteLine(result);
+        Console.WriteLine("--");
+        Console.WriteLine("--");
 
-        using var fileopener = new Process();
+        // Change your model, and the changes will be reflected on the canvas.
+        firstNode.Position = new XY(100, 100);
 
-        fileopener.StartInfo.FileName = "explorer";
-        fileopener.StartInfo.Arguments = "\"" + file + "\"";
-        fileopener.Start();
+        result = canvas.SVGContent();
+        Console.WriteLine(result);
+        Console.WriteLine("--");
+        Console.WriteLine("--");
+    }
+}
+
+public class Node
+{
+    private readonly INotifyEntityChanged<int> notifyEntityChanged;
+    private XY position;
+    public XY Position
+    {
+        get => position;
+        set
+        {
+            position = value;
+
+            // Invalidate this node.
+            notifyEntityChanged.Invalidate(Id);
+
+            // Immediately render changes.
+            notifyEntityChanged.RenderChanges();
+        }
+    }
+
+    public int Id { get; }
+
+    public Node(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<int> notifyEntityChanged)
+    {
+        this.notifyEntityChanged = notifyEntityChanged;
+
+        Id = keyGenerator.Generate();
+        Position = new XY(Random.Shared.Next(300), Random.Shared.Next(300));
+    }
+}
+
+public class VisualNode : BaseVisualParent<int>
+{
+    private readonly Node node;
+    private readonly double radius = 50;
+
+    public VisualNode(Node node) : base(node.Id)
+    {
+        this.node = node;
+    }
+
+    public override IEnumerable<BaseDrawableElement> GetDrawableElements()
+    {
+        Console.WriteLine($"Visual node with id {node.Id} has regenerated it's drawable elements.");
+        Console.WriteLine("--");
+        Console.WriteLine("--");
+        yield return new DrawableCircle(node.Position, radius, ColorARGB.White);
+    }
+}
+
+public class MyGraph : BaseVisualParent<int>
+{
+    private readonly Node firstNode;
+    private readonly Node secondNode;
+
+    public MyGraph(Node firstNode, Node secondNode, int sceneId) : base(sceneId)
+    {
+        this.firstNode = firstNode;
+        this.secondNode = secondNode;
+    }
+
+    public override IEnumerable<BaseContentWrapper> GetContentWrappers()
+    {
+        yield return new VisualNode(firstNode);
+        yield return new VisualNode(secondNode);
     }
 }
