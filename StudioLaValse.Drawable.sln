@@ -11,13 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioLaValse.Drawable.WPF"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioLaValse.Drawable.WPF.Skia", "StudioLaValse.Drawable.WPF.Skia\StudioLaValse.Drawable.WPF.Skia.csproj", "{FB04EBDE-4CEA-4AA0-92D9-3E72E5325CD3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.WPF", "StudioLaValse.Drawable.Example.WPF\Example.WPF.csproj", "{5FA83588-60F1-4BD5-8B5B-F17750016E5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.WPF", "Example.WPF\Example.WPF.csproj", "{5FA83588-60F1-4BD5-8B5B-F17750016E5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioLaValse.Drawable.Interaction", "StudioLaValse.Drawable.Interaction\StudioLaValse.Drawable.Interaction.csproj", "{52D7231B-3D76-4E6B-8BA9-A655E9396AE5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "StudioLaValse.Drawable.Example\Example.csproj", "{7CE1BF29-D3F0-4716-A993-4EB2397FDA8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "Example\Example.csproj", "{7CE1BF29-D3F0-4716-A993-4EB2397FDA8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Winforms", "StudioLaValse.Drawable.Example.Winforms\Example.Winforms.csproj", "{C29ABBB2-5237-4FC5-8502-172ABA9E2CC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Winforms", "Example.Winforms\Example.Winforms.csproj", "{C29ABBB2-5237-4FC5-8502-172ABA9E2CC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioLaValse.Drawable.Winforms", "StudioLaValse.Drawable.Winforms\StudioLaValse.Drawable.Winforms.csproj", "{80028724-9F3E-40AC-85E8-B26EA6ECF7CB}"
 EndProject
@@ -25,9 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioLaValse.Drawable.HTML
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioLaValse.Drawable.Avalonia", "StudioLaValse.Drawable.Avalonia\StudioLaValse.Drawable.Avalonia.csproj", "{3BA17CE1-AD0B-48EF-8442-A25B2C82DD9A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Avalonia", "StudioLaValse.Drawable.Example.Avalonia\Example.Avalonia.csproj", "{A3AADEB9-768B-4BBA-BDAA-3D8E43F494DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Avalonia", "Example.Avalonia\Example.Avalonia.csproj", "{A3AADEB9-768B-4BBA-BDAA-3D8E43F494DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Svg", "StudioLaValse.Drawable.Example.Svg\Example.Svg.csproj", "{FA3F1E74-54AC-456B-B7BE-3EC447BB45A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Svg", "Example.Svg\Example.Svg.csproj", "{FA3F1E74-54AC-456B-B7BE-3EC447BB45A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

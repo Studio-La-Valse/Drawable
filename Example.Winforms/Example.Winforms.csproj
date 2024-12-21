@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudioLaValse.Drawable.Example\Example.csproj" />
+    <ProjectReference Include="..\Example\Example.csproj" />
     <ProjectReference Include="..\StudioLaValse.Drawable.Winforms\StudioLaValse.Drawable.Winforms.csproj" />
   </ItemGroup>
 

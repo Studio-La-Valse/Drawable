@@ -6,7 +6,7 @@ using System.Windows.Media;
 namespace StudioLaValse.Drawable.WPF.Text
 {
     /// <summary>
-    /// The default WPF text measurer. Set this instance to <see cref="ExternalTextMeasure.TextMeasurer"/> to provide text measuring capabilities in WPF applications.
+    /// The default WPF text measurer.
     /// </summary>
     public class WPFTextMeasurer : IMeasureText
     {

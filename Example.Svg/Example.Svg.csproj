@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudioLaValse.Drawable.Example\Example.csproj" />
+    <ProjectReference Include="..\Example\Example.csproj" />
     <ProjectReference Include="..\StudioLaValse.Drawable.HTML\StudioLaValse.Drawable.HTML.csproj" />
     <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
   </ItemGroup>
