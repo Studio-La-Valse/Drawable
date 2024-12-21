@@ -1,6 +1,6 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
+using Example.Model;
 using StudioLaValse.Drawable.Interaction.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Geometry;
@@ -8,7 +8,7 @@ using StudioLaValse.Key;
 using System.ComponentModel;
 using System.Security.Cryptography;
 
-namespace StudioLaValse.Drawable.Example.Scene
+namespace Example.Scene
 {
     public class VisualCurveControlPoint : BaseTransformableParent<ElementId>
     {
@@ -39,7 +39,7 @@ namespace StudioLaValse.Drawable.Example.Scene
                 }
 
                 isMouseOver = value;
-                notifyEntityChanged.Invalidate(host.Key, method: Method.Deep);
+                notifyEntityChanged.Invalidate(host.Key, renderMethod: RenderMethod.Deep);
             }
         }
         public bool MouseIsOver => IsMouseOver;
@@ -60,7 +60,7 @@ namespace StudioLaValse.Drawable.Example.Scene
 
             if (hasChanged)
             {
-                notifyEntityChanged.Invalidate(controlPoint.ControlFor.ElementId, method: Method.Deep);
+                notifyEntityChanged.Invalidate(controlPoint.ControlFor.ElementId, renderMethod: RenderMethod.Deep);
             }
 
             return hasChanged;
@@ -80,7 +80,7 @@ namespace StudioLaValse.Drawable.Example.Scene
 
             if (IsSelected)
             {
-                yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, ColorARGB.Transparant, new ColorARGB(1, 255, 0, 0), 5);
+                yield return new DrawableCircle(controlPoint.Point.X, controlPoint.Point.Y, 2, ColorARGB.White, new ColorARGB(1, 255, 0, 0), 0.5);
                 yield break;
             }
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StudioLaValse.Drawable.Example.WPF.Models;
+using Example.WPF.Models;
 using System.Windows;
 using System.Windows.Media;
 
-namespace StudioLaValse.Drawable.Example.WPF
+namespace Example.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

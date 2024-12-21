@@ -23,8 +23,8 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         {
             void action(IEnumerable<TEntity> left, IEnumerable<TEntity> right)
             {
-                notifyEntityChanged.Invalidate(left.Select(e => getKey(e)), NotFoundHandler.Skip, Method.Recursive);
-                notifyEntityChanged.Invalidate(right.Select(e => getKey(e)), NotFoundHandler.Skip, Method.Recursive);
+                notifyEntityChanged.Invalidate(left.Select(e => getKey(e)), NotFoundHandler.Skip, RenderMethod.Recursive);
+                notifyEntityChanged.Invalidate(right.Select(e => getKey(e)), NotFoundHandler.Skip, RenderMethod.Recursive);
             }
             return selection.AddChangedHandler(action, getKey);
         }
@@ -47,8 +47,8 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
         /// <summary>
         /// Extends the specified <see cref="ISelectionManager{TEntity}"/> to intercept keyboard keys.
         /// When setting the selection:
-        ///     if shift is pressed, the selection is appended,
-        ///     if control is pressed, the selection is removed.
+        ///     while shift is pressed, the selection is appended,
+        ///     while control is pressed, the selection is removed.
         /// Pressing (releasing) escape clears the selection.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>

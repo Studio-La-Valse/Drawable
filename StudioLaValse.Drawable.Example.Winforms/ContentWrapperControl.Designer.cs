@@ -1,4 +1,4 @@
-﻿namespace StudioLaValse.Drawable.Example.Winforms
+﻿namespace Example.Winforms
 {
     partial class ContentWrapperControl
     {

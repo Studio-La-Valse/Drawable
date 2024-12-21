@@ -1,7 +1,7 @@
 ﻿using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 
-namespace StudioLaValse.Drawable.Example.Model
+namespace Example.Model
 {
     public class PointModel : PersistentElement
     {
@@ -9,8 +9,6 @@ namespace StudioLaValse.Drawable.Example.Model
         private double x = new Random().NextDouble() * 2000;
         private double y = new Random().NextDouble() * 2000;
         private readonly INotifyEntityChanged<ElementId> notifyEntityChanged;
-
-        public PersistentElement Ghost { get; }
 
         public double Radius
         {
@@ -23,7 +21,7 @@ namespace StudioLaValse.Drawable.Example.Model
                 }
 
                 radius = value;
-                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
+                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, RenderMethod.Recursive);
             }
         }
         public double X
@@ -36,7 +34,7 @@ namespace StudioLaValse.Drawable.Example.Model
                     return;
                 }
                 x = value;
-                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
+                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, RenderMethod.Recursive);
             }
         }
         public double Y
@@ -49,12 +47,11 @@ namespace StudioLaValse.Drawable.Example.Model
                     return;
                 }
                 y = value;
-                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, Method.Recursive);
+                notifyEntityChanged.Invalidate(ElementId, NotFoundHandler.Throw, RenderMethod.Recursive);
             }
         }
-        public PointModel(IKeyGenerator<int> keyGenerator, PersistentElement ghost, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
+        public PointModel(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
         {
-            Ghost = ghost;
             this.notifyEntityChanged = notifyEntityChanged;
         }
     }

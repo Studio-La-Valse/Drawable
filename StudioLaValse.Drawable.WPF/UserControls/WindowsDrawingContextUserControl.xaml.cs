@@ -123,8 +123,6 @@ namespace StudioLaValse.Drawable.WPF.UserControls
             InitializeComponent();
 
             var textMeasurer = new WPFTextMeasurer();
-            ExternalTextMeasure.TextMeasurer = textMeasurer;
-
             baseBitmapPainter = new WindowsDrawingContextBitmapPainter(this, textMeasurer);
             drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 

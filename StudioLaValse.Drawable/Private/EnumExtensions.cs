@@ -2,7 +2,7 @@
 {
     internal static class EnumExtensions
     {
-        public static Method GetMax(this Method left, Method right)
+        public static RenderMethod GetMax(this RenderMethod left, RenderMethod right)
         {
             return left > right ? left : right;
         }

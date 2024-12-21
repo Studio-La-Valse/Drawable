@@ -164,8 +164,6 @@ public partial class InteractiveControl : BaseInteractiveControl, IDisposable
         InitializeComponent();
 
         var textMeasurer = new AvaloniaTextMeasurer();
-        ExternalTextMeasure.TextMeasurer = textMeasurer;
-
         baseBitmapPainter = new GraphicsPainter(this, textMeasurer);
         drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 

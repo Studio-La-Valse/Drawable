@@ -1,7 +1,4 @@
-﻿using StudioLaValse.Geometry;
-using StudioLaValse.Key;
-
-namespace StudioLaValse.Drawable.Example.Model
+﻿namespace Example.Model
 {
     public class CurveModel : PersistentElement
     {

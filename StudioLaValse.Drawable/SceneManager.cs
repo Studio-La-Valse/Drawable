@@ -70,6 +70,11 @@ namespace StudioLaValse.Drawable
                 bitmapPainter.DrawBackground(Background.Value);
             }
 
+            if(renderQueue.Count == 0)
+            {
+                return;
+            }
+
             cache.Rebuild(visualTree, renderQueue, out var missing);
             renderQueue.Clear();
 
@@ -94,13 +99,13 @@ namespace StudioLaValse.Drawable
             {
                 switch (entity.Value.Method)
                 {
-                    case Method.Recursive:
+                    case RenderMethod.Recursive:
                         entity.Key.Regenerate();
                         break;
-                    case Method.Deep:
+                    case RenderMethod.Deep:
                         entity.Key.Rebuild();
                         break;
-                    case Method.Shallow:
+                    case RenderMethod.Shallow:
                         entity.Key.Redraw();
                         break;
                     default:
@@ -121,7 +126,7 @@ namespace StudioLaValse.Drawable
         public void Rerender()
         {
             renderQueue.Clear();
-            AddToQueue(new InvalidationRequest<TKey>(visualTree.Key, NotFoundHandler.Throw, Method.Recursive));
+            AddToQueue(new InvalidationRequest<TKey>(visualTree.Key, NotFoundHandler.Throw, RenderMethod.Recursive));
             RenderChanges();
         }
 

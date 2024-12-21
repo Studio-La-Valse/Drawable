@@ -1,8 +1,9 @@
-﻿using StudioLaValse.Drawable.Example.Model;
+﻿using Example.Model;
+using StudioLaValse.Drawable;
 using StudioLaValse.Key;
 using System.Linq;
 
-namespace StudioLaValse.Drawable.Example.WPF.Models
+namespace Example.WPF.Models
 {
     public class ModelFactory
     {
@@ -19,9 +20,7 @@ namespace StudioLaValse.Drawable.Example.WPF.Models
         {
             // return new TextModel(keyGenerator);
 
-            var n = 5000;
-            var components = Enumerable.Range(0, n).Select(i => new PointModel(keyGenerator, new BaseGhost(keyGenerator), notifyEntityChanged)).ToArray();
-            var graph = new PointsModel(keyGenerator, components);
+            var graph = new PointsModel(keyGenerator, notifyEntityChanged);
             return graph;
 
             //var curve = new CurveModel(keyGenerator);

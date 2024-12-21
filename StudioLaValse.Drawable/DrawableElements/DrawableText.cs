@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace StudioLaValse.Drawable.DrawableElements
 {
     /// <summary>
-    /// Represents drawable text as an extension of the <see cref="BaseDrawableElement"/>. Requires <see cref="ExternalTextMeasure.TextMeasurer"/> to be set to a target specific implementation before the the constructor of any instance is called.
+    /// Represents drawable text as an extension of the <see cref="BaseDrawableElement"/>. 
     /// </summary>
     public class DrawableText : BaseDrawableElement
     {
@@ -44,6 +44,26 @@ namespace StudioLaValse.Drawable.DrawableElements
         /// </summary>
         public string Text { get; }
 
+        /// <summary>
+        /// Get the dimensions of the text.
+        /// Throws a <see cref="TextNotMeasuredException"/> if the text has not been measured using <see cref="DrawableText.Measure(IMeasureText)"/>.
+        /// </summary>
+        public XY Dimensions
+        {
+            get
+            {
+                if(dimensions is null)
+                {
+                    throw new TextNotMeasuredException();
+                }
+
+                return dimensions.Value;
+            }
+            private set
+            {
+                dimensions = value;
+            }
+        }
 
         /// <summary>
         /// The default constructor.
@@ -192,11 +212,89 @@ namespace StudioLaValse.Drawable.DrawableElements
             throw new NotImplementedException(nameof(HorizontalAlignment));
         }
 
+        /// <summary>
+        /// Try to get the left coordinate of the text without measuring.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <returns></returns>
+        public bool TryGetLeft(out double left)
+        {
+            left = 0;
+
+            if (HorizontalAlignment == HorizontalTextOrigin.Left)
+            {
+                left = OriginX;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to get the right of the text without measuring.
+        /// </summary>
+        /// <returns></returns>
+        public bool TryGetRight(out double right)
+        {
+            right = 0;
+            if (HorizontalAlignment == HorizontalTextOrigin.Right)
+            {
+                right = OriginX;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to get the top of the text without measuring.
+        /// </summary>
+        /// <returns></returns>
+        public bool TryGetTop(out double top)
+        {
+            top = 0;
+
+            if (VerticalAlignment == VerticalTextOrigin.Top)
+            {
+                top = OriginY;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to get the bottom of the text without measuring.
+        /// </summary>
+        /// <returns></returns>
+        public bool TryGetBottom(out double bottom)
+        {
+            bottom = 0;
+
+            if (VerticalAlignment == VerticalTextOrigin.Bottom)
+            {
+                bottom = OriginY;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Measure this text using the specified text measurer. 
+        /// If you want to call the <see cref="BoundingBox"/>, you need to call this method first.
+        /// </summary>
+        /// <param name="measureText"></param>
+        /// <returns></returns>
+        public DrawableText Measure(IMeasureText measureText)
+        {
+            this.dimensions = measureText.Measure(Text, FontFamily, FontSize);
+            return this;
+        }
 
         /// <inheritdoc/>
         public override BoundingBox BoundingBox()
         {
-            var dimensions = this.dimensions ??= ExternalTextMeasure.TextMeasurer.Measure(Text, FontFamily, FontSize);
             var topleftX = OriginX;
             var topleftY = OriginY;
             
@@ -204,11 +302,11 @@ namespace StudioLaValse.Drawable.DrawableElements
             {
                 if (HorizontalAlignment == HorizontalTextOrigin.Center)
                 {
-                    topleftX -= dimensions.X / 2;
+                    topleftX -= Dimensions.X / 2;
                 }
                 else
                 {
-                    topleftX -= dimensions.X;
+                    topleftX -= Dimensions.X;
                 }
             }
 
@@ -216,15 +314,15 @@ namespace StudioLaValse.Drawable.DrawableElements
             {
                 if (VerticalAlignment == VerticalTextOrigin.Center)
                 {
-                    topleftY -= dimensions.Y / 2;
+                    topleftY -= Dimensions.Y / 2;
                 }
                 else
                 {
-                    topleftY -= dimensions.Y;
+                    topleftY -= Dimensions.Y;
                 }
             }
 
-            return new BoundingBox(topleftX, topleftX + dimensions.X, topleftY, topleftY + dimensions.Y);
+            return new BoundingBox(topleftX, topleftX + Dimensions.X, topleftY, topleftY + Dimensions.Y);
         }
 
         /// <inheritdoc/>

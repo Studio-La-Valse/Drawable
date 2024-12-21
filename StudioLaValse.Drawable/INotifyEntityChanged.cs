@@ -11,22 +11,22 @@
         /// </summary>
         /// <param name="element"></param>
         /// <param name="notFoundHandler"></param>
-        /// <param name="method"></param>
-        void Invalidate(TKey element, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
+        /// <param name="renderMethod"></param>
+        void Invalidate(TKey element, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, RenderMethod renderMethod = RenderMethod.Recursive);
         /// <summary>
         /// Notifies listeners that a number of entities has changed.
         /// </summary>
         /// <param name="elements"></param>
         /// <param name="notFoundHandler"></param>
-        /// <param name="method"></param>
-        void Invalidate(IEnumerable<TKey> elements, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive);
+        /// <param name="renderMethod"></param>
+        void Invalidate(IEnumerable<TKey> elements, NotFoundHandler notFoundHandler = NotFoundHandler.Throw, RenderMethod renderMethod = RenderMethod.Recursive);
         /// <summary>
         /// Notifies listeners that a number of entities has changed.
         /// </summary>
         /// <param name="notFoundHandler"></param>
-        /// <param name="method"></param>
+        /// <param name="renderMethod"></param>
         /// <param name="elements"></param>
-        void Invalidate(NotFoundHandler notFoundHandler = NotFoundHandler.Throw, Method method = Method.Recursive, params TKey[] elements);
+        void Invalidate(NotFoundHandler notFoundHandler = NotFoundHandler.Throw, RenderMethod renderMethod = RenderMethod.Recursive, params TKey[] elements);
         /// <summary>
         /// Notifies listeners that no more entities will change for now, and that a render update may be called.
         /// </summary>

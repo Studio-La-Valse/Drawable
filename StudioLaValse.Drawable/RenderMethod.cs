@@ -3,7 +3,7 @@
     /// <summary>
     /// An enum defining how the entity should be invalidated.
     /// </summary>
-    public enum Method
+    public enum RenderMethod
     {
         /// <summary>
         /// Shallow invalidation: only the drawable elements at surface level will be redrawn.

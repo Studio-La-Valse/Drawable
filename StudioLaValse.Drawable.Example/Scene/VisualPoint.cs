@@ -1,6 +1,6 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
+using Example.Model;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.Selection;
@@ -9,7 +9,7 @@ using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using System.Drawing;
 
-namespace StudioLaValse.Drawable.Example.Scene
+namespace Example.Scene
 {
     public class VisualPoint : BaseTransformableParent<ElementId>
     {
@@ -34,7 +34,7 @@ namespace StudioLaValse.Drawable.Example.Scene
                 }
 
                 isMouseOver = value;
-                notifyEntityChanged.Invalidate(component.ElementId, method: Method.Shallow);
+                notifyEntityChanged.Invalidate(component.ElementId, renderMethod: RenderMethod.Shallow);
             }
         }
 

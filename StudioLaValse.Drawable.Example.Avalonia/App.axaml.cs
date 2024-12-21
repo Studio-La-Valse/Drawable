@@ -1,24 +1,19 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using StudioLaValse.Drawable.Avalonia.Controls;
-using StudioLaValse.Drawable.Avalonia.Painters;
-using StudioLaValse.Drawable.Example.Avalonia.ViewModels;
-using StudioLaValse.Drawable.Example.Avalonia.Views;
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Example.Scene;
-using StudioLaValse.Drawable.Interaction.Extensions;
-using StudioLaValse.Drawable.Interaction.Selection;
-using StudioLaValse.Key;
+using Example.Avalonia.ViewModels;
+using Example.Avalonia.Views;
 using System;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using StudioLaValse.Drawable.Example.Avalonia.Models;
-using MsExtensionsHostingSample;
 using System.Diagnostics;
+using StudioLaValse.Key;
+using StudioLaValse.Drawable;
+using StudioLaValse.Drawable.Interaction.Extensions;
+using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.ViewModels;
 
-namespace StudioLaValse.Drawable.Example.Avalonia;
+namespace Example.Avalonia;
 public partial class App : Application
 {
     public IHost? GlobalHost { get; private set; }
@@ -66,8 +61,6 @@ file static class Extensions
         services.AddSingleton(SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyElementChanged, e => e.ElementId).InterceptKeys());
         services.AddSingleton<ISelectionManager<PersistentElement>>(s => s.GetRequiredService<SelectionWithKeyResponse<PersistentElement>>());
         services.AddSingleton(notifyElementChanged);
-        services.AddTransient<ModelFactory>();
-        services.AddTransient<SceneFactory>();
 
         return services;
     }

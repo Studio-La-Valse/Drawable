@@ -1,8 +1,9 @@
-﻿using StudioLaValse.Geometry;
+﻿using StudioLaValse.Drawable;
+using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using System.Runtime.InteropServices.JavaScript;
 
-namespace StudioLaValse.Drawable.Example.Model
+namespace Example.Model
 {
     public class CurveControlPoint : PersistentElement
     {
@@ -29,7 +30,7 @@ namespace StudioLaValse.Drawable.Example.Model
             }
 
             this.point = point;
-            notifyEntityChanged.Invalidate(ControlFor.ElementId, NotFoundHandler.Throw, Method.Deep);
+            notifyEntityChanged.Invalidate(ControlFor.ElementId, NotFoundHandler.Throw, RenderMethod.Deep);
         }
     }
 }

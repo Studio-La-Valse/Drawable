@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudioLaValse.Drawable.Example\StudioLaValse.Drawable.Example.csproj" />
+    <ProjectReference Include="..\StudioLaValse.Drawable.Example\Example.csproj" />
     <ProjectReference Include="..\StudioLaValse.Drawable.Interaction\StudioLaValse.Drawable.Interaction.csproj" />
     <ProjectReference Include="..\StudioLaValse.Drawable.Skia\StudioLaValse.Drawable.Skia.csproj" />
     <ProjectReference Include="..\StudioLaValse.Drawable.WPF.Skia\StudioLaValse.Drawable.WPF.Skia.csproj" />

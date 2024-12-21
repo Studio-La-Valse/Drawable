@@ -44,7 +44,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
     /// <inheritdoc/>
     protected override void DrawElement(DrawingContext drawingContext, DrawableRectangle rectangle)
     {
-        var rect = new Rect(new Point((int)rectangle.TopLeftX, (int)rectangle.TopLeftY), new Size((int)rectangle.Width, (int)rectangle.Height));
+        var rect = rectangle.ToRect();
         drawingContext.FillRectangle(rectangle.Color.ToBrush(), rect);
 
         if (rectangle.StrokeColor != null && rectangle.StrokeWeight > 0)
@@ -72,7 +72,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
         if (ellipse.StrokeColor != null && ellipse.StrokeWeight > 0)
         {
             var strokeBrush = ellipse.StrokeColor.Value.ToBrush();
-            var pen = new Pen(strokeBrush, (float)ellipse.StrokeWeight);
+            var pen = new Pen(strokeBrush, ellipse.StrokeWeight);
             drawingContext.DrawEllipse(brush, pen, rect);
         }
         else

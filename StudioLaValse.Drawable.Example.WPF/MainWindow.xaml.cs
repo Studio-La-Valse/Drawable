@@ -1,7 +1,7 @@
-﻿using StudioLaValse.Drawable.Example.WPF.ViewModels;
+﻿using Example.WPF.ViewModels;
 using System.Windows;
 
-namespace StudioLaValse.Drawable.Example.WPF
+namespace Example.WPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

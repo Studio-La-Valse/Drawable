@@ -2,7 +2,7 @@
 using Avalonia.ReactiveUI;
 using System;
 
-namespace StudioLaValse.Drawable.Example.Avalonia;
+namespace Example.Avalonia;
 
 internal sealed class Program
 {

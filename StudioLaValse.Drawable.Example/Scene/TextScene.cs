@@ -1,11 +1,11 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
+using Example.Model;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using StudioLaValse.Drawable.Text;
 
-namespace StudioLaValse.Drawable.Example.Scene;
+namespace Example.Scene;
 public class TextScene : BaseVisualParent<ElementId>
 {
     private readonly TextModel textModel;
@@ -67,5 +67,11 @@ public class TextScene : BaseVisualParent<ElementId>
         yield return new DrawableCircle(left, top, 2, circleColor);
         yield return new DrawableText(left, top, text, 12, textColor, HorizontalTextOrigin.Right, VerticalTextOrigin.Bottom, fontFamily);
         left = 20;
+    }
+
+    // Required to prevent text measuring without a text measurer.
+    public override BoundingBox BoundingBox()
+    {
+        return new BoundingBox(-50, 310, 10, 110);
     }
 }

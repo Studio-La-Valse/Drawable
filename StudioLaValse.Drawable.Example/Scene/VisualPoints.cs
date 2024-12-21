@@ -1,13 +1,13 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
+using Example.Model;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 
-namespace StudioLaValse.Drawable.Example.Scene
+namespace Example.Scene
 {
     public class VisualPoints : BaseVisualParent<ElementId>
     {
@@ -24,7 +24,7 @@ namespace StudioLaValse.Drawable.Example.Scene
 
         public override IEnumerable<BaseContentWrapper> GetContentWrappers()
         {
-            return graph.Components.Select(c => new VisualPoint(c, selection, notifyEntityChanged));
+            return graph.Points.Select(c => new VisualPoint(c, selection, notifyEntityChanged));
         }
 
         public override IEnumerable<BaseDrawableElement> GetDrawableElements()

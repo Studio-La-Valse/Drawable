@@ -126,8 +126,6 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
             this.SKElement.IgnorePixelScaling = true;
 
             var textMeasurer = new SkiaTextMeasurer();
-            ExternalTextMeasure.TextMeasurer = textMeasurer;
-
             baseBitmapPainter = new SkiaWpfElementPainter(this, textMeasurer);
             drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 

@@ -1,14 +1,20 @@
 ﻿using StudioLaValse.Key;
 
-namespace StudioLaValse.Drawable.Example.Model
+namespace Example.Model
 {
     public class PointsModel : PersistentElement, IEquatable<PointsModel>
     {
-        public IEnumerable<PointModel> Components { get; }
+        public IEnumerable<PointModel> Points { get; }
 
-        public PointsModel(IKeyGenerator<int> keyGenerator, IEnumerable<PointModel> components) : base(keyGenerator)
+        public PointsModel(IKeyGenerator<int> keyGenerator, INotifyEntityChanged<ElementId> notifyEntityChanged) : base(keyGenerator)
         {
-            Components = components;
+            var points = new List<PointModel>();
+            for (var i = 0; i < 10000; i++)
+            {
+                points.Add(new PointModel(keyGenerator, notifyEntityChanged));
+            }
+
+            Points = points;
         }
 
         public bool Equals(PointsModel? other)

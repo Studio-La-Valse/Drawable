@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using StudioLaValse.Drawable.Example.WPF.ViewModels;
+using Example.WPF.ViewModels;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.ViewModels;
 using StudioLaValse.Key;
+using StudioLaValse.Drawable;
 
-namespace StudioLaValse.Drawable.Example.WPF.Models
+namespace Example.WPF.Models
 {
     public static class ServiceCollectionExtensions
     {

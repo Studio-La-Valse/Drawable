@@ -1,4 +1,5 @@
 ﻿using StudioLaValse.Geometry;
+using System.Drawing;
 
 namespace StudioLaValse.Drawable.Text
 {

@@ -1,6 +1,6 @@
 ﻿using StudioLaValse.Drawable.Winforms.Controls;
 
-namespace StudioLaValse.Drawable.Example.Winforms
+namespace Example.Winforms
 {
     public partial class ContentWrapperControl : Panel
     {

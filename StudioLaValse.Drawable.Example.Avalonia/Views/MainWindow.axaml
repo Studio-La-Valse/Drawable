@@ -1,18 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:local="clr-namespace:StudioLaValse.Drawable.Example.Avalonia"
-		xmlns:viewModel="clr-namespace:StudioLaValse.Drawable.Example.Avalonia.ViewModels;assembly=StudioLaValse.Drawable.Example.Avalonia"
+		xmlns:local="clr-namespace:Example.Avalonia"
+		xmlns:viewModel="clr-namespace:Example.Avalonia.ViewModels;assembly=Example.Avalonia"
 		xmlns:vme="clr-namespace:StudioLaValse.Drawable.Interaction.ViewModels;assembly=StudioLaValse.Drawable.Interaction"
 		x:DataType="viewModel:MainWindowViewModel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:c="using:StudioLaValse.Drawable.Example.Avalonia.Controls"
+		xmlns:c="using:Example.Avalonia.Controls"
 		xmlns:converters="using:StudioLaValse.Drawable.Avalonia.Converters"
 		xmlns:ce="using:StudioLaValse.Drawable.Avalonia.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="StudioLaValse.Drawable.Example.Avalonia.Views.MainWindow"
+        x:Class="Example.Avalonia.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="StudioLaValse.Drawable.Example.Avalonia">
+        Title="Example.Avalonia">
 
 	<Window.Resources>
 		<converters:BoundsConverter x:Key="boundsConverter"/>
@@ -38,9 +38,6 @@
 			<Button Command="{Binding TextSceneCommand}"
                     Content="Text scene"/>
 
-			<Button Command="{Binding ToggleZoom}"
-                    Content="Toggle Zoom"/>
-
 		</StackPanel>
 
 
@@ -58,8 +55,8 @@
 								   TranslateX="{Binding TranslateX}"
 								   TranslateY="{Binding TranslateY}"
 								   Zoom="{Binding Zoom, Mode=TwoWay}"
-								   EnablePan="{Binding EnablePan}"
-								   EnableZoom="{Binding EnableZoom}"/>
+								   EnablePan="True"
+								   EnableZoom="True"/>
 		</Grid>
 
 	</Grid>

@@ -2,10 +2,8 @@ using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.ContentWrappers;
 using StudioLaValse.Drawable.Interaction.Private;
-using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
 using StudioLaValse.Geometry;
-using System.Xml.Linq;
 
 namespace StudioLaValse.Drawable.Interaction
 {
@@ -84,11 +82,14 @@ namespace StudioLaValse.Drawable.Interaction
         {
             lastMouseDownPosition = lastMousePosition;
 
-            if (TraverseAndHandleBehavior(e => e.HandleLeftMouseButtonDown()))
+            if (InitMassTransform())
             {
-                HandleInitBoundingBox();
+                if (TraverseAndHandleBehavior(e => e.HandleLeftMouseButtonDown()))
+                {
+                    HandleInitBoundingBox();
+                }
             }
-
+           
             RenderChanges();
 
             leftMouseIsDown = true;
@@ -162,6 +163,43 @@ namespace StudioLaValse.Drawable.Interaction
         }
 
         /// <summary>
+        /// Initializes a mass transform. 
+        /// Prevents a default mouse down behavior if the current mouse down was on a selected element (this prevents deselecting by default)
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool InitMassTransform()
+        {
+            var mouseDownOnAnySelected = false;
+
+            TraverseAndHandle(e =>
+            {
+                if (mouseDownOnAnySelected)
+                {
+                    return false;
+                }
+
+                if (e is BaseTransformableParent<TKey> transformable)
+                {
+                    if (transformable.IsSelected)
+                    {
+                        if (transformable.CaptureMouse(lastMouseDownPosition))
+                        {
+                            mouseDownOnAnySelected = true;
+                        }
+                    }
+                }
+                return true;
+            });
+
+            if(mouseDownOnAnySelected)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Handles a mass transformation on drag.
         /// </summary>
         public virtual bool HandleMassTransform()
@@ -208,7 +246,7 @@ namespace StudioLaValse.Drawable.Interaction
         }
 
         /// <summary>
-        /// Handles initalizing a selection border.
+        /// Handles initalizing a selection border. Does not complete succesfully if the mouse down was on a element.
         /// </summary>
         public virtual bool HandleInitBoundingBox()
         {
@@ -278,13 +316,11 @@ namespace StudioLaValse.Drawable.Interaction
                     if (overlap)
                     {
                         selectable.OnMouseEnter();
-                        return false;
                     }
                     else
                     {
                         selectable.OnMouseLeave();
                     }
-                    return true;
                 }
 
                 return true;

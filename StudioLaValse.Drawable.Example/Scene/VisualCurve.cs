@@ -1,13 +1,4 @@
-﻿using StudioLaValse.Drawable.ContentWrappers;
-using StudioLaValse.Drawable.DrawableElements;
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Interaction.ContentWrappers;
-using StudioLaValse.Drawable.Interaction.Selection;
-using StudioLaValse.Geometry;
-using StudioLaValse.Key;
-using System.ComponentModel;
-
-namespace StudioLaValse.Drawable.Example.Scene
+﻿namespace Example.Scene
 {
     public class VisualCurve : BaseSelectableParent<ElementId>
     {
@@ -29,7 +20,7 @@ namespace StudioLaValse.Drawable.Example.Scene
                 }
 
                 isMouseOver = value;
-                notifyEntityChanged.Invalidate(curve.ElementId, method: Method.Deep);
+                notifyEntityChanged.Invalidate(curve.ElementId, renderMethod: RenderMethod.Deep);
             }
         }
 

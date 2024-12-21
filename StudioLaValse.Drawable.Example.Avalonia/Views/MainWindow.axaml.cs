@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
-using StudioLaValse.Drawable.Example.Avalonia.ViewModels;
+using Example.Avalonia.ViewModels;
 
-namespace StudioLaValse.Drawable.Example.Avalonia.Views;
+namespace Example.Avalonia.Views;
 
 public partial class MainWindow : Window
 {

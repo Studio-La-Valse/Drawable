@@ -1,4 +1,4 @@
-﻿namespace StudioLaValse.Drawable.Example.Model
+﻿namespace Example.Model
 {
     public static class DoubleExtensions
     {

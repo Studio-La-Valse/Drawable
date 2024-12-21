@@ -1,10 +1,11 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Example.Scene;
+using Example.Model;
+using Example.Scene;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Key;
+using StudioLaValse.Drawable;
 
-namespace StudioLaValse.Drawable.Example.WPF.Models
+namespace Example.WPF.Models
 {
     public class SceneFactory
     {

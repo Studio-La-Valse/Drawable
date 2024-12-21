@@ -1,5 +1,5 @@
-using StudioLaValse.Drawable.Example.Model;
-using StudioLaValse.Drawable.Example.Scene;
+using Example.Model;
+using Example.Scene;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.Interaction.Selection;
 using StudioLaValse.Drawable.Interaction.UserInput;
@@ -10,9 +10,10 @@ using StudioLaValse.Geometry;
 using StudioLaValse.Key;
 using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.Interaction;
+using StudioLaValse.Drawable;
 
 
-namespace StudioLaValse.Drawable.Example.Winforms
+namespace Example.Winforms
 {
     internal static class Program
     {
@@ -30,14 +31,12 @@ namespace StudioLaValse.Drawable.Example.Winforms
 
             var selection = SelectionManager<PersistentElement>.CreateDefault(e => e.ElementId).OnChangedNotify(notifyEntityChanged, e => e.ElementId).InterceptKeys();
             var keyGenerator = new IncrementalKeyGenerator();
-            var components = Enumerable.Range(0, 5000).Select(i => new PointModel(keyGenerator, new BaseGhost(keyGenerator), notifyEntityChanged)).ToArray();
 
-            var graph = new PointsModel(keyGenerator, components);
+            var graph = new PointsModel(keyGenerator, notifyEntityChanged);
             var scene = new VisualPoints(graph, selection, notifyEntityChanged);
 
             var canvas = new ControlContainer();
             var textMeasurer = new TextMeasurer();
-            ExternalTextMeasure.TextMeasurer = textMeasurer;
             var canvasPainter = new GraphicsPainter(canvas, textMeasurer);
             var sceneManager = new InteractiveSceneManager<ElementId>(scene, canvasPainter);
 

@@ -37,6 +37,14 @@ namespace StudioLaValse.Drawable.Interaction.ContentWrappers
         {
             leftMouseIsDown = true;
             lastMouseIsDownWasOnElement = CaptureMouse(LastMousePosition);
+            if (lastMouseIsDownWasOnElement)
+            {
+                Select();
+            }
+            else
+            {
+                Deselect();
+            }
 
             return base.HandleLeftMouseButtonDown();
         }

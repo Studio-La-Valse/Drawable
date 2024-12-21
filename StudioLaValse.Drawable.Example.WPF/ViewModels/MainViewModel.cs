@@ -1,4 +1,5 @@
-﻿using StudioLaValse.Drawable.Example.WPF.Models;
+﻿using Example.WPF.Models;
+using StudioLaValse.Drawable;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.Interaction;
 using StudioLaValse.Drawable.Interaction.Extensions;
@@ -12,7 +13,7 @@ using StudioLaValse.Key;
 using System;
 using System.Windows.Input;
 
-namespace StudioLaValse.Drawable.Example.WPF.ViewModels
+namespace Example.WPF.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
@@ -29,14 +30,15 @@ namespace StudioLaValse.Drawable.Example.WPF.ViewModels
             {
                 var model = modelFactory.Create();
                 var scene = sceneFactory.Create(model);
-                var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter);
+                var selectionBorder = new SelectionBorder();
+                var sceneManager = new InteractiveSceneManager<ElementId>(scene, CanvasViewModel.CanvasPainter).AddSelectionBorder(selectionBorder);
 
                 sceneManager.Rerender();
 
                 sceneManagerDispatcherDisposable?.Dispose();
                 sceneManagerDispatcherDisposable = notifyEntityChanged.Subscribe(sceneManager.CreateObserver());
 
-                CanvasViewModel.SelectionBorder = sceneManager;
+                CanvasViewModel.SelectionBorder = selectionBorder;
                 CanvasViewModel.InputObserver = new BaseInputObserver().Then(sceneManager).Then(selectionManager);
 
                 CanvasViewModel.CenterContent(scene);

@@ -40,7 +40,7 @@ internal static class GeometryExtensions
 
     public static Rect ToRect(this DrawableRectangle rectangle)
     {
-        var rect = new Rect(new Point((int)rectangle.TopLeftX, (int)rectangle.TopLeftY), new Size((int)rectangle.Width, (int)rectangle.Height));
+        var rect = new Rect(new Point(rectangle.TopLeftX, rectangle.TopLeftY), new Size(rectangle.Width, rectangle.Height));
         return rect;
     }
 
