@@ -12,9 +12,11 @@
             "**/obj/**", 
             "_site/**", 
             "DocFx",
-            "StudioLaValse.Drawable.Example/*",
-            "StudioLaValse.Drawable.Example.Winforms/*",
-            "StudioLaValse.Drawable.Example.WPF/*" ]
+            "Example/*",
+            "Example.Avalonia/*",
+            "Example.Svg/*",
+            "Example.Winforms/*",
+            "Example.WPF/*"]
         }
       ],
       "dest": "api"
