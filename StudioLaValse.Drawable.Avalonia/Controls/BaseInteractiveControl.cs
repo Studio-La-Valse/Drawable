@@ -134,6 +134,7 @@ public class BaseInteractiveControl : UserControl, IInteractiveCanvas
                 global::Avalonia.Input.Key.Escape => Interaction.UserInput.Key.Escape,
                 global::Avalonia.Input.Key.Z => Interaction.UserInput.Key.Z,
                 global::Avalonia.Input.Key.R => Interaction.UserInput.Key.R,
+                global::Avalonia.Input.Key.Delete => Interaction.UserInput.Key.Delete,
                 _ => Interaction.UserInput.Key.Unknown
             });
     }

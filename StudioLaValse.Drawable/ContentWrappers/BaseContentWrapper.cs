@@ -14,19 +14,30 @@ namespace StudioLaValse.Drawable.ContentWrappers
         /// <returns></returns>
         public virtual BoundingBox BoundingBox()
         {
-            return new BoundingBox(GetDrawableElements().Select(element => element.GetBoundingBox()));
+            if (GetDrawableElements().Any())
+            {
+                return new BoundingBox(GetDrawableElements().Select(element => element.BoundingBox()));
+            }
+
+            return new BoundingBox(GetContentWrappers().Select(element => element.BoundingBox()));
         }
 
         /// <summary>
         /// Override this method to provide the <see cref="BaseDrawableElement"/>s that represents the visual model in this layer.
         /// </summary>
         /// <returns></returns>
-        public abstract IEnumerable<BaseDrawableElement> GetDrawableElements();
+        public virtual IEnumerable<BaseDrawableElement> GetDrawableElements()
+        {
+            yield break;
+        }
 
         /// <summary>
         /// Called to get all child <see cref="BaseContentWrapper"/>s of this layer. Implement to create a tree-like visual representaion of the model.
         /// </summary>
         /// <returns></returns>
-        public abstract IEnumerable<BaseContentWrapper> GetContentWrappers();
+        public virtual IEnumerable<BaseContentWrapper> GetContentWrappers()
+        {
+            yield break;
+        }
     }
 }

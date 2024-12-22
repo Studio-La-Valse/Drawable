@@ -11,17 +11,17 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
     public static class InteractiveCanvasExtensions
     {
         /// <summary>
-        /// Subscribes to an interaction <see cref="IBehavior"/>. Returns an <see cref="IDisposable"/> that when disposed, unsubscribes from the <see cref="IBehavior"/>
+        /// Subscribes to an interaction <see cref="IInputObserver"/>. Returns an <see cref="IDisposable"/> that when disposed, unsubscribes from the <see cref="IInputObserver"/>
         /// </summary>
         /// <param name="canvas"></param>
         /// <param name="behavior"></param>
         /// <returns></returns>
-        public static IDisposable Subscribe(this IInteractiveCanvas canvas, IBehavior behavior)
+        public static IDisposable Subscribe(this IInteractiveCanvas canvas, IInputObserver behavior)
         {
             var collection = new Queue<IDisposable>();
             var list = new List<IDisposable>()
             {
-                canvas.MouseMove.Subscribe(behavior.HandleSetMousePosition),
+                canvas.MouseMove.Subscribe(e => behavior.HandleMouseMove(e)),
                 canvas.MouseLeftButtonDown.Subscribe(e =>
                 {
                     if (e)
@@ -44,9 +44,9 @@ namespace StudioLaValse.Drawable.Interaction.Extensions
                         behavior.HandleRightMouseButtonUp();
                     }
                 }),
-                canvas.MouseWheel.Subscribe(behavior.HandleMouseWheel),
-                canvas.KeyDown.Subscribe(behavior.KeyDown),
-                canvas.KeyUp.Subscribe(behavior.KeyUp)
+                canvas.MouseWheel.Subscribe(e => behavior.HandleMouseWheel(e)),
+                canvas.KeyDown.Subscribe(e => behavior.HandleKeyDown(e)),
+                canvas.KeyUp.Subscribe(e => behavior.HandleKeyUp(e))
             };
             foreach (var element in list)
             {

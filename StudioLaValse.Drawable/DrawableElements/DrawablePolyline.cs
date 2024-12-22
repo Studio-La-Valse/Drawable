@@ -34,7 +34,7 @@ namespace StudioLaValse.Drawable.DrawableElements
         }
 
         /// <inheritdoc/>
-        public override BoundingBox GetBoundingBox()
+        public override BoundingBox BoundingBox()
         {
             var minX = 0d;
             var maxX = 0d;
@@ -61,6 +61,18 @@ namespace StudioLaValse.Drawable.DrawableElements
             }
 
             return new BoundingBox(minX, maxX, minY, maxY);
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointEdge(XY other)
+        {
+            return new Polyline(Points).ClosestPoint(other);
+        }
+
+        /// <inheritdoc/>
+        public override XY ClosestPointShape(XY other)
+        {
+            return new Polyline(Points).ClosestPoint(other);
         }
     }
 }

@@ -8,16 +8,9 @@ namespace StudioLaValse.Drawable.Winforms.Extensions
     {
         public static Color ToWindowsColor(this ColorARGB color)
         {
-            var clr = Color.FromArgb(color.Alpha, color.Red, color.Green, color.Blue);
+            var clr = Color.FromArgb((int)Math.Round(color.Alpha * 255), color.Red, color.Green, color.Blue);
             return clr;
         }
-
-        public static Color ToWindowsColor(this ColorRGB color)
-        {
-            var clr = Color.FromArgb(color.Red, color.Green, color.Blue);
-            return clr;
-        }
-
 
         public static Brush ToWindowsBrush(this ColorARGB color)
         {

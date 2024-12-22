@@ -15,17 +15,6 @@ namespace StudioLaValse.Drawable.WPF.Extensions
         private static readonly SolidColorBrush White = Brushes.White;
 
 
-        public static SolidColorBrush ToWindowsBrush(this ColorRGB? colorRGB)
-        {
-            if (colorRGB is null)
-            {
-                return Black;
-            }
-
-            var argb = new ColorARGB(ColorRGB.MaxValue, colorRGB);
-
-            return argb.ToWindowsBrush();
-        }
         public static SolidColorBrush ToWindowsBrush(this ColorARGB? colorARGB)
         {
             if (colorARGB is null)
@@ -33,25 +22,18 @@ namespace StudioLaValse.Drawable.WPF.Extensions
                 return Black;
             }
 
-            if (!colorARGB.IsDifferent(ColorARGB.Black))
-            {
-                return Black;
-            }
-
-            if (!colorARGB.IsDifferent(ColorARGB.White))
-            {
-                return White;
-            }
-
+            return colorARGB.Value.ToWindowsBrush();
+        }
+        public static SolidColorBrush ToWindowsBrush(this ColorARGB colorARGB)
+        {
             var windowsColor = Color.FromArgb(
-                Convert.ToByte(colorARGB.Alpha),
+                Convert.ToByte(colorARGB.Alpha * 255),
                 Convert.ToByte(colorARGB.Red),
                 Convert.ToByte(colorARGB.Green),
                 Convert.ToByte(colorARGB.Blue));
 
             return new SolidColorBrush(windowsColor);
         }
-
 
         public static Point ToWindowsPoint(this XY p)
         {
@@ -160,7 +142,7 @@ namespace StudioLaValse.Drawable.WPF.Extensions
         }
         public static UIElement ToUIElement(this DrawablePolyline polyline)
         {
-            var lineShape = new Polyline
+            var lineShape = new System.Windows.Shapes.Polyline
             {
                 Points = new PointCollection(polyline.Points.Select(p => new Point(p.X, p.Y))),
                 Stroke = polyline.Color.ToWindowsBrush(),
@@ -171,7 +153,7 @@ namespace StudioLaValse.Drawable.WPF.Extensions
         }
         public static UIElement ToUIElement(this DrawablePolygon polygon)
         {
-            var lineShape = new Polygon
+            var lineShape = new System.Windows.Shapes.Polygon
             {
                 Points = new PointCollection(polygon.Points.Select(p => new Point(p.X, p.Y))),
                 Fill = polygon.Fill.ToWindowsBrush(),

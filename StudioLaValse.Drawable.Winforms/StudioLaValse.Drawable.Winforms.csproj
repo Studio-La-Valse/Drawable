@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
-		<PackageVersion>5.0.0</PackageVersion>
+		<PackageVersion>6.0.0</PackageVersion>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 
@@ -19,7 +19,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="StudioLaValse.Geometry" Version="1.0.0" />
+		<PackageReference Include="StudioLaValse.Geometry" Version="2.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup>

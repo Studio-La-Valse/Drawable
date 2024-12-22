@@ -24,57 +24,90 @@ namespace StudioLaValse.Drawable.Interaction.Private
             action(left, right);
         }
 
-        public void Clear()
+        public bool Clear()
         {
             var changedElements = selection.GetSelection().ToArray();
 
-            selection.Clear();
-
-            if (!changedElements.Any())
+            if (!selection.Clear())
             {
-                return;
+                return false;
             }
 
-            Emit(Array.Empty<TEntity>(), changedElements);
+            Emit([], changedElements);
+
+            return true;
         }
 
-        public void Add(TEntity element)
+        public bool Add(TEntity element)
         {
-            selection.Add(element);
-            Emit(new[] { element }, Array.Empty<TEntity>());
+            if (!selection.Add(element))
+            {
+                return false;
+            }
+
+            Emit([element], []);
+
+            return true;
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public bool AddRange(IEnumerable<TEntity> entities)
         {
-            selection.AddRange(entities);
-            Emit(entities, Array.Empty<TEntity>());
+            if (!selection.AddRange(entities))
+            {
+                return false;
+            }
+
+            Emit(entities, []);
+            return true;
         }
 
-        public void Remove(TEntity element)
+        public bool Remove(TEntity element)
         {
-            selection.Remove(element);
-            Emit(Array.Empty<TEntity>(), new[] { element });
+            if (!selection.Remove(element))
+            {
+                return false;
+            }
+
+            Emit([], [element]);
+            return true;
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public bool RemoveRange(IEnumerable<TEntity> entities)
         {
-            selection.RemoveRange(entities);
-            Emit(Array.Empty<TEntity>(), entities);
+            if (!selection.RemoveRange(entities))
+            {
+                return false;
+            }
+
+            Emit([], entities);
+            return true;
         }
 
-        public void Set(TEntity element)
+        public bool Set(TEntity element)
         {
             var existingSelection = selection.GetSelection().ToArray();
-            selection.Set(element);
-            Emit(new[] { element }, existingSelection);
+
+            if (!selection.Set(element))
+            {
+                return false;
+            }
+
+            Emit([element], existingSelection);
+            return true;
         }
 
-        public void SetRange(IEnumerable<TEntity> entities)
+        public bool SetRange(IEnumerable<TEntity> entities)
         {
             var existingSelection = selection.GetSelection().ToArray();
+            if (!selection.SetRange(entities))
+            {
+                return false;
+            }
+
             var (left, _, right) = existingSelection.Venn(entities, getKey);
-            selection.SetRange(entities);
+
             Emit(right, left);
+            return true;
         }
     }
 }

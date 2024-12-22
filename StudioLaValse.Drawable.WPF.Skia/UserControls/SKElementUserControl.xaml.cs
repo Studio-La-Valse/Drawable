@@ -7,11 +7,11 @@ using StudioLaValse.Drawable.Interaction.Extensions;
 using StudioLaValse.Drawable.Skia.Models;
 using StudioLaValse.Drawable.Text;
 using StudioLaValse.Drawable.WPF.DependencyProperties;
-using StudioLaValse.Drawable.WPF.Painters;
 using StudioLaValse.Drawable.WPF.Skia.BitmapPainters;
-using StudioLaValse.Drawable.WPF.UserControls;
 using StudioLaValse.Drawable.WPF.Visuals;
 using System.Windows;
+using StudioLaValse.Drawable.Interaction;
+using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 {
@@ -44,7 +44,7 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 
         private IDisposable pipeSubscription;
         public static readonly DependencyProperty PipeProperty = DependencyPropertyBase
-            .Register<SKElementUserControl, IBehavior>(nameof(Pipe), (o, e) =>
+            .Register<SKElementUserControl, IInputObserver>(nameof(Pipe), (o, e) =>
             {
                 o.pipeSubscription?.Dispose();
                 if (e is null)
@@ -53,10 +53,10 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
                 }
 
                 o.pipeSubscription = o.Subscribe(e);
-            }, BehaviorPipeline.DoNothing());
-        public IBehavior Pipe
+            }, new BaseInputObserver());
+        public IInputObserver Pipe
         {
-            get => (IBehavior)GetValue(PipeProperty);
+            get => (IInputObserver)GetValue(PipeProperty);
             set => SetValue(PipeProperty, value);
         }
 
@@ -65,14 +65,14 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
 
         private IDisposable? selectionBorderSubscription;
         public static readonly DependencyProperty SelectionBorderProperty = DependencyPropertyBase
-            .Register<SKElementUserControl, ObservableBoundingBox>(nameof(SelectionBorder), (o, e) =>
+            .Register<SKElementUserControl, IObservable<BoundingBox>>(nameof(SelectionBorder), (o, e) =>
             {
                 o.selectionBorderSubscription?.Dispose();
                 o.selectionBorderSubscription = e?.Subscribe(o.selectionBorderName.CreateObserver(o));
             });
-        public ObservableBoundingBox? SelectionBorder
+        public IObservable<BoundingBox> SelectionBorder
         {
-            get => (ObservableBoundingBox)GetValue(SelectionBorderProperty);
+            get => (IObservable<BoundingBox>)GetValue(SelectionBorderProperty);
             set => SetValue(SelectionBorderProperty, value);
         }
 
@@ -126,12 +126,10 @@ namespace StudioLaValse.Drawable.WPF.Skia.UserControls
             this.SKElement.IgnorePixelScaling = true;
 
             var textMeasurer = new SkiaTextMeasurer();
-            ExternalTextMeasure.TextMeasurer = textMeasurer;
-
             baseBitmapPainter = new SkiaWpfElementPainter(this, textMeasurer);
             drawableElementObserver = new DrawableElementObserver(baseBitmapPainter);
 
-            Pipe = BehaviorPipeline.DoNothing();
+            Pipe = new BaseInputObserver();
             pipeSubscription = this.Subscribe(Pipe);
         }
 

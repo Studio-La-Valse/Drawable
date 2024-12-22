@@ -1,22 +1,23 @@
 ﻿using StudioLaValse.Drawable.BitmapPainters;
 using StudioLaValse.Drawable.ContentWrappers;
+using StudioLaValse.Drawable.Exceptions;
 using StudioLaValse.Drawable.Extensions;
 using StudioLaValse.Drawable.Private;
 using StudioLaValse.Geometry;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudioLaValse.Drawable
 {
+
     /// <summary>
     /// The main object that invalidates Entity instances associated in the scene.
     /// </summary>
-    /// <typeparam name="TEntity">The entity type</typeparam>
     /// <typeparam name="TKey">The entity key type</typeparam>
-    public class SceneManager<TEntity, TKey> : IObserver<InvalidationRequest<TEntity>> where TEntity : class where TKey : IEquatable<TKey>
+    public class SceneManager<TKey> where TKey : IEquatable<TKey>
     {
-        private readonly Queue<InvalidationRequest<TEntity>> renderQueue = new();
-        private readonly VisualTreeCache<TEntity, TKey> cache;
-        private readonly VisualTree<TEntity> visualTree;
-        private readonly GetKey<TEntity, TKey> keyExtractor;
+        private readonly Dictionary<TKey, InvalidationRequest<TKey>> renderQueue;
+        private readonly VisualTreeCache<TKey> cache;
+        private readonly VisualTree<TKey> visualTree;
         private readonly BaseBitmapPainter bitmapPainter;
 
         /// <summary>
@@ -25,44 +26,36 @@ namespace StudioLaValse.Drawable
         public ColorARGB? Background { get; set; }
 
         /// <summary>
-        /// Enumerates the visual parents in the scene.
-        /// </summary>
-        public IEnumerable<BaseVisualParent<TEntity>> VisualParents =>
-            cache.Entries.Select(e => e.Item2.VisualParent);
-
-        /// <summary>
-        /// Enumerates the entities that are visually represented in the scene.
-        /// </summary>
-        public IEnumerable<TEntity> KnownEntities =>
-            cache.Entries.Select(e => e.Item1);
-
-        /// <summary>
         /// The default constructor
         /// </summary>
         /// <param name="scene"></param>
-        /// <param name="keyExtractor">The key extractor for entities. Note that entities do not have to implement equals, but the keys they provide do.</param>
         /// <param name="bitmapPainter"></param>
-        public SceneManager(BaseVisualParent<TEntity> scene, GetKey<TEntity, TKey> keyExtractor, BaseBitmapPainter bitmapPainter)
+        public SceneManager(BaseVisualParent<TKey> scene, BaseBitmapPainter bitmapPainter)
         {
-            visualTree = new VisualTree<TEntity>(scene);
-            cache = new VisualTreeCache<TEntity, TKey>(keyExtractor);
-            this.keyExtractor = keyExtractor;
+            renderQueue = new Dictionary<TKey, InvalidationRequest<TKey>>(new EqualityComparer<TKey>());  
+            visualTree = new VisualTree<TKey>(scene);
+            cache = new VisualTreeCache<TKey>();
             this.bitmapPainter = bitmapPainter;
         }
-
 
         /// <summary>
         /// Adds the specified entity to the invalidation queue.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns>The same instance of the <see cref="SceneManager{TEntity, TKey}"/> to allow chaining of methods.</returns>
-        public SceneManager<TEntity, TKey> AddToQueue(InvalidationRequest<TEntity> element)
+        /// <param name="request"></param>
+        /// <returns>The same instance of the <see cref="SceneManager{TKey}"/> to allow chaining of methods.</returns>
+        public SceneManager<TKey> AddToQueue(InvalidationRequest<TKey> request)
         {
-            if(renderQueue.Select(e => e.Entity).Any(e => keyExtractor(e).Equals(keyExtractor(element.Entity))))
+            if (renderQueue.TryGetValue(request.Entity, out var existing))
             {
-                return this;
+                var updatedExisting = new InvalidationRequest<TKey>(request.Entity,
+                    request.NotFoundHandler.GetMax(existing.NotFoundHandler),
+                    request.Method.GetMax(existing.Method));
+                renderQueue[request.Entity] = updatedExisting;
             }
-            renderQueue.Enqueue(element);
+            else
+            {
+                renderQueue[request.Entity] = request;
+            }
             return this;
         }
 
@@ -71,51 +64,56 @@ namespace StudioLaValse.Drawable
         /// </summary>
         public void RenderChanges()
         {
-            cache.Rebuild(visualTree);
-
             bitmapPainter.InitDrawing();
             if(Background is not null)
             {
-                bitmapPainter.DrawBackground(Background);
+                bitmapPainter.DrawBackground(Background.Value);
             }
 
-            while (renderQueue.Count != 0)
+            if(renderQueue.Count == 0)
             {
-                var entity = renderQueue.Dequeue();
-                if(!cache.Find(entity.Entity, out var visualTree))
-                {
-                    switch (entity.NotFoundHandler)
-                    {
-                        case NotFoundHandler.Raise:
-                            throw new InvalidOperationException(
-                                $"Entity ({entity} : {keyExtractor(entity.Entity)}) was not found in the visual tree.");
-                        case NotFoundHandler.Rerender:
-                            Rerender();
-                            return;
-                        case NotFoundHandler.Skip:
-                            continue;
-                        default:
-                            throw new NotImplementedException(nameof(entity.NotFoundHandler)); 
-                    }
-                }
+                return;
+            }
 
-                switch (entity.Method)
+            cache.Rebuild(visualTree, renderQueue, out var missing);
+            renderQueue.Clear();
+
+            foreach (var entity in missing)
+            {
+                switch (entity.NotFoundHandler)
                 {
-                    case Method.Recursive:
-                        visualTree.Regenerate();
+                    case NotFoundHandler.Throw:
+                        throw new EntityNotFoundInVisualTreeException(
+                            $"Entity with key {entity} was not found in the visual tree.");
+                    case NotFoundHandler.Rerender:
+                        Rerender();
+                        return;
+                    case NotFoundHandler.Skip:
+                        continue;
+                    default:
+                        throw new NotImplementedException(nameof(entity.NotFoundHandler));
+                }
+            }
+
+            foreach(var entity in cache.Requests())
+            {
+                switch (entity.Value.Method)
+                {
+                    case RenderMethod.Recursive:
+                        entity.Key.Regenerate();
                         break;
-                    case Method.Deep:
-                        visualTree.Rebuild();
+                    case RenderMethod.Deep:
+                        entity.Key.Rebuild();
                         break;
-                    case Method.Shallow:
-                        visualTree.Redraw();
+                    case RenderMethod.Shallow:
+                        entity.Key.Redraw();
                         break;
                     default:
-                        throw new NotImplementedException(nameof(entity.Method));
+                        throw new NotImplementedException(nameof(entity.Value.Method));
                 }
             }
 
-            visualTree.SelectRecursive(e => e.ChildBranches)
+            visualTree.SelectBreadth(e => e.ChildBranches)
                 .SelectMany(e => e.Elements)
                 .ForEach(bitmapPainter.DrawElement);
 
@@ -128,36 +126,28 @@ namespace StudioLaValse.Drawable
         public void Rerender()
         {
             renderQueue.Clear();
-            renderQueue.Enqueue(new InvalidationRequest<TEntity>(visualTree.Element, NotFoundHandler.Raise));
+            AddToQueue(new InvalidationRequest<TKey>(visualTree.Key, NotFoundHandler.Throw, RenderMethod.Recursive));
             RenderChanges();
         }
 
         /// <summary>
+        /// Traverses the visual tree and handles behavior based on the provided function. 
+        /// The handle behavior should return a boolean flag to indicate wether or not to continue the propagation into the visual tree.
+        /// </summary>
+        /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
+        public virtual bool TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
+        {
+            return visualTree.TraverseAndHandle(handleBehavior);
+        }
+
+        /// <summary>
         /// A static method to create a default observable that notifies when the state of an entity has changed. 
-        /// Used by any <see cref="IObserver{T}"/>, or <see cref="SceneManagerExtensions.CreateObserver{TEntity, TKey}(SceneManager{TEntity, TKey})"/> to invalidate and rerender these entities.
+        /// Used by any <see cref="IObserver{T}"/>, or <see cref="SceneManagerExtensions.CreateObserver{TKey}(SceneManager{TKey})"/> to invalidate and rerender these entities.
         /// </summary>
         /// <returns></returns>
-        public static INotifyEntityChanged<TEntity> CreateObservable()
+        public static INotifyEntityChanged<TKey> CreateObservable()
         {
-            return new EntityInvalidator<TEntity>();
-        }
-
-        /// <inheritdoc/>
-        public void OnCompleted()
-        {
-            RenderChanges();
-        }
-
-        /// <inheritdoc/>
-        public void OnError(Exception error)
-        {
-            throw error;
-        }
-
-        /// <inheritdoc/>
-        public void OnNext(InvalidationRequest<TEntity> value)
-        {
-            AddToQueue(value);
+            return new EntityInvalidator<TKey>();
         }
     }
 }

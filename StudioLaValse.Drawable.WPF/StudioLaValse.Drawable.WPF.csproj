@@ -5,7 +5,7 @@
 		<UseWPF>true</UseWPF>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<PackageVersion>5.0.0</PackageVersion>
+		<PackageVersion>6.0.0</PackageVersion>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 
@@ -57,5 +57,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\StudioLaValse.Drawable.Interaction\StudioLaValse.Drawable.Interaction.csproj" />
 	  <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Converters\" />
 	</ItemGroup>
 </Project>

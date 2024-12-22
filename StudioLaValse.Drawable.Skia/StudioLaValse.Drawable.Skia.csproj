@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<PackageVersion>5.0.0</PackageVersion>
+		<PackageVersion>6.0.0</PackageVersion>
 	</PropertyGroup>
 
 	<!--build-->
@@ -18,7 +18,7 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="SkiaSharp" Version="2.88.7" />
-		<PackageReference Include="StudioLaValse.Geometry" Version="1.0.0" />
+		<PackageReference Include="StudioLaValse.Geometry" Version="2.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup>

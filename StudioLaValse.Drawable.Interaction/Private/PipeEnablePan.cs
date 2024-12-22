@@ -4,7 +4,7 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.Interaction.Private
 {
-    internal class PipeEnablePan : IBehavior
+    internal class PipeEnablePan : IInputObserver
     {
         private readonly IInteractiveCanvas canvas;
 
@@ -16,38 +16,40 @@ namespace StudioLaValse.Drawable.Interaction.Private
             canvas = interactiveCanvas;
         }
 
-        public void HandleLeftMouseButtonDown()
+        public bool HandleLeftMouseButtonDown()
         {
-
+            return true;
         }
 
-        public void HandleLeftMouseButtonUp()
+        public bool HandleLeftMouseButtonUp()
         {
-
+            return true;
         }
 
-        public void HandleMouseWheel(double delta)
+        public bool HandleMouseWheel(double delta)
         {
-
+            return true;
         }
 
-        public void HandleRightMouseButtonDown()
+        public bool HandleRightMouseButtonDown()
         {
             RightButtonDown = true;
+            return true;
         }
 
-        public void HandleRightMouseButtonUp()
+        public bool HandleRightMouseButtonUp()
         {
             RightButtonDown = false;
+            return true;
         }
 
-        public void HandleSetMousePosition(XY position)
+        public bool HandleMouseMove(XY position)
         {
             var positionOnHost = canvas.CanvasToHost(position);
 
             if (positionOnHost.DistanceTo(LastPosition) < 0.01)
             {
-                return;
+                return true;
             }
 
             var dx = positionOnHost.X - LastPosition.X;
@@ -61,16 +63,18 @@ namespace StudioLaValse.Drawable.Interaction.Private
             }
 
             LastPosition = positionOnHost;
+
+            return true;
         }
 
-        public void KeyDown(Key key)
+        public bool HandleKeyDown(Key key)
         {
-
+            return true;
         }
 
-        public void KeyUp(Key key)
+        public bool HandleKeyUp(Key key)
         {
-
+            return true;
         }
     }
 }

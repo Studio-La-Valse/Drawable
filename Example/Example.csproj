@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageVersion>1.0.0</PackageVersion>
+		<BuildPackage>false</BuildPackage>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="StudioLaValse.Key" Version="1.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\StudioLaValse.Drawable.HTML\StudioLaValse.Drawable.HTML.csproj" />
+	  <ProjectReference Include="..\StudioLaValse.Drawable.Interaction\StudioLaValse.Drawable.Interaction.csproj" />
+	  <ProjectReference Include="..\StudioLaValse.Drawable\StudioLaValse.Drawable.csproj" />
+	</ItemGroup>
+</Project>

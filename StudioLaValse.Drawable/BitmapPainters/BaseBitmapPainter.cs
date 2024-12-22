@@ -3,9 +3,8 @@ using StudioLaValse.Geometry;
 
 namespace StudioLaValse.Drawable.BitmapPainters
 {
-
     /// <summary>
-    /// The base class for all bitmap painters. Required by the <see cref="SceneManager{TEntity, TKey}"/>
+    /// The base class for all bitmap painters. Required by the <see cref="SceneManager{TKey}"/>
     /// </summary>
     public abstract class BaseBitmapPainter
     {
@@ -85,6 +84,13 @@ namespace StudioLaValse.Drawable.BitmapPainters
         /// </summary>
         /// <param name="bitmap"></param>
         /// <param name="bezier"></param>
-        protected abstract void DrawElement(TBitmap bitmap, DrawableBezierCurve bezier);
+        protected abstract void DrawElement(TBitmap bitmap, DrawableBezierQuadratic bezier);
+
+        /// <summary>
+        /// Draw a bezier curve to the provided bitmap.
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="bezier"></param>
+        protected abstract void DrawElement(TBitmap bitmap, DrawableBezierCubic bezier);
     }
 }

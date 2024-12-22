@@ -1,28 +1,54 @@
 ﻿using StudioLaValse.Drawable.ContentWrappers;
 using StudioLaValse.Drawable.DrawableElements;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StudioLaValse.Drawable.Private
 {
-    internal class VisualTree<TEntity> where TEntity : class
+    /// <summary>
+    /// Represents a visual tree containing elements of type <typeparamref name="TKey"/>.
+    /// </summary>
+    /// <typeparam name="TKey">The type of elements contained in the visual tree.</typeparam>
+    internal class VisualTree<TKey> where TKey : IEquatable<TKey>
     {
-        private readonly List<VisualTree<TEntity>> childBranches = [];
-        private readonly List<BaseDrawableElement> elements = [];
-        private readonly List<BaseContentWrapper> contentWrappers = [];
-        private readonly BaseVisualParent<TEntity> visualParent;
+        private readonly List<VisualTree<TKey>> childBranches = new List<VisualTree<TKey>>();
+        private readonly List<BaseDrawableElement> elements = new List<BaseDrawableElement>();
+        private readonly List<BaseContentWrapper> contentWrappers = new List<BaseContentWrapper>();
+        private readonly BaseVisualParent<TKey> visualParent;
 
-        public TEntity Element => visualParent.AssociatedElement;
-        public BaseVisualParent<TEntity> VisualParent => visualParent;
+        /// <summary>
+        /// Gets the key associated with the visual parent.
+        /// </summary>
+        public TKey Key => visualParent.Key;
+
+        /// <summary>
+        /// Gets the visual parent.
+        /// </summary>
+        public BaseVisualParent<TKey> VisualParent => visualParent;
+
+        /// <summary>
+        /// Gets the drawable elements in the visual tree.
+        /// </summary>
         public IEnumerable<BaseDrawableElement> Elements => elements;
-        public IEnumerable<VisualTree<TEntity>> ChildBranches => childBranches;
 
+        /// <summary>
+        /// Gets the child branches of the visual tree.
+        /// </summary>
+        public IEnumerable<VisualTree<TKey>> ChildBranches => childBranches;
 
-        public VisualTree(BaseVisualParent<TEntity> visualParent)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisualTree{TEntity}"/> class.
+        /// </summary>
+        /// <param name="visualParent">The visual parent associated with the tree.</param>
+        public VisualTree(BaseVisualParent<TKey> visualParent)
         {
             this.visualParent = visualParent;
-            this.contentWrappers.Add(visualParent);
+            contentWrappers.Add(visualParent);
         }
 
-
+        /// <summary>
+        /// Regenerates the visual tree, clearing and repopulating elements, content wrappers, and child branches.
+        /// </summary>
         public void Regenerate()
         {
             elements.Clear();
@@ -33,7 +59,12 @@ namespace StudioLaValse.Drawable.Private
             contentWrappers.Add(contentWrapper);
             Regenerate(contentWrapper);
         }
-        private void Regenerate(BaseContentWrapper baseContentWrapper)
+
+        /// <summary>
+        /// Helper method to recursively regenerate the visual tree.
+        /// </summary>
+        /// <param name="baseContentWrapper">The base content wrapper to regenerate from.</param>
+        public void Regenerate(BaseContentWrapper baseContentWrapper)
         {
             var drawableElements = baseContentWrapper.GetDrawableElements();
             foreach (var drawableElement in drawableElements)
@@ -45,9 +76,9 @@ namespace StudioLaValse.Drawable.Private
             {
                 contentWrappers.Add(_contentWrapper);
 
-                if (_contentWrapper is BaseVisualParent<TEntity> parent)
+                if (_contentWrapper is BaseVisualParent<TKey> parent)
                 {
-                    var branchToDrawTo = new VisualTree<TEntity>(parent);
+                    var branchToDrawTo = new VisualTree<TKey>(parent);
                     childBranches.Add(branchToDrawTo);
                     branchToDrawTo.Regenerate();
                 }
@@ -58,7 +89,9 @@ namespace StudioLaValse.Drawable.Private
             }
         }
 
-
+        /// <summary>
+        /// Rebuilds the visual tree, clearing and repopulating the drawable elements.
+        /// </summary>
         public void Rebuild()
         {
             elements.Clear();
@@ -78,8 +111,9 @@ namespace StudioLaValse.Drawable.Private
             }
         }
 
-
-
+        /// <summary>
+        /// Redraws the visual tree, clearing and repopulating the drawable elements.
+        /// </summary>
         public void Redraw()
         {
             elements.Clear();
@@ -92,6 +126,27 @@ namespace StudioLaValse.Drawable.Private
                     elements.Add(drawableElement);
                 }
             }
+        }
+
+        /// <summary>
+        /// Traverses the visual tree and handles behavior based on the provided function.
+        /// </summary>
+        /// <param name="handleBehavior">The function to handle the behavior for each node in the tree.</param>
+        public bool TraverseAndHandle(Func<BaseVisualParent<TKey>, bool> handleBehavior)
+        {
+            var result = handleBehavior(VisualParent);
+
+            if (!result)
+            {
+                return false;
+            }
+
+            foreach (var child in ChildBranches)
+            {
+                child.TraverseAndHandle(handleBehavior);
+            }
+
+            return true;
         }
     }
 }
