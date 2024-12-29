@@ -9,7 +9,7 @@ namespace StudioLaValse.Drawable.BitmapPainters
     {
         private readonly BaseBitmapPainter baseBitmapPainter;
 
-        private bool completed = true;
+        private bool requiresInit = true;
 
         /// <summary>
         /// The default constructor.
@@ -23,9 +23,15 @@ namespace StudioLaValse.Drawable.BitmapPainters
         /// <inheritdoc/>
         public void OnCompleted()
         {
+            if (requiresInit)
+            {
+                baseBitmapPainter.InitDrawing();
+                requiresInit = false;
+            }
+
             baseBitmapPainter.FinishDrawing();
 
-            completed = true;
+            requiresInit = true;
         }
 
         /// <inheritdoc/>
@@ -37,10 +43,10 @@ namespace StudioLaValse.Drawable.BitmapPainters
         /// <inheritdoc/>
         public void OnNext(BaseDrawableElement value)
         {
-            if (completed)
+            if (requiresInit)
             {
                 baseBitmapPainter.InitDrawing();
-                completed = false;
+                requiresInit = false;
             }
 
             baseBitmapPainter.DrawElement(value);

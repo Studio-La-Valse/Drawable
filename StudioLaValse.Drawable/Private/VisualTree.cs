@@ -11,9 +11,9 @@ namespace StudioLaValse.Drawable.Private
     /// <typeparam name="TKey">The type of elements contained in the visual tree.</typeparam>
     internal class VisualTree<TKey> where TKey : IEquatable<TKey>
     {
-        private readonly List<VisualTree<TKey>> childBranches = new List<VisualTree<TKey>>();
-        private readonly List<BaseDrawableElement> elements = new List<BaseDrawableElement>();
-        private readonly List<BaseContentWrapper> contentWrappers = new List<BaseContentWrapper>();
+        private readonly HashSet<VisualTree<TKey>> childBranches = [];
+        private readonly HashSet<BaseDrawableElement> elements = [];
+        private readonly HashSet<BaseContentWrapper> contentWrappers = [];
         private readonly BaseVisualParent<TKey> visualParent;
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace StudioLaValse.Drawable.Private
         /// Helper method to recursively regenerate the visual tree.
         /// </summary>
         /// <param name="baseContentWrapper">The base content wrapper to regenerate from.</param>
-        public void Regenerate(BaseContentWrapper baseContentWrapper)
+        private void Regenerate(BaseContentWrapper baseContentWrapper)
         {
             var drawableElements = baseContentWrapper.GetDrawableElements();
             foreach (var drawableElement in drawableElements)
@@ -74,8 +74,6 @@ namespace StudioLaValse.Drawable.Private
 
             foreach (var _contentWrapper in baseContentWrapper.GetContentWrappers())
             {
-                contentWrappers.Add(_contentWrapper);
-
                 if (_contentWrapper is BaseVisualParent<TKey> parent)
                 {
                     var branchToDrawTo = new VisualTree<TKey>(parent);
@@ -84,6 +82,8 @@ namespace StudioLaValse.Drawable.Private
                 }
                 else
                 {
+                    contentWrappers.Add(_contentWrapper);
+
                     Regenerate(_contentWrapper);
                 }
             }
