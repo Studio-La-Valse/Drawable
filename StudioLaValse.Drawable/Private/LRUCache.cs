@@ -1,4 +1,4 @@
-﻿namespace StudioLaValse.Drawable.Text
+﻿namespace StudioLaValse.Drawable.Private
 {
     internal class LRUCache<TKey, TValue> where TKey : IEquatable<TKey>
     {

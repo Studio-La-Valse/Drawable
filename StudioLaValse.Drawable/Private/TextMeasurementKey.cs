@@ -1,4 +1,6 @@
-﻿namespace StudioLaValse.Drawable.Text
+﻿using StudioLaValse.Drawable.Text;
+
+namespace StudioLaValse.Drawable.Private
 {
     internal class TextMeasurementKey : IEquatable<TextMeasurementKey>
     {

@@ -6,7 +6,7 @@ using Avalonia.Controls.Templates;
 using Microsoft.Extensions.DependencyInjection;
 using StudioLaValse.Drawable.Interaction.ViewModels;
 
-namespace MsExtensionsHostingSample;
+namespace Example.Avalonia;
 
 public static class ViewLocatorHelpers
 {

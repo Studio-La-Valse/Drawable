@@ -1,6 +1,8 @@
-﻿using StudioLaValse.Geometry;
+﻿using StudioLaValse.Drawable.Private;
+using StudioLaValse.Drawable.Text;
+using StudioLaValse.Geometry;
 
-namespace StudioLaValse.Drawable.Text
+namespace StudioLaValse.Drawable.Extensions
 {
     /// <summary>
     /// Extensions to the <see cref="IMeasureText"/> interface.

@@ -1,4 +1,4 @@
-﻿namespace StudioLaValse.Drawable
+﻿namespace StudioLaValse.Drawable.Extensions
 {
     /// <summary>
     /// Extensions for enumerables.

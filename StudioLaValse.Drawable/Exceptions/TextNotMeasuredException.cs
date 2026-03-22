@@ -1,6 +1,7 @@
-﻿using StudioLaValse.Drawable.Text;
+﻿using StudioLaValse.Drawable.DrawableElements;
+using StudioLaValse.Drawable.Text;
 
-namespace StudioLaValse.Drawable.DrawableElements
+namespace StudioLaValse.Drawable.Exceptions
 {
     /// <summary>
     /// An exception that is thrown when the dimensions of a <see cref="DrawableText"/> is accessed before measuring it using a <see cref="IMeasureText"/>. 

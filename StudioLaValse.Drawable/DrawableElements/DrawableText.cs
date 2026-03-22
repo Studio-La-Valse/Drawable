@@ -1,4 +1,5 @@
-﻿using StudioLaValse.Drawable.Text;
+﻿using StudioLaValse.Drawable.Exceptions;
+using StudioLaValse.Drawable.Text;
 using StudioLaValse.Geometry;
 using System.Diagnostics.CodeAnalysis;
 

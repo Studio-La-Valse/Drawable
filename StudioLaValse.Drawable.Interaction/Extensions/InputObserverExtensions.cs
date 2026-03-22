@@ -1,5 +1,6 @@
 ﻿using StudioLaValse.Drawable.Interaction.Private;
 using StudioLaValse.Drawable.Interaction.Selection;
+using StudioLaValse.Drawable.Interaction.UserInput;
 
 namespace StudioLaValse.Drawable.Interaction.Extensions;
 

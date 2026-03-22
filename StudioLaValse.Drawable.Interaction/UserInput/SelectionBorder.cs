@@ -1,7 +1,7 @@
 ﻿using StudioLaValse.Drawable.Interaction.Private;
 using StudioLaValse.Geometry;
 
-namespace StudioLaValse.Drawable.Interaction
+namespace StudioLaValse.Drawable.Interaction.UserInput
 {
     /// <summary>
     /// A selection border that may be observed.
@@ -16,7 +16,7 @@ namespace StudioLaValse.Drawable.Interaction
             observers.Add(observer);
             return new DefaultUnsubscriber<BoundingBox>(observer, observers);
         }
-        
+
         /// <summary>
         /// Set the specified bounding box to be the next selection border.
         /// </summary>

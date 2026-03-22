@@ -1,6 +1,7 @@
-﻿using StudioLaValse.Geometry;
+﻿using StudioLaValse.Drawable.Text;
+using StudioLaValse.Geometry;
 
-namespace StudioLaValse.Drawable.Text
+namespace StudioLaValse.Drawable.Private
 {
     internal class MeasureTextWithCache : IMeasureText
     {
@@ -16,12 +17,12 @@ namespace StudioLaValse.Drawable.Text
         public XY Measure(string text, FontFamilyCore fontFamily, double size)
         {
             var key = new TextMeasurementKey(text, fontFamily, size);
-            if(cache.TryGet(key, out var value))
+            if (cache.TryGet(key, out var value))
             {
                 return value;
             }
 
-            value = measureText.Measure(text, fontFamily, size); 
+            value = measureText.Measure(text, fontFamily, size);
             cache.Set(key, value);
             return value;
         }

@@ -100,6 +100,7 @@ public class GraphicsPainter : BaseCachingBitmapPainter<DrawingContext>
             {
                 StartPoint = polyline.Points.First().ToPoint(),
                 Segments = segments,
+                IsClosed = false,
                 IsFilled = false
             }
         };
